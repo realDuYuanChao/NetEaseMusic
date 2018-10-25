@@ -3,4 +3,8 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="red">#ce3d3a</color>
+    <color name="divider_color">#d9d9d9</color>
+    <color name="confirm_normal">#f45144</color>
+    <color name="confirm_press">#c63f35</color>
 </resources>
