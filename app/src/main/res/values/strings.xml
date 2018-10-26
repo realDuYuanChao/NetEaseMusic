@@ -15,4 +15,8 @@
 <string name="password">Password</string>
 <string name="login_error">Login error</string>
 <string name="i_know">I konw</string>
+    <string name="inbox">Inbox</string>
+    <string name="friends">Friends</string>
+    <string name="nearby">Nearby</string>
+    <string name="communicate">Communicate</string>
 </resources>

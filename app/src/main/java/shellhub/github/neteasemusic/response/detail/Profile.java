@@ -1,20 +1,23 @@
-package shellhub.github.neteasemusic.model.login;
+package shellhub.github.neteasemusic.response.detail;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 import lombok.Data;
+import shellhub.github.neteasemusic.response.common.Experts;
 
 @Data
 public class Profile{
 
-	@SerializedName("detailDescription")
-	private String detailDescription;
+	@SerializedName("backgroundUrl")
+	private String backgroundUrl;
 
 	@SerializedName("birthday")
 	private long birthday;
 
-	@SerializedName("backgroundUrl")
-	private String backgroundUrl;
+	@SerializedName("detailDescription")
+	private String detailDescription;
 
 	@SerializedName("gender")
 	private int gender;
@@ -25,11 +28,20 @@ public class Profile{
 	@SerializedName("signature")
 	private String signature;
 
+	@SerializedName("followeds")
+	private int followeds;
+
 	@SerializedName("description")
 	private String description;
 
 	@SerializedName("remarkName")
 	private Object remarkName;
+
+	@SerializedName("eventCount")
+	private int eventCount;
+
+	@SerializedName("playlistBeSubscribedCount")
+	private int playlistBeSubscribedCount;
 
 	@SerializedName("accountStatus")
 	private int accountStatus;
@@ -49,6 +61,9 @@ public class Profile{
 	@SerializedName("province")
 	private int province;
 
+	@SerializedName("artistIdentity")
+	private List<Object> artistIdentity;
+
 	@SerializedName("nickname")
 	private String nickname;
 
@@ -64,20 +79,29 @@ public class Profile{
 	@SerializedName("authStatus")
 	private int authStatus;
 
+	@SerializedName("follows")
+	private int follows;
+
 	@SerializedName("vipType")
 	private int vipType;
 
-	@SerializedName("followed")
-	private boolean followed;
+	@SerializedName("blacklist")
+	private boolean blacklist;
 
 	@SerializedName("userId")
 	private int userId;
+
+	@SerializedName("followed")
+	private boolean followed;
 
 	@SerializedName("mutual")
 	private boolean mutual;
 
 	@SerializedName("authority")
 	private int authority;
+
+	@SerializedName("artistName")
+	private Object artistName;
 
 	@SerializedName("backgroundImgId")
 	private long backgroundImgId;
@@ -88,4 +112,6 @@ public class Profile{
 	@SerializedName("experts")
 	private Experts experts;
 
+	@SerializedName("playlistCount")
+	private int playlistCount;
 }

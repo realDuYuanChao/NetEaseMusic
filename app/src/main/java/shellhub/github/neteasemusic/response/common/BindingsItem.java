@@ -1,11 +1,13 @@
-package shellhub.github.neteasemusic.model.login;
+package shellhub.github.neteasemusic.response.common;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 import lombok.Data;
 
 @Data
-public class BindingsItem{
+public class BindingsItem implements Serializable {
 
 	@SerializedName("expiresIn")
 	private int expiresIn;

@@ -1,11 +1,13 @@
-package shellhub.github.neteasemusic.model.login;
+package shellhub.github.neteasemusic.response.login;
 
 import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
 
 import lombok.Data;
 
 @Data
-public class Account{
+public class Account implements Serializable {
 
 	@SerializedName("salt")
 	private String salt;
@@ -48,5 +50,4 @@ public class Account{
 
 	@SerializedName("status")
 	private int status;
-
 }

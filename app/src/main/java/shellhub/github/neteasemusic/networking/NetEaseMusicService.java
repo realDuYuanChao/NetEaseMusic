@@ -1,15 +1,12 @@
 package shellhub.github.neteasemusic.networking;
 
 
-import android.accounts.NetworkErrorException;
-
-import java.util.concurrent.Executors;
-
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import shellhub.github.neteasemusic.model.login.LoginSuccessResponse;
+import shellhub.github.neteasemusic.response.detail.DetailResponse;
+import shellhub.github.neteasemusic.response.login.LoginSuccessResponse;
 
 public class NetEaseMusicService {
     private NetEaseMusicAPI netEaseMusicAPI;
@@ -18,7 +15,7 @@ public class NetEaseMusicService {
         this.netEaseMusicAPI = netEaseMusicAPI;
     }
 
-    public void login(String phone, String password, final LoginCallback loginCallback) {
+    public void login(String phone, String password, final Callback callback) {
         netEaseMusicAPI.loginByPhone(phone, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -30,12 +27,12 @@ public class NetEaseMusicService {
 
                     @Override
                     public void onNext(LoginSuccessResponse loginSuccessResponse) {
-                        loginCallback.onSuccess(loginSuccessResponse);
+                        callback.onSuccess(loginSuccessResponse);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        loginCallback.onError(e);
+                        callback.onError(e);
                     }
 
                     @Override
@@ -46,10 +43,37 @@ public class NetEaseMusicService {
 
     }
 
-    public interface LoginCallback {
-        void onSuccess(LoginSuccessResponse loginSuccessResponse);
+    public void detail(String uid, final Callback callback) {
+        netEaseMusicAPI.detail(uid)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<DetailResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(DetailResponse detailResponse) {
+                        callback.onSuccess(detailResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+
+    public interface Callback<T> {
+        void onSuccess(T data);
 
         void onError(Throwable e);
     }
-
 }

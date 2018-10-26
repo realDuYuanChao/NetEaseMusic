@@ -32,7 +32,7 @@ public class LoginActivity extends BaseApp implements LoginView {
     ProgressBar pbLogin;
 
 
-    @Inject
+//    @Inject
     public NetEaseMusicService mNetEaseMusicService;
 
     @Override

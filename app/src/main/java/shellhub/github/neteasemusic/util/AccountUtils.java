@@ -28,12 +28,13 @@ public class AccountUtils {
 
     public static User restore() {
         SPUtils spUtils = SPUtils.getInstance(ConstantUtils.SP_LOGIN_USER, Context.MODE_PRIVATE);
-        return new User(spUtils.getString(ConstantUtils.SP_LOGIN_USER_USERNAME_KEY, null),
-                spUtils.getString(ConstantUtils.SP_LOGIN_USER_PASSWORD_KEY, null));
+        return new User(spUtils.getString(ConstantUtils.SP_LOGIN_USER_UID_KEY), spUtils.getString(ConstantUtils.SP_LOGIN_USER_USERNAME_KEY),
+                spUtils.getString(ConstantUtils.SP_LOGIN_USER_PASSWORD_KEY));
     }
 
     public static void store(User user) {
         SPUtils spUtils = SPUtils.getInstance(ConstantUtils.SP_LOGIN_USER, Context.MODE_PRIVATE);
+        spUtils.put(ConstantUtils.SP_LOGIN_USER_UID_KEY, user.getUid());
         spUtils.put(ConstantUtils.SP_LOGIN_USER_USERNAME_KEY, user.getUsername());
         spUtils.put(ConstantUtils.SP_LOGIN_USER_PASSWORD_KEY, user.getPassword());
     }

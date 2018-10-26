@@ -23,6 +23,6 @@ public class AccountUtilsTest {
 
     @Test
     public void store() {
-        User user = new User("shellhub", "github");
+        User user = new User("353543427", "shellhub", "github");
     }
 }

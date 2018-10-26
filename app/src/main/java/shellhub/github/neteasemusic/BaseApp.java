@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import java.io.File;
 
 import lombok.Data;
-import lombok.Getter;
 import shellhub.github.neteasemusic.deps.DaggerDeps;
 import shellhub.github.neteasemusic.deps.Deps;
 import shellhub.github.neteasemusic.networking.NetworkModule;
