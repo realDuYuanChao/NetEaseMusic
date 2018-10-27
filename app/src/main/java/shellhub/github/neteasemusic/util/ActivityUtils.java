@@ -25,7 +25,7 @@ public class ActivityUtils {
         }
     }
 //
-//    public static void gotoActivity(Class<? extends Activity> clazz, boolean finish) {
+//    public static void checkLogin(Class<? extends Activity> clazz, boolean finish) {
 //
 //    }
 }

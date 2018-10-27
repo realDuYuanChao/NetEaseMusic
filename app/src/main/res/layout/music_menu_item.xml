@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_selected"
+    android:clickable="true"
+    android:focusable="true">
+
+    <ImageView
+        android:id="@+id/iv_music_menu_ic"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        android:tint="@color/music_menu_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_recent_play" />
+
+    <TextView
+        android:id="@+id/tv_music_menu_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:text="@string/manage_downloads"
+        android:textColor="@color/dark"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_music_menu_ic"
+        app:layout_constraintStart_toEndOf="@+id/iv_music_menu_ic"
+        app:layout_constraintTop_toTopOf="@+id/iv_music_menu_ic" />
+
+    <TextView
+        android:id="@+id/tv_music_menu_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="(1)"
+        android:textColor="@color/gray"
+        app:layout_constraintBaseline_toBaselineOf="@+id/tv_music_menu_desc"
+        app:layout_constraintStart_toEndOf="@+id/tv_music_menu_desc" />
+
+    <View
+        android:id="@+id/music_menu_divider"
+        android:layout_width="0dp"
+        android:layout_height="0.1dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/divider_color"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_music_menu_desc"
+        app:layout_constraintTop_toBottomOf="@+id/iv_music_menu_ic" />
+
+</android.support.constraint.ConstraintLayout>

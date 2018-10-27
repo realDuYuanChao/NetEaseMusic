@@ -6,7 +6,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
-import shellhub.github.neteasemusic.response.login.LoginSuccessResponse;
+import shellhub.github.neteasemusic.response.login.LoginResponse;
 
 public class NetEaseMusicService {
     private NetEaseMusicAPI netEaseMusicAPI;
@@ -19,15 +19,15 @@ public class NetEaseMusicService {
         netEaseMusicAPI.loginByPhone(phone, password)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<LoginSuccessResponse>() {
+                .subscribe(new Observer<LoginResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onNext(LoginSuccessResponse loginSuccessResponse) {
-                        callback.onSuccess(loginSuccessResponse);
+                    public void onNext(LoginResponse loginResponse) {
+                        callback.onSuccess(loginResponse);
                     }
 
                     @Override

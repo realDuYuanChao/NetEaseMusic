@@ -6,9 +6,8 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import shellhub.github.neteasemusic.model.User;
+import shellhub.github.neteasemusic.model.entities.User;
 
-import static org.junit.Assert.*;
 @RunWith(AndroidJUnit4.class)
 public class AccountUtilsTest {
 

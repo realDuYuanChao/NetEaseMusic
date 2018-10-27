@@ -1,11 +1,15 @@
 package shellhub.github.neteasemusic.view;
 
+import shellhub.github.neteasemusic.response.login.LoginResponse;
+
 public interface LoginView extends BaseView {
     void showProgress();
 
     void hideProgress();
 
-    void networkError();
+    void usernameError(String errorMsg);
 
-    void invalidateAccount();
+    void passwordError(String errorMsg);
+
+    void loginSuccess(LoginResponse loginResponse);
 }

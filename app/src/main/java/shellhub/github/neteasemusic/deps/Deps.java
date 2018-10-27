@@ -4,8 +4,8 @@ import javax.inject.Singleton;
 
 import dagger.Component;
 import shellhub.github.neteasemusic.networking.NetworkModule;
-import shellhub.github.neteasemusic.view.activities.LoginActivity;
-import shellhub.github.neteasemusic.view.activities.MainActivity;
+import shellhub.github.neteasemusic.ui.activities.LoginActivity;
+import shellhub.github.neteasemusic.ui.activities.MainActivity;
 
 @Singleton
 @Component(modules = {NetworkModule.class,})

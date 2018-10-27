@@ -8,4 +8,7 @@
     <color name="confirm_normal">#f45144</color>
     <color name="confirm_press">#c63f35</color>
     <color name="white">#ffffff</color>
+    <color name="dark">#333333</color>
+    <color name="gray">#999999</color>
+    <color name="music_menu_icon">#d33a31</color>
 </resources>

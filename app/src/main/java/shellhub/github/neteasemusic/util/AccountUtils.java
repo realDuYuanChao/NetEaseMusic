@@ -7,7 +7,7 @@ import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.ToastUtils;
 
 import shellhub.github.neteasemusic.R;
-import shellhub.github.neteasemusic.model.User;
+import shellhub.github.neteasemusic.model.entities.User;
 
 public class AccountUtils {
     public static boolean checkLogin(String phone, String password) {
