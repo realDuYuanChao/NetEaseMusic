@@ -4,6 +4,8 @@
     package="shellhub.github.neteasemusic">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -26,13 +28,33 @@
             android:name=".ui.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".ui.activities.LoginActivity"
             android:label="@string/login_with_mobile"
-            android:parentActivityName=".ui.activities.AccountActivity"
-            android:name=".ui.activities.LoginActivity" />
+            android:parentActivityName=".ui.activities.AccountActivity" />
         <activity
             android:name=".ui.activities.AccountActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.activities.RegisterActivity"></activity>
+        <activity android:name=".ui.activities.RegisterActivity" />
+        <activity
+            android:name=".ui.activities.LocalActivity"
+            android:label="@string/local_files"
+            android:parentActivityName=".ui.activities.MainActivity" />
+        <activity
+            android:name=".ui.activities.RecentPlayActivity"
+            android:label="Recent play"
+            android:parentActivityName=".ui.activities.MainActivity" />
+        <activity
+            android:name=".ui.activities.ManageDownloadsActivity"
+            android:label="@string/manage_downloads"
+            android:parentActivityName=".ui.activities.MainActivity" />
+        <activity
+            android:name=".ui.activities.StationsActivity"
+            android:label="@string/stations"
+            android:parentActivityName=".ui.activities.MainActivity" />
+        <activity
+            android:name=".ui.activities.FavoritesActivity"
+            android:label="@string/favs"
+            android:parentActivityName=".ui.activities.MainActivity" />
     </application>
 
 </manifest>

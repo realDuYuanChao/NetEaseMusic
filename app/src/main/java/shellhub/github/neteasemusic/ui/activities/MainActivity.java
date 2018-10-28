@@ -14,11 +14,17 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -29,6 +35,7 @@ import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.BaseApp;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
+import shellhub.github.neteasemusic.model.entities.MusicMenuEvent;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.MainPresenter;
@@ -46,8 +53,6 @@ public class MainActivity extends BaseApp
     DrawerLayout drawer;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
-    RecyclerView rvMusicMenu;
-
 
     private View navHeader;
     private ImageView ivAvatar;
@@ -90,6 +95,28 @@ public class MainActivity extends BaseApp
                 .commit();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMusicMenuEvent(MusicMenuEvent event) {
+        mainPresenter.musicMenuNavigate(event);
+    };
 
     /**
      * px转换dip
@@ -126,6 +153,31 @@ public class MainActivity extends BaseApp
     }
 
     @Override
+    public void navigateToLocalView() {
+        ActivityUtils.startActivity(LocalActivity.class);
+    }
+
+    @Override
+    public void navigateToRecentPlayView() {
+        ActivityUtils.startActivity(RecentPlayActivity.class);
+    }
+
+    @Override
+    public void navigateToDownloadsView() {
+        ActivityUtils.startActivity(ManageDownloadsActivity.class);
+    }
+
+    @Override
+    public void navigateToStationsView() {
+        ActivityUtils.startActivity(StationsActivity.class);
+    }
+
+    @Override
+    public void navigateToFavorites() {
+        ActivityUtils.startActivity(FavoritesActivity.class);
+    }
+
+    @Override
     public void setUpMVP() {
         mainPresenter = new MainPresenterImpl(mNetEaseMusicService, this);
     }
@@ -157,6 +209,6 @@ public class MainActivity extends BaseApp
     @Override
     public void updateMusicMenu(List<MusicMenu> musicMenus) {
         LogUtils.d(TAG, musicMenus);
-        musicFragment.updateData(musicMenus);
+        MusicFragment.updateAdapter(musicMenus);
     }
 }

@@ -26,7 +26,12 @@
     <string name="local_music">Local music</string>
     <string name="recent_play">Recent play</string>
     <string name="manage_downloads">Manage downloads</string>
-    <string name="station">Station</string>
+    <string name="stations">Stations</string>
     <string name="favs">Favs</string>
     <string name="sati">Sati空间</string>
+    <string name="local_files">Local files</string>
+    <string name="single">Single</string>
+    <string name="artist">Artist</string>
+    <string name="album">Album</string>
+    <string name="folder">Folder</string>
 </resources>

@@ -7,9 +7,10 @@ import java.util.List;
 import shellhub.github.neteasemusic.model.MainModel;
 import shellhub.github.neteasemusic.model.MusicMenuModel;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
+import shellhub.github.neteasemusic.model.entities.MusicMenuEvent;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
 import shellhub.github.neteasemusic.model.impl.MainModelImpl;
-import shellhub.github.neteasemusic.model.impl.MusicMenuImpl;
+import shellhub.github.neteasemusic.model.impl.MusicMenuModelImpl;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.MainPresenter;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
@@ -25,12 +26,17 @@ public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback,
     public MainPresenterImpl(NetEaseMusicService netEaseMusicService, MainView mainView) {
         this.mainView = mainView;
         this.mainModel = new MainModelImpl(netEaseMusicService);
+        musicMenuModel = new MusicMenuModelImpl();
     }
 
     @Override
     public void update(Bundle bundle) {
         mainModel.update(bundle, this);
-        musicMenuModel = new MusicMenuImpl();
+    }
+
+    @Override
+    public void musicMenuNavigate(MusicMenuEvent musicMenuEvent) {
+        musicMenuModel.navigate(musicMenuEvent,this);
     }
 
     @Override
@@ -47,5 +53,30 @@ public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback,
     @Override
     public void loadedMusicMenu(List<MusicMenu> musicMenus) {
         mainView.updateMusicMenu(musicMenus);
+    }
+
+    @Override
+    public void navigateToLocalView() {
+        mainView.navigateToLocalView();
+    }
+
+    @Override
+    public void navigateToRecentView() {
+        mainView.navigateToRecentPlayView();
+    }
+
+    @Override
+    public void navigateToDownloadsView() {
+        mainView.navigateToDownloadsView();
+    }
+
+    @Override
+    public void navigateToStationsView() {
+        mainView.navigateToStationsView();
+    }
+
+    @Override
+    public void navigateToFavorites() {
+        mainView.navigateToFavorites();
     }
 }

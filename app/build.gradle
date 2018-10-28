@@ -10,7 +10,7 @@ android {
         versionName "1.0"
 
         buildConfigField "int", "LIMIT", "100"
-        buildConfigField "String", "BASEURL", "\"http://192.168.23.8:3000\""
+        buildConfigField "String", "BASEURL", "\"http://192.168.199.192:3000\""
         buildConfigField "int", "CACHETIME", "432000" // 5days
 
         vectorDrawables.useSupportLibrary = true
@@ -72,6 +72,9 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     //circle iamgeview
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    implementation 'org.greenrobot:eventbus:3.1.1'
+
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

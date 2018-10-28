@@ -1,9 +1,7 @@
 package shellhub.github.neteasemusic.response.detail;
 
-import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 
-@Generated("com.robohorse.robopojogenerator")
 public class UserPoint{
 
 	@SerializedName("balance")

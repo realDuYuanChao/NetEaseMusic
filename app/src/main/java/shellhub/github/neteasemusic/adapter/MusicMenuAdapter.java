@@ -8,9 +8,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,7 @@ import butterknife.ButterKnife;
 import lombok.Data;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
+import shellhub.github.neteasemusic.model.entities.MusicMenuEvent;
 
 @Data
 public class MusicMenuAdapter extends RecyclerView.Adapter<MusicMenuAdapter.MusicMenuViewHolder> {
@@ -36,13 +38,7 @@ public class MusicMenuAdapter extends RecyclerView.Adapter<MusicMenuAdapter.Musi
 
     @Override
     public void onBindViewHolder(@NonNull MusicMenuViewHolder musicMenuViewHolder, int i) {
-        Glide.with(Utils.getApp()).load(musicMenus.get(i).getIcon()).into(musicMenuViewHolder.ivMusicMenuIcon);
-        musicMenuViewHolder.tvMusicMenuDesc.setText(musicMenus.get(i).getDesc());
-        musicMenuViewHolder.tvMusicMenuDetail.setText(musicMenus.get(i).getDetail());
-        if (i == musicMenus.size() - 1) {
-            //remove the latest divider
-            musicMenuViewHolder.musicMenuDivider.setVisibility(View.GONE);
-        }
+        musicMenuViewHolder.bind(i);
     }
 
     @Override
@@ -50,20 +46,36 @@ public class MusicMenuAdapter extends RecyclerView.Adapter<MusicMenuAdapter.Musi
         return musicMenus.size();
     }
 
-    public class MusicMenuViewHolder extends RecyclerView.ViewHolder{
+    class MusicMenuViewHolder extends RecyclerView.ViewHolder{
         @BindView(R.id.iv_music_menu_ic)
-        public ImageView ivMusicMenuIcon;
+        ImageView ivMusicMenuIcon;
         @BindView(R.id.tv_music_menu_desc)
-        public TextView tvMusicMenuDesc;
+        TextView tvMusicMenuDesc;
         @BindView(R.id.tv_music_menu_detail)
-        public TextView tvMusicMenuDetail;
+        TextView tvMusicMenuDetail;
         @BindView(R.id.music_menu_divider)
-        public View musicMenuDivider;
+        View musicMenuDivider;
 
-        public MusicMenuViewHolder(@NonNull View itemView) {
+        private MusicMenuViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
-    }
 
+        void bind(final int index) {
+            Glide.with(Utils.getApp()).load(musicMenus.get(index).getIcon()).into(ivMusicMenuIcon);
+            tvMusicMenuDesc.setText(musicMenus.get(index).getDesc());
+            tvMusicMenuDetail.setText(musicMenus.get(index).getDetail());
+            if (index == musicMenus.size() - 1) {
+                //remove the latest divider
+                musicMenuDivider.setVisibility(View.GONE);
+            }
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EventBus.getDefault().post(new MusicMenuEvent(index));
+                }
+            });
+
+        }
+    }
 }

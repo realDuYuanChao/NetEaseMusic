@@ -10,6 +10,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
+
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -17,6 +22,7 @@ import butterknife.ButterKnife;
 import lombok.Getter;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.MusicMenuAdapter;
+import shellhub.github.neteasemusic.adapter.OnClickListener;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
 
 /**
@@ -24,10 +30,10 @@ import shellhub.github.neteasemusic.model.entities.MusicMenu;
  */
 public class MusicFragment extends Fragment {
 
+    private String TAG = MusicFragment.class.getSimpleName();
     @BindView(R.id.rv_music_menu)
     RecyclerView rvMusicMenu;
     private static MusicMenuAdapter adapter;
-    private LinearLayoutManager layoutManager;
 
     public MusicFragment() {
         // Required empty public constructor
@@ -40,20 +46,16 @@ public class MusicFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_music, container, false);
         ButterKnife.bind(this, view);
-        setupAdapter();
+        setUp();
         return view;
     }
 
-    private void setupAdapter(){
-        adapter = new MusicMenuAdapter();
-        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
-        rvMusicMenu.setLayoutManager(mLayoutManager);
-        rvMusicMenu.setNestedScrollingEnabled(false);
-//        rvMusicMenu.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
-        rvMusicMenu.setAdapter(adapter);
+    private void setUp() {
+        rvMusicMenu.setLayoutManager(new LinearLayoutManager(getContext()));
+        rvMusicMenu.setAdapter(adapter = new MusicMenuAdapter());
     }
 
-    public static void updateData(List<MusicMenu> musicMenus) {
+    public static void updateAdapter(List<MusicMenu> musicMenus) {
         adapter.setMusicMenus(musicMenus);
         adapter.notifyDataSetChanged();
     }

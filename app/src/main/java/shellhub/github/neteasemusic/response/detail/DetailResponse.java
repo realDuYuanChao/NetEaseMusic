@@ -1,8 +1,8 @@
 package shellhub.github.neteasemusic.response.detail;
 
-import java.util.List;
-import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 import lombok.Data;
 import shellhub.github.neteasemusic.response.common.BindingsItem;
