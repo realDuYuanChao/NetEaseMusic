@@ -21,12 +21,12 @@ import butterknife.ButterKnife;
 import lombok.Data;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
-import shellhub.github.neteasemusic.model.entities.MusicMenuEvent;
+import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 
 @Data
 public class MusicMenuAdapter extends RecyclerView.Adapter<MusicMenuAdapter.MusicMenuViewHolder> {
 
-    private List<MusicMenu> musicMenus = new ArrayList<>();
+    private List<MusicMenu> musicMenus = new ArrayList<MusicMenu>();
 
     @NonNull
     @Override
@@ -72,7 +72,7 @@ public class MusicMenuAdapter extends RecyclerView.Adapter<MusicMenuAdapter.Musi
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    EventBus.getDefault().post(new MusicMenuEvent(index));
+                    EventBus.getDefault().post(new MusicMenuIndexEvent(index));
                 }
             });
 

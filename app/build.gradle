@@ -10,7 +10,7 @@ android {
         versionName "1.0"
 
         buildConfigField "int", "LIMIT", "100"
-        buildConfigField "String", "BASEURL", "\"http://192.168.199.192:3000\""
+        buildConfigField "String", "BASEURL", "\"http://192.168.43.51:3000\""
         buildConfigField "int", "CACHETIME", "432000" // 5days
 
         vectorDrawables.useSupportLibrary = true
@@ -73,7 +73,12 @@ dependencies {
     //circle iamgeview
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
+    //eventbus
     implementation 'org.greenrobot:eventbus:3.1.1'
+
+    //PermissionsDispatcher
+//    implementation "com.github.hotchemi:permissionsdispatcher:4.0.0"
+//    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:4.0.0"
 
 
     testImplementation 'junit:junit:4.12'

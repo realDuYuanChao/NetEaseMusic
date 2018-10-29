@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.activities.LocalActivity">
+
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tl_local_category"
+        android:layout_width="0dp"
+        android:background="?attr/colorPrimary"
+        android:layout_height="wrap_content"
+        app:tabTextAppearance="@style/TabTextAppearance"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextColor="@color/tab_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tabIndicatorColor="@android:color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+    </android.support.design.widget.TabLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vp_local_files"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tl_local_category" />
+
+</android.support.constraint.ConstraintLayout>

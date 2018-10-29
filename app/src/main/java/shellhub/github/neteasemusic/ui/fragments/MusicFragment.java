@@ -14,7 +14,10 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -24,6 +27,7 @@ import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.MusicMenuAdapter;
 import shellhub.github.neteasemusic.adapter.OnClickListener;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
+import shellhub.github.neteasemusic.model.entities.MusicMenuEvent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,8 +50,15 @@ public class MusicFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_music, container, false);
         ButterKnife.bind(this, view);
+        EventBus.getDefault().register(this);
         setUp();
         return view;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        EventBus.getDefault().unregister(this);
     }
 
     private void setUp() {
@@ -55,8 +66,10 @@ public class MusicFragment extends Fragment {
         rvMusicMenu.setAdapter(adapter = new MusicMenuAdapter());
     }
 
-    public static void updateAdapter(List<MusicMenu> musicMenus) {
-        adapter.setMusicMenus(musicMenus);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMenuReadyEvent(MusicMenuEvent event) {
+        LogUtils.d(TAG, event.getMusicMenus());
+        adapter.setMusicMenus(event.getMusicMenus());
         adapter.notifyDataSetChanged();
     }
 }

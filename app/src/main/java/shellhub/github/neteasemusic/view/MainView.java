@@ -1,5 +1,6 @@
 package shellhub.github.neteasemusic.view;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import shellhub.github.neteasemusic.model.entities.MusicMenu;

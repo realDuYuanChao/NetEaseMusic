@@ -7,7 +7,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -36,6 +34,7 @@ import shellhub.github.neteasemusic.BaseApp;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.MusicMenuEvent;
+import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.MainPresenter;
@@ -107,14 +106,8 @@ public class MainActivity extends BaseApp
         EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMusicMenuEvent(MusicMenuEvent event) {
+    public void onMusicMenuEvent(MusicMenuIndexEvent event) {
         mainPresenter.musicMenuNavigate(event);
     };
 
@@ -206,9 +199,10 @@ public class MainActivity extends BaseApp
         tvLevel.append(detailResponse.getLevel() + "");
     }
 
+
     @Override
     public void updateMusicMenu(List<MusicMenu> musicMenus) {
         LogUtils.d(TAG, musicMenus);
-        MusicFragment.updateAdapter(musicMenus);
+        EventBus.getDefault().post(new MusicMenuEvent(musicMenus));
     }
 }

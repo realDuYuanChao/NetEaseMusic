@@ -2,12 +2,13 @@ package shellhub.github.neteasemusic.presenter.impl;
 
 import android.os.Bundle;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import shellhub.github.neteasemusic.model.MainModel;
 import shellhub.github.neteasemusic.model.MusicMenuModel;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
-import shellhub.github.neteasemusic.model.entities.MusicMenuEvent;
+import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
 import shellhub.github.neteasemusic.model.impl.MainModelImpl;
 import shellhub.github.neteasemusic.model.impl.MusicMenuModelImpl;
@@ -35,8 +36,8 @@ public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback,
     }
 
     @Override
-    public void musicMenuNavigate(MusicMenuEvent musicMenuEvent) {
-        musicMenuModel.navigate(musicMenuEvent,this);
+    public void musicMenuNavigate(MusicMenuIndexEvent musicMenuIndexEvent) {
+        musicMenuModel.navigate(musicMenuIndexEvent,this);
     }
 
     @Override
