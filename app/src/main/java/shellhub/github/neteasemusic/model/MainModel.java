@@ -13,6 +13,7 @@ public interface MainModel {
 
         void updateDetail(DetailResponse detailResponse);
 
-        void showNetworkError();
+        void showNetworkError(String errorMsg);
+
     }
 }

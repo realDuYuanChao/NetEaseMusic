@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
 
@@ -22,11 +23,53 @@ import lombok.Data;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
+import shellhub.github.neteasemusic.util.MusicUtils;
 
 @Data
 public class MusicMenuAdapter extends RecyclerView.Adapter<MusicMenuAdapter.MusicMenuViewHolder> {
 
-    private List<MusicMenu> musicMenus = new ArrayList<MusicMenu>();
+    private List<MusicMenu> musicMenus = new ArrayList<>();
+    private String TAG = MusicMenuAdapter.class.getSimpleName();
+
+    private int[] musicMenuIcons = {
+            R.drawable.ic_music,
+            R.drawable.ic_recent,
+            R.drawable.ic_download,
+            R.drawable.ic_station,
+            R.drawable.ic_favs,
+            R.drawable.ic_moon
+    };
+    private String[] musicMenuDescs = {
+            Utils.getApp().getResources().getString(R.string.local_music),
+            Utils.getApp().getResources().getString(R.string.recent_play),
+            Utils.getApp().getResources().getString(R.string.manage_downloads),
+            Utils.getApp().getResources().getString(R.string.stations),
+            Utils.getApp().getResources().getString(R.string.favs),
+            Utils.getApp().getResources().getString(R.string.sati)
+
+    };
+
+    private String[] musicMenuDetails = {
+            /*TODO*/
+            "(" + MusicUtils.getCount() + ")",
+            "(102)",
+            "(0)",
+            "(0)",
+            "(7)",
+            Utils.getApp().getResources().getString(R.string.special_mode)
+    };
+
+    public MusicMenuAdapter() {
+        for (int i = 0; i < musicMenuIcons.length; i++) {
+            MusicMenu musicMenu = new MusicMenu();
+            musicMenu.setIcon(musicMenuIcons[i]);
+            musicMenu.setDesc(musicMenuDescs[i]);
+            musicMenu.setDetail(musicMenuDetails[i]);
+            LogUtils.d(TAG, i);
+
+            musicMenus.add(musicMenu);
+        }
+    }
 
     @NonNull
     @Override

@@ -3,7 +3,10 @@ package shellhub.github.neteasemusic.model.impl;
 import android.os.Bundle;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.NetworkUtils;
+import com.blankj.utilcode.util.Utils;
 
+import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.MainModel;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
 import shellhub.github.neteasemusic.model.entities.User;
@@ -23,14 +26,21 @@ public class MainModelImpl implements MainModel {
 
     @Override
     public void update(Bundle bundle, final MainCallback callback) {
+
+        //check network
+        if (!NetworkUtils.isConnected()) {
+            LogUtils.d(TAG, "isConnected()");
+            callback.showNetworkError(Utils.getApp().getResources().getString(R.string.network_error));
+            return;
+        }
         String uid;
         //login data
-        if (bundle != null && bundle.getSerializable(ConstantUtils.LOGIN_RESPONSE_KEY) != null){
+        if (bundle != null && bundle.getSerializable(ConstantUtils.LOGIN_RESPONSE_KEY) != null) {
             LoginResponse loginResponse = (LoginResponse) bundle.getSerializable(ConstantUtils.LOGIN_RESPONSE_KEY);
             Profile profile = loginResponse.getProfile();
             uid = profile.getUserId() + "";
             callback.updateProfile(new NavProfile(profile.getBackgroundUrl(), profile.getAvatarUrl(), profile.getNickname()));
-        }else {
+        } else {
             // no data provide, need call network
             User user = AccountUtils.restore();
             uid = user.getUid();
@@ -43,7 +53,7 @@ public class MainModelImpl implements MainModel {
 
                 @Override
                 public void onError(Throwable e) {
-                    callback.showNetworkError();
+                    callback.showNetworkError(e.getMessage());
                     LogUtils.e(TAG, e.fillInStackTrace());
                 }
             });
@@ -58,7 +68,7 @@ public class MainModelImpl implements MainModel {
 
             @Override
             public void onError(Throwable e) {
-                callback.showNetworkError();
+                callback.showNetworkError(e.getMessage());
                 LogUtils.e(TAG, e.fillInStackTrace());
             }
         });

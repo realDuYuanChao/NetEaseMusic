@@ -7,12 +7,10 @@ import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 
 public interface MusicMenuModel {
-    void loadMusicMenu(MusicMenuCallback callback);
 
     void navigate(MusicMenuIndexEvent event, MusicMenuCallback callback);
 
     interface MusicMenuCallback{
-        void loadedMusicMenu(List<MusicMenu> musicMenus);
 
         void navigateToLocalView();
 

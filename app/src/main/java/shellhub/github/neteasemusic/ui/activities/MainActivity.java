@@ -7,16 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-
-import com.google.android.material.navigation.NavigationView;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.Toolbar;
-
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
@@ -31,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.google.android.material.navigation.NavigationView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,6 +31,12 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import permissions.dispatcher.NeedsPermission;
@@ -51,7 +48,6 @@ import permissions.dispatcher.RuntimePermissions;
 import shellhub.github.neteasemusic.BaseApp;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
-import shellhub.github.neteasemusic.model.entities.MusicMenuEvent;
 import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
@@ -59,6 +55,7 @@ import shellhub.github.neteasemusic.presenter.MainPresenter;
 import shellhub.github.neteasemusic.presenter.impl.MainPresenterImpl;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.ui.fragments.MusicFragment;
+import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.MainView;
 
 @RuntimePermissions
@@ -95,6 +92,8 @@ public class MainActivity extends BaseApp
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);
         setTitle("");
+        LogUtils.d(TagUtils.getTag(MainActivity.class), "loadMusicMenu" + Thread.currentThread().getId());
+
 
         setUpNavHeader();
         receiveData = getIntent().getExtras();
@@ -190,11 +189,8 @@ public class MainActivity extends BaseApp
     }
 
     @Override
-    public void showNetworkError() {
+    public void showNetworkError(String errorMsg) {
         ToastUtils.showLong(R.string.network_error);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_container, musicFragment = new MusicFragment())
-                .commit();
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -281,6 +277,5 @@ public class MainActivity extends BaseApp
     @Override
     public void updateMusicMenu(List<MusicMenu> musicMenus) {
         LogUtils.d(TAG, musicMenus);
-        EventBus.getDefault().post(new MusicMenuEvent(musicMenus));
     }
 }

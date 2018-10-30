@@ -2,7 +2,6 @@ package shellhub.github.neteasemusic.presenter.impl;
 
 import android.os.Bundle;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import shellhub.github.neteasemusic.model.MainModel;
@@ -43,7 +42,6 @@ public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback,
     @Override
     public void updateProfile(NavProfile navProfile) {
         mainView.updateNavProfile(navProfile);
-        musicMenuModel.loadMusicMenu(this);
     }
 
     @Override
@@ -52,14 +50,10 @@ public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback,
     }
 
     @Override
-    public void showNetworkError() {
-        mainView.showNetworkError();
+    public void showNetworkError(String errorMsg) {
+        mainView.showNetworkError(errorMsg);
     }
 
-    @Override
-    public void loadedMusicMenu(List<MusicMenu> musicMenus) {
-        mainView.updateMusicMenu(musicMenus);
-    }
 
     @Override
     public void navigateToLocalView() {
