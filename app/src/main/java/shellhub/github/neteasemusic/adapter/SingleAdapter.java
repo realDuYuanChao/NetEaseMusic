@@ -17,10 +17,11 @@ import butterknife.ButterKnife;
 import lombok.Data;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.Single;
+import shellhub.github.neteasemusic.util.TagUtils;
 
 @Data
 public class SingleAdapter extends RecyclerView.Adapter<SingleAdapter.SingleViewHolder> {
-    private String TAG = SingleAdapter.class.getSimpleName();
+    private String TAG = TagUtils.getTag(this.getClass());
     private List<Single> singles = new ArrayList<Single>();
 
     @NonNull

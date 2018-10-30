@@ -21,10 +21,11 @@ import butterknife.ButterKnife;
 import lombok.Data;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.Artist;
+import shellhub.github.neteasemusic.util.TagUtils;
 
 @Data
 public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.SingleViewHolder> {
-    private String TAG = ArtistAdapter.class.getSimpleName();
+    private String TAG = TagUtils.getTag(this.getClass());
     private List<Artist> artists = new ArrayList<Artist>();
 
     @NonNull

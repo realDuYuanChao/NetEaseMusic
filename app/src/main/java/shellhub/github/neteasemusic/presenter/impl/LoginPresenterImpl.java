@@ -7,15 +7,16 @@ import shellhub.github.neteasemusic.model.impl.LoginModelImpl;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.LoginPresenter;
+import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.LoginView;
 
 public class LoginPresenterImpl implements LoginPresenter, LoginModel.LoginCallback {
+    private String TAG = TagUtils.getTag(this.getClass());
     private LoginView mLoginView;
     private LoginModel mLoginModel;
-//    private NetEaseMusicService mNetEaseMusicService;
+    //    private NetEaseMusicService mNetEaseMusicService;
     private CompositeSubscription subscriptions;
 
-    private String TAG = LoginPresenterImpl.class.getSimpleName();
 
     public LoginPresenterImpl(NetEaseMusicService netEaseMusicService, LoginView mLoginView) {
 //        this.mNetEaseMusicService = netEaseMusicService;

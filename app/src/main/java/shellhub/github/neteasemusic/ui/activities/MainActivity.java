@@ -61,6 +61,7 @@ import shellhub.github.neteasemusic.view.MainView;
 @RuntimePermissions
 public class MainActivity extends BaseApp
         implements NavigationView.OnNavigationItemSelectedListener, MainView {
+    private final String TAG = TagUtils.getTag(this.getClass());
 
     @BindView(R.id.nav_view)
     NavigationView navigationView;
@@ -74,7 +75,6 @@ public class MainActivity extends BaseApp
     private TextView tvNickname;
     private TextView tvLevel;
 
-    private final String TAG = MainActivity.class.getSimpleName();
     private Bundle receiveData;
 
     private MainPresenter mainPresenter;

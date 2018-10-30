@@ -14,14 +14,15 @@ import shellhub.github.neteasemusic.model.impl.MusicMenuModelImpl;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.MainPresenter;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
+import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.MainView;
 
 public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback, MusicMenuModel.MusicMenuCallback {
+    private String TAG = TagUtils.getTag(this.getClass());
     private MainView mainView;
     private MainModel mainModel;
     private MusicMenuModel musicMenuModel;
 
-    private String TAG = MainPresenter.class.getSimpleName();
 
     public MainPresenterImpl(NetEaseMusicService netEaseMusicService, MainView mainView) {
         this.mainView = mainView;

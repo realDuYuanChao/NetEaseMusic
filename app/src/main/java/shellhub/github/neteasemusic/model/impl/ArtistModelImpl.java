@@ -11,10 +11,11 @@ import java.util.ArrayList;
 
 import shellhub.github.neteasemusic.model.ArtistModel;
 import shellhub.github.neteasemusic.model.entities.Artist;
+import shellhub.github.neteasemusic.util.TagUtils;
 
 public class ArtistModelImpl implements ArtistModel {
 
-    private String TAG = ArtistModelImpl.class.getSimpleName();
+    private String TAG = TagUtils.getTag(this.getClass());
     @Override
     public void loadArtist(Callback callback) {
         ArrayList<Artist> artists = new ArrayList<Artist>();

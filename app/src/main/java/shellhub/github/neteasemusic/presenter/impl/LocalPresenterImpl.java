@@ -9,10 +9,11 @@ import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.model.impl.ArtistModelImpl;
 import shellhub.github.neteasemusic.model.impl.SingleModelImpl;
 import shellhub.github.neteasemusic.presenter.LocalPresenter;
+import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.LocalView;
 
 public class LocalPresenterImpl implements LocalPresenter, ArtistModel.Callback, SingleModel.Callback{
-    private String TAG = LocalPresenterImpl.class.getSimpleName();
+    private String TAG = TagUtils.getTag(this.getClass());
     private LocalView mLocalView;
     private SingleModel mSingleModel;
     private ArtistModel mArtistModel;

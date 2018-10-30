@@ -16,10 +16,11 @@ import shellhub.github.neteasemusic.response.login.LoginResponse;
 import shellhub.github.neteasemusic.response.login.Profile;
 import shellhub.github.neteasemusic.util.AccountUtils;
 import shellhub.github.neteasemusic.util.ConstantUtils;
+import shellhub.github.neteasemusic.util.TagUtils;
 
 public class MainModelImpl implements MainModel {
     private NetEaseMusicService mNetEaseMusicService;
-    private String TAG = MainModelImpl.class.getSimpleName();
+    private String TAG = TagUtils.getTag(this.getClass());
     public MainModelImpl(NetEaseMusicService mNetEaseMusicService) {
         this.mNetEaseMusicService = mNetEaseMusicService;
     }

@@ -24,12 +24,13 @@ import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 import shellhub.github.neteasemusic.util.MusicUtils;
+import shellhub.github.neteasemusic.util.TagUtils;
 
 @Data
 public class MusicMenuAdapter extends RecyclerView.Adapter<MusicMenuAdapter.MusicMenuViewHolder> {
 
+    private String TAG = TagUtils.getTag(this.getClass());
     private List<MusicMenu> musicMenus = new ArrayList<>();
-    private String TAG = MusicMenuAdapter.class.getSimpleName();
 
     private int[] musicMenuIcons = {
             R.drawable.ic_music,

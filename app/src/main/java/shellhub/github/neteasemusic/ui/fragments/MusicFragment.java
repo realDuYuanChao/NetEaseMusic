@@ -20,13 +20,14 @@ import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.MusicMenuAdapter;
 import shellhub.github.neteasemusic.model.entities.MusicMenuEvent;
+import shellhub.github.neteasemusic.util.TagUtils;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class MusicFragment extends Fragment {
 
-    private String TAG = MusicFragment.class.getSimpleName();
+    private String TAG = TagUtils.getTag(this.getClass());
     @BindView(R.id.rv_music_menu)
     RecyclerView rvMusicMenu;
     private static MusicMenuAdapter adapter;

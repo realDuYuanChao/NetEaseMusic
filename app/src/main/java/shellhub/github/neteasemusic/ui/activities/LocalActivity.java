@@ -21,11 +21,12 @@ import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.model.entities.SingleEvent;
 import shellhub.github.neteasemusic.presenter.LocalPresenter;
 import shellhub.github.neteasemusic.presenter.impl.LocalPresenterImpl;
+import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.LocalView;
 
 public class LocalActivity extends AppCompatActivity implements LocalView {
 
-    private String TAG = LocalActivity.class.getSimpleName();
+    private String TAG = TagUtils.getTag(this.getClass());
     @BindView(R.id.tl_local_category)
     TabLayout tlLocalCategory;
 

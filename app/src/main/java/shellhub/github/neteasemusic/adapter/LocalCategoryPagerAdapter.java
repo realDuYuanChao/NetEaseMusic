@@ -14,10 +14,11 @@ import shellhub.github.neteasemusic.ui.fragments.AlbumFragment;
 import shellhub.github.neteasemusic.ui.fragments.ArtistFragment;
 import shellhub.github.neteasemusic.ui.fragments.FolderFragment;
 import shellhub.github.neteasemusic.ui.fragments.SingleFragment;
+import shellhub.github.neteasemusic.util.TagUtils;
 
 public class LocalCategoryPagerAdapter extends FragmentPagerAdapter {
     private Context context;
-    private String TAG = LocalCategoryPagerAdapter.class.getSimpleName();
+    private String TAG = TagUtils.getTag(this.getClass());
     private List<Fragment> fragments = new ArrayList<>();
 
     public LocalCategoryPagerAdapter(FragmentManager fm, Context context) {
