@@ -12,5 +12,7 @@ public interface MainModel {
         void updateProfile(NavProfile navProfile);
 
         void updateDetail(DetailResponse detailResponse);
+
+        void showNetworkError();
     }
 }

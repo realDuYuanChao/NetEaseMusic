@@ -15,9 +15,9 @@ public class SingleModelImplTest {
     @Test
     public void load() {
         singleModel = new SingleModelImpl();
-        singleModel.load(new SingleModel.Callback() {
+        singleModel.loadSingle(new SingleModel.Callback() {
             @Override
-            public void load(List<Single> singles) {
+            public void loadSingle(List<Single> singles) {
                 System.out.println(singles.get(0).toString());
                 assertNotEquals(0, singles.size());
                 assertEquals(1, singles.size());

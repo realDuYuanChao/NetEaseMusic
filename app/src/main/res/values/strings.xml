@@ -34,4 +34,6 @@
     <string name="artist">Artist</string>
     <string name="album">Album</string>
     <string name="folder">Folder</string>
+    <string name="network_error">Network error</string>
+    <string name="songs">songs</string>
 </resources>

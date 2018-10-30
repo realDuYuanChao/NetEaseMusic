@@ -2,6 +2,8 @@ package shellhub.github.neteasemusic.model.impl;
 
 import android.os.Bundle;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import shellhub.github.neteasemusic.model.MainModel;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
 import shellhub.github.neteasemusic.model.entities.User;
@@ -14,7 +16,7 @@ import shellhub.github.neteasemusic.util.ConstantUtils;
 
 public class MainModelImpl implements MainModel {
     private NetEaseMusicService mNetEaseMusicService;
-
+    private String TAG = MainModelImpl.class.getSimpleName();
     public MainModelImpl(NetEaseMusicService mNetEaseMusicService) {
         this.mNetEaseMusicService = mNetEaseMusicService;
     }
@@ -41,6 +43,8 @@ public class MainModelImpl implements MainModel {
 
                 @Override
                 public void onError(Throwable e) {
+                    callback.showNetworkError();
+                    LogUtils.e(TAG, e.fillInStackTrace());
                 }
             });
         }
@@ -54,7 +58,8 @@ public class MainModelImpl implements MainModel {
 
             @Override
             public void onError(Throwable e) {
-
+                callback.showNetworkError();
+                LogUtils.e(TAG, e.fillInStackTrace());
             }
         });
     }

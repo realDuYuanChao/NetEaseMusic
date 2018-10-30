@@ -52,6 +52,11 @@ public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback,
     }
 
     @Override
+    public void showNetworkError() {
+        mainView.showNetworkError();
+    }
+
+    @Override
     public void loadedMusicMenu(List<MusicMenu> musicMenus) {
         mainView.updateMusicMenu(musicMenus);
     }

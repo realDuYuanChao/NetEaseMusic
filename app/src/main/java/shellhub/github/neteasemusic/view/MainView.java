@@ -27,4 +27,6 @@ public interface MainView extends BaseView {
 
     void navigateToFavorites();
 
+    void showNetworkError();
+
 }

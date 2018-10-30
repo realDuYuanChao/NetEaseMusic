@@ -1,6 +1,5 @@
 package shellhub.github.neteasemusic.model.impl;
 
-import android.content.ContentProvider;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -14,7 +13,7 @@ import shellhub.github.neteasemusic.model.entities.Single;
 
 public class SingleModelImpl implements SingleModel {
     @Override
-    public void load(Callback callback) {
+    public void loadSingle(Callback callback) {
         ArrayList<Single> singles = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String[] projection = null;
@@ -28,6 +27,6 @@ public class SingleModelImpl implements SingleModel {
             single.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
             singles.add(single);
         }
-        callback.load(singles);
+        callback.loadSingle(singles);
     }
 }

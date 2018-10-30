@@ -1,34 +1,41 @@
 package shellhub.github.neteasemusic.presenter.impl;
 
-import com.blankj.utilcode.util.LogUtils;
-
-import java.util.ArrayList;
 import java.util.List;
 
+import shellhub.github.neteasemusic.model.ArtistModel;
 import shellhub.github.neteasemusic.model.SingleModel;
+import shellhub.github.neteasemusic.model.entities.Artist;
 import shellhub.github.neteasemusic.model.entities.Single;
+import shellhub.github.neteasemusic.model.impl.ArtistModelImpl;
 import shellhub.github.neteasemusic.model.impl.SingleModelImpl;
 import shellhub.github.neteasemusic.presenter.LocalPresenter;
 import shellhub.github.neteasemusic.view.LocalView;
 
-public class LocalPresenterImpl implements LocalPresenter, SingleModel.Callback {
+public class LocalPresenterImpl implements LocalPresenter, ArtistModel.Callback, SingleModel.Callback{
     private String TAG = LocalPresenterImpl.class.getSimpleName();
     private LocalView mLocalView;
-    private SingleModel singleModel;
+    private SingleModel mSingleModel;
+    private ArtistModel mArtistModel;
 
     public LocalPresenterImpl(LocalView mLocalView) {
         this.mLocalView = mLocalView;
-        this.singleModel = new SingleModelImpl();
+        this.mSingleModel = new SingleModelImpl();
+        mArtistModel = new ArtistModelImpl();
     }
 
     @Override
     public void load() {
-        singleModel.load(this);
+        mSingleModel.loadSingle(this);
+        mArtistModel.loadArtist(this);
     }
 
     @Override
-    public void load(List<Single> singles) {
-        LogUtils.d(TAG, singles.toString() + "-----");
+    public void loadArtist(List<Artist> artists) {
+        mLocalView.loadArtist(artists);
+    }
+
+    @Override
+    public void loadSingle(List<Single> singles) {
         mLocalView.loadSingle(singles);
     }
 }

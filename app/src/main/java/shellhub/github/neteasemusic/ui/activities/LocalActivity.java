@@ -1,9 +1,9 @@
 package shellhub.github.neteasemusic.ui.activities;
 
 import android.os.Bundle;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.blankj.utilcode.util.LogUtils;
 
@@ -15,11 +15,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.LocalCategoryPagerAdapter;
+import shellhub.github.neteasemusic.model.entities.Artist;
+import shellhub.github.neteasemusic.model.entities.ArtistEvent;
 import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.model.entities.SingleEvent;
 import shellhub.github.neteasemusic.presenter.LocalPresenter;
 import shellhub.github.neteasemusic.presenter.impl.LocalPresenterImpl;
-import shellhub.github.neteasemusic.ui.fragments.SingleFragment;
 import shellhub.github.neteasemusic.view.LocalView;
 
 public class LocalActivity extends AppCompatActivity implements LocalView {
@@ -40,8 +41,15 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
         setContentView(R.layout.activity_local);
         ButterKnife.bind(this);
         vpLocalFiles.setAdapter(new LocalCategoryPagerAdapter(getSupportFragmentManager(), this));
+        LogUtils.d(TAG, "onCreate");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         tlLocalCategory.setupWithViewPager(vpLocalFiles);
         setUpMVP();
+
     }
 
     @Override
@@ -54,5 +62,11 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     public void loadSingle(List<Single> singles) {
         LogUtils.d(TAG, singles);
         EventBus.getDefault().post(new SingleEvent(singles));
+    }
+
+    @Override
+    public void loadArtist(List<Artist> artists) {
+        LogUtils.d(TAG, artists);
+        EventBus.getDefault().post(new ArtistEvent(artists));
     }
 }

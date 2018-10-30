@@ -1,12 +1,10 @@
 package shellhub.github.neteasemusic.adapter;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-
-import com.blankj.utilcode.util.LogUtils;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,19 +31,7 @@ public class LocalCategoryPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int i) {
-        switch (i) {
-            case 0:
-                LogUtils.d(TAG, SingleFragment.getInstance() == null);
-                fragments.get(0);
-                return SingleFragment.getInstance();
-            case 1:
-                return new ArtistFragment();
-            case 2:
-                return new AlbumFragment();
-            default:
-                return new FolderFragment();
-        }
-
+        return fragments.get(i);
     }
 
     @Override

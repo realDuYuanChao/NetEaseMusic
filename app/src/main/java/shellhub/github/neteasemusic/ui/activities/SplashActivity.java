@@ -2,8 +2,8 @@ package shellhub.github.neteasemusic.ui.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.presenter.SplashPresenter;

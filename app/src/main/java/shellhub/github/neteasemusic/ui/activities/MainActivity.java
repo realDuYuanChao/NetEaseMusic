@@ -3,11 +3,11 @@ package shellhub.github.neteasemusic.ui.activities;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
+import com.google.android.material.navigation.NavigationView;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -168,6 +169,14 @@ public class MainActivity extends BaseApp
     @Override
     public void navigateToFavorites() {
         ActivityUtils.startActivity(FavoritesActivity.class);
+    }
+
+    @Override
+    public void showNetworkError() {
+        ToastUtils.showLong(R.string.network_error);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, musicFragment = new MusicFragment())
+                .commit();
     }
 
     @Override

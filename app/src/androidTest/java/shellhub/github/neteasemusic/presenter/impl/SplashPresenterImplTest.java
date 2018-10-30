@@ -1,7 +1,7 @@
 package shellhub.github.neteasemusic.presenter.impl;
 
 import android.content.Context;
-import android.support.test.runner.AndroidJUnit4;
+import androidx.test.runner.AndroidJUnit4;
 
 import com.blankj.utilcode.util.SPUtils;
 
