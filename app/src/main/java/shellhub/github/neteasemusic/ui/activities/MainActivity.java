@@ -1,13 +1,24 @@
 package shellhub.github.neteasemusic.ui.activities;
 
+import android.Manifest;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+
 import com.google.android.material.navigation.NavigationView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.widget.Toolbar;
+
+import android.provider.Settings;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,6 +42,12 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 import shellhub.github.neteasemusic.BaseApp;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
@@ -44,6 +61,7 @@ import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.ui.fragments.MusicFragment;
 import shellhub.github.neteasemusic.view.MainView;
 
+@RuntimePermissions
 public class MainActivity extends BaseApp
         implements NavigationView.OnNavigationItemSelectedListener, MainView {
 
@@ -79,10 +97,9 @@ public class MainActivity extends BaseApp
         setTitle("");
 
         setUpNavHeader();
-        setUpMVP();
-
         receiveData = getIntent().getExtras();
-        mainPresenter.update(receiveData);
+        MainActivityPermissionsDispatcher.setUpMVPWithPermissionCheck(this);
+
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -110,7 +127,9 @@ public class MainActivity extends BaseApp
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMusicMenuEvent(MusicMenuIndexEvent event) {
         mainPresenter.musicMenuNavigate(event);
-    };
+    }
+
+    ;
 
     /**
      * px转换dip
@@ -133,7 +152,6 @@ public class MainActivity extends BaseApp
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -179,10 +197,61 @@ public class MainActivity extends BaseApp
                 .commit();
     }
 
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     @Override
     public void setUpMVP() {
+        Log.d(TAG, "setUpMVP: ");
         mainPresenter = new MainPresenterImpl(mNetEaseMusicService, this);
+        mainPresenter.update(receiveData);
     }
+
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void permissionRequest() {
+        Log.d(TAG, "setUpMVP: ");
+        mainPresenter = new MainPresenterImpl(mNetEaseMusicService, this);
+        mainPresenter.update(receiveData);
+    }
+
+    @OnShowRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void showRationForStorage(final PermissionRequest request) {
+        new AlertDialog.Builder(this)
+                .setMessage(R.string.permission_storage_ration)
+                .setNegativeButton(R.string.confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        request.proceed();
+                    }
+                })
+                .setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                }).show();
+    }
+
+    @OnPermissionDenied(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void showDeniedForStorage() {
+        //TODO
+        Intent intent = new Intent();
+        intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivity(intent);
+    }
+
+    @OnNeverAskAgain(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    void showNeverAskForStorage() {
+        //TODO
+        ToastUtils.showLong("You disable this feature");
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
 
     @Override
     public void updateNavProfile(final NavProfile navProfile) {

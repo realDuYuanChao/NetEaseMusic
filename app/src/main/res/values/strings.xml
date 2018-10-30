@@ -36,4 +36,7 @@
     <string name="folder">Folder</string>
     <string name="network_error">Network error</string>
     <string name="songs">songs</string>
+    <string name="permission_storage_ration">This app need Storage Permission. Some feature will not work if you DENY</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 </resources>
