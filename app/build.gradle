@@ -70,15 +70,15 @@ dependencies {
     //glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-    //circle iamgeview
+    //circle imageview
     implementation 'de.hdodenhof:circleimageview:2.2.0'
 
     //eventbus
     implementation 'org.greenrobot:eventbus:3.1.1'
 
     //PermissionsDispatcher
-//    implementation "com.github.hotchemi:permissionsdispatcher:4.0.0"
-//    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:4.0.0"
+    implementation "com.github.hotchemi:permissionsdispatcher:4.0.0"
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:4.0.0"
 
 
     testImplementation 'junit:junit:4.12'
