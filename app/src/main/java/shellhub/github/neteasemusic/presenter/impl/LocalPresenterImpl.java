@@ -31,6 +31,11 @@ public class LocalPresenterImpl implements LocalPresenter, ArtistModel.Callback,
     }
 
     @Override
+    public void query(String keyword) {
+        mSingleModel.query(keyword, this);
+    }
+
+    @Override
     public void loadArtist(List<Artist> artists) {
         mLocalView.loadArtist(artists);
     }
@@ -39,4 +44,5 @@ public class LocalPresenterImpl implements LocalPresenter, ArtistModel.Callback,
     public void loadSingle(List<Single> singles) {
         mLocalView.loadSingle(singles);
     }
+
 }

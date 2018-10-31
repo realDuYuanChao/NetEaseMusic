@@ -39,4 +39,5 @@
     <string name="permission_storage_ration">This app need Storage Permission. Some feature will not work if you DENY</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="searching_local_file">Searching local files</string>
 </resources>
