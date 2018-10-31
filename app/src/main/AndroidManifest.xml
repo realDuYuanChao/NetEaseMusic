@@ -56,6 +56,7 @@
             android:name=".ui.activities.FavoritesActivity"
             android:label="@string/favs"
             android:parentActivityName=".ui.activities.MainActivity" />
+        <activity android:name=".ui.activities.PlayActivity"></activity>
     </application>
 
 </manifest>

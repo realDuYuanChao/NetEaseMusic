@@ -7,4 +7,6 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="icon_text_padding">8dp</dimen>
     <dimen name="smaller">10sp</dimen>
+    <dimen name="small_controller">30dp</dimen>
+    <dimen name="big_controller">50dp</dimen>
 </resources>

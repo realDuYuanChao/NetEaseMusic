@@ -40,4 +40,5 @@
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
     <string name="searching_local_file">Searching local files</string>
+    <string name="share">Share</string>
 </resources>
