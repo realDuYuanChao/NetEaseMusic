@@ -15,59 +15,59 @@
         android:layout_marginLeft="32dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/imageView3"
+        app:layout_constraintEnd_toStartOf="@+id/iv_previous"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/ic_shuffle_white" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/iv_previous"
         android:layout_width="@dimen/small_controller"
         android:layout_height="@dimen/small_controller"
         app:layout_constraintBottom_toBottomOf="@+id/iv_play_type"
-        app:layout_constraintEnd_toStartOf="@+id/imageView4"
+        app:layout_constraintEnd_toStartOf="@+id/iv_play_pause"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/iv_play_type"
         app:layout_constraintTop_toTopOf="@+id/iv_play_type"
         app:srcCompat="@drawable/previous" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/iv_play_pause"
         android:layout_width="@dimen/big_controller"
         android:layout_height="@dimen/big_controller"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-        app:layout_constraintEnd_toStartOf="@+id/imageView5"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_previous"
+        app:layout_constraintEnd_toStartOf="@+id/iv_next"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toTopOf="@+id/imageView3"
+        app:layout_constraintStart_toEndOf="@+id/iv_previous"
+        app:layout_constraintTop_toTopOf="@+id/iv_previous"
         app:srcCompat="@drawable/note_btn_pause_white" />
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/iv_next"
         android:layout_width="@dimen/small_controller"
         android:layout_height="@dimen/small_controller"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-        app:layout_constraintEnd_toStartOf="@+id/imageView6"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_play_pause"
+        app:layout_constraintEnd_toStartOf="@+id/iv_playlist"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
-        app:layout_constraintTop_toTopOf="@+id/imageView4"
+        app:layout_constraintStart_toEndOf="@+id/iv_play_pause"
+        app:layout_constraintTop_toTopOf="@+id/iv_play_pause"
         app:srcCompat="@drawable/next" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/iv_playlist"
         android:layout_width="@dimen/small_controller"
         android:layout_height="@dimen/small_controller"
         android:layout_marginEnd="@dimen/small_controller"
         android:layout_marginRight="32dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@+id/iv_next"
+        app:layout_constraintTop_toTopOf="@+id/iv_next"
         app:srcCompat="@drawable/playlist" />
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/tv_current_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -79,19 +79,19 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_total_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="05:32"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/progressBar2"
+        app:layout_constraintBottom_toBottomOf="@+id/pb_play"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/progressBar2" />
+        app:layout_constraintTop_toTopOf="@+id/pb_play" />
 
     <ProgressBar
-        android:id="@+id/progressBar2"
+        android:id="@+id/pb_play"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="265dp"
         android:layout_height="wrap_content"
@@ -99,56 +99,56 @@
         android:layout_marginLeft="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView"
-        app:layout_constraintEnd_toStartOf="@+id/textView2"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="@+id/textView" />
+        app:layout_constraintBottom_toBottomOf="@+id/tv_current_time"
+        app:layout_constraintEnd_toStartOf="@+id/tv_total_time"
+        app:layout_constraintStart_toEndOf="@+id/tv_current_time"
+        app:layout_constraintTop_toTopOf="@+id/tv_current_time" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/iv_favorite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
         android:layout_marginLeft="64dp"
         android:layout_marginBottom="32dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView"
-        app:layout_constraintEnd_toStartOf="@+id/imageView9"
+        app:layout_constraintBottom_toTopOf="@+id/tv_current_time"
+        app:layout_constraintEnd_toStartOf="@+id/iv_download"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/favorite" />
 
     <ImageView
-        android:id="@+id/imageView9"
+        android:id="@+id/iv_download"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView8"
-        app:layout_constraintEnd_toStartOf="@+id/imageView10"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_favorite"
+        app:layout_constraintEnd_toStartOf="@+id/iv_comment"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView8"
-        app:layout_constraintTop_toTopOf="@+id/imageView8"
+        app:layout_constraintStart_toEndOf="@+id/iv_favorite"
+        app:layout_constraintTop_toTopOf="@+id/iv_favorite"
         app:srcCompat="@drawable/ic_download_black" />
 
     <ImageView
-        android:id="@+id/imageView10"
+        android:id="@+id/iv_comment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView9"
-        app:layout_constraintEnd_toStartOf="@+id/imageView11"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_download"
+        app:layout_constraintEnd_toStartOf="@+id/iv_menu"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView9"
-        app:layout_constraintTop_toTopOf="@+id/imageView9"
+        app:layout_constraintStart_toEndOf="@+id/iv_download"
+        app:layout_constraintTop_toTopOf="@+id/iv_download"
         app:srcCompat="@drawable/ic_comment_white" />
 
     <ImageView
-        android:id="@+id/imageView11"
+        android:id="@+id/iv_menu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="64dp"
         android:layout_marginRight="64dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView10"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_comment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/imageView10"
-        app:layout_constraintTop_toTopOf="@+id/imageView10"
+        app:layout_constraintStart_toEndOf="@+id/iv_comment"
+        app:layout_constraintTop_toTopOf="@+id/iv_comment"
         app:srcCompat="@drawable/ic_pop_menu" />
 </androidx.constraintlayout.widget.ConstraintLayout>
