@@ -5,8 +5,10 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
+import shellhub.github.neteasemusic.response.search.SearchResponse;
 
 public class NetEaseMusicService {
     private NetEaseMusicAPI netEaseMusicAPI;
@@ -70,6 +72,57 @@ public class NetEaseMusicService {
                 });
     }
 
+    public void search(String keywords, final Callback callback) {
+        netEaseMusicAPI.search(keywords).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SearchResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(SearchResponse searchResponse) {
+                        callback.onSuccess(searchResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void comment(int id, final Callback callback) {
+        netEaseMusicAPI.comment(id).subscribeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<CommentResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(CommentResponse commentResponse) {
+                        callback.onSuccess(commentResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
 
     public interface Callback<T> {
         void onSuccess(T data);

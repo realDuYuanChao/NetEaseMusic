@@ -13,6 +13,7 @@
         android:layout_height="@dimen/small_controller"
         android:layout_marginStart="32dp"
         android:layout_marginLeft="32dp"
+        android:tint="@color/white"
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/iv_previous"
@@ -24,6 +25,7 @@
         android:id="@+id/iv_previous"
         android:layout_width="@dimen/small_controller"
         android:layout_height="@dimen/small_controller"
+        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/iv_play_type"
         app:layout_constraintEnd_toStartOf="@+id/iv_play_pause"
         app:layout_constraintHorizontal_bias="0.5"
@@ -35,6 +37,7 @@
         android:id="@+id/iv_play_pause"
         android:layout_width="@dimen/big_controller"
         android:layout_height="@dimen/big_controller"
+        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/iv_previous"
         app:layout_constraintEnd_toStartOf="@+id/iv_next"
         app:layout_constraintHorizontal_bias="0.5"
@@ -59,6 +62,7 @@
         android:layout_height="@dimen/small_controller"
         android:layout_marginEnd="@dimen/small_controller"
         android:layout_marginRight="32dp"
+        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/iv_next"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -86,19 +90,17 @@
         android:layout_marginRight="16dp"
         android:text="05:32"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/pb_play"
+        app:layout_constraintBottom_toBottomOf="@+id/sb_duration"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/pb_play" />
+        app:layout_constraintTop_toTopOf="@+id/sb_duration" />
 
-    <ProgressBar
-        android:id="@+id/pb_play"
+    <SeekBar
+        android:id="@+id/sb_duration"
         style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="265dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:max="100"
+        android:progressTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/tv_current_time"
         app:layout_constraintEnd_toStartOf="@+id/tv_total_time"
         app:layout_constraintStart_toEndOf="@+id/tv_current_time"
@@ -106,8 +108,8 @@
 
     <ImageView
         android:id="@+id/iv_favorite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/small_controller"
+        android:layout_height="@dimen/small_controller"
         android:layout_marginStart="64dp"
         android:layout_marginLeft="64dp"
         android:layout_marginBottom="32dp"
@@ -115,23 +117,25 @@
         app:layout_constraintEnd_toStartOf="@+id/iv_download"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/favorite" />
+        app:srcCompat="@drawable/favorite_red" />
 
     <ImageView
         android:id="@+id/iv_download"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/small_controller"
+        android:layout_height="@dimen/small_controller"
+        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/iv_favorite"
         app:layout_constraintEnd_toStartOf="@+id/iv_comment"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/iv_favorite"
         app:layout_constraintTop_toTopOf="@+id/iv_favorite"
-        app:srcCompat="@drawable/ic_download_black" />
+        app:srcCompat="@drawable/downloaded" />
 
     <ImageView
         android:id="@+id/iv_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/small_controller"
+        android:layout_height="@dimen/small_controller"
+        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/iv_download"
         app:layout_constraintEnd_toStartOf="@+id/iv_menu"
         app:layout_constraintHorizontal_bias="0.5"
@@ -141,10 +145,11 @@
 
     <ImageView
         android:id="@+id/iv_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/small_controller"
+        android:layout_height="@dimen/small_controller"
         android:layout_marginEnd="64dp"
         android:layout_marginRight="64dp"
+        android:tint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/iv_comment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

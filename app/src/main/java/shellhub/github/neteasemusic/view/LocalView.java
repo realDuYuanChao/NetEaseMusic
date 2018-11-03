@@ -10,4 +10,6 @@ public interface LocalView extends BaseView{
     void loadSingle(List<Single> singles);
 
     void loadArtist(List<Artist> artists);
+
+    void navigatePlay(String data);
 }

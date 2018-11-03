@@ -9,6 +9,8 @@ public class ConstantUtils {
     public final static String BASE_URL = "http://192.168.199.191:3000";
     public final static String CELLPHONE_API = "/login/cellphone";
     public final static String USER_DETAIL_API = "/user/detail";
+    public final static String SEARCH_API = "/search";
+    public final static String COMMENT_API = "/comment/music";
 
 
     /**
@@ -30,5 +32,27 @@ public class ConstantUtils {
     public final static String SP_LOGIN_USER_UID_KEY = "uid";
     public final static String SP_LOGIN_USER_USERNAME_KEY = "username";
     public final static String SP_LOGIN_USER_PASSWORD_KEY = "password";
+
+    /**
+     * message deliver key
+     */
+    public final static String MUSIC_URI_KEY = "shellhub.github.neteasemusic_music_uri";
+
+    /**
+     * Music Player Action Command
+     */
+    public static final String ACTION_PLAY = "shellhub.github.neteasemusic.ACTION_PLAY";
+    public static final String ACTION_PAUSE = "shellhub.github.neteasemusic.ACTION_PAUSE";
+    public static final String ACTION_PREVIOUS = "shellhub.github.neteasemusic.ACTION_PREVIOUS";
+    public static final String ACTION_NEXT = "shellhub.github.neteasemusic.ACTION_NEXT";
+    public static final String ACTION_STOP = "shellhub.github.neteasemusic.ACTION_STOP";
+    public static final String ACTION_DOWNLOAD = "shellhub.github.neteasemusic.ACTION_DOWNLOAD";
+
+    /**
+     * Duration Constant
+     */
+    public static final int ONE_HOUR = 60 * 60 * 1000;
+    public static final int ONE_MINUTE = 60 * 1000;
+    public static final int ONE_SECOND = 1000;
 
 }

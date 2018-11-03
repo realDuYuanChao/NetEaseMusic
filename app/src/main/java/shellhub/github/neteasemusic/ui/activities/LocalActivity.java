@@ -10,6 +10,8 @@ import com.blankj.utilcode.util.LogUtils;
 import com.google.android.material.tabs.TabLayout;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -26,6 +28,7 @@ import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.model.entities.SingleEvent;
 import shellhub.github.neteasemusic.presenter.LocalPresenter;
 import shellhub.github.neteasemusic.presenter.impl.LocalPresenterImpl;
+import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.LocalView;
 
@@ -53,6 +56,9 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     @Override
     protected void onStart() {
         super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         tlLocalCategory.setupWithViewPager(vpLocalFiles);
         setUpMVP();
 
@@ -103,5 +109,18 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     public void loadArtist(List<Artist> artists) {
         LogUtils.d(TAG, artists);
         EventBus.getDefault().post(new ArtistEvent(artists));
+    }
+
+    @Override
+    public void navigatePlay(String data) {
+        Intent intent = new Intent(this, PlayActivity.class);
+        intent.putExtra(ConstantUtils.MUSIC_URI_KEY, data);
+        startActivity(intent);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSingleEvent(Single single) {
+        LogUtils.d(TAG, single);
+        navigatePlay(single.getData());
     }
 }

@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +19,7 @@ import butterknife.ButterKnife;
 import lombok.Data;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.Single;
+import shellhub.github.neteasemusic.model.entities.SingleEvent;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 @Data
@@ -59,6 +62,11 @@ public class SingleAdapter extends RecyclerView.Adapter<SingleAdapter.SingleView
         public void bind(int index) {
             tvSingleTitle.setText(singles.get(index).getTitle());
             tvSingleArtist.setText(singles.get(index).getArtist());
+
+            itemView.setOnClickListener((view)->{
+                LogUtils.d(TAG, singles.get(index));
+                EventBus.getDefault().post(singles.get(index));
+            });
         }
     }
 }

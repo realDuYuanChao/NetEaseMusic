@@ -4,13 +4,13 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "shellhub.github.neteasemusic"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
         buildConfigField "int", "LIMIT", "100"
-        buildConfigField "String", "BASEURL", "\"http://192.168.43.51:3000\""
+        buildConfigField "String", "BASEURL", "\"http://192.168.23.1:3000\""
         buildConfigField "int", "CACHETIME", "432000" // 5days
 
         vectorDrawables.useSupportLibrary = true
@@ -23,67 +23,56 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-//    compileOptions {
-//        sourceCompatibility = '1.8'
-//        targetCompatibility = '1.8'
-//    }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-
     //butterknife
     implementation 'com.jakewharton:butterknife:9.0.0-rc1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
-
     //okhttp & retrofit & gson-convert
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.4.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
-
     //RXAndroid & RXJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.3'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
     //Gson for json
     implementation 'com.google.code.gson:gson:2.8.5'
-
     //util code
     implementation 'com.blankj:utilcode:1.21.1'
-
     //lombok
-    compileOnly 'org.projectlombok:lombok:1.18.2'
-    annotationProcessor 'org.projectlombok:lombok:1.18.2'
-
+    //    compileOnly 'org.projectlombok:lombok:1.16.22'
+    //    annotationProcessor 'org.projectlombok:lombok:1.16.22'
     //dagger
     implementation 'com.google.dagger:dagger:2.18'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.18'
     compileOnly 'javax.annotation:jsr250-api:1.0'
-
     //glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     //circle imageview
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-
     //eventbus
     implementation 'org.greenrobot:eventbus:3.1.1'
-
     //PermissionsDispatcher
-    implementation "com.github.hotchemi:permissionsdispatcher:4.0.0"
+    implementation 'com.github.hotchemi:permissionsdispatcher:4.0.0'
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:4.0.0"
-
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-
-
+    compileOnly files('libs/lombok-1.16.20.jar')
+    annotationProcessor files('libs/lombok-1.16.20.jar')
 }

@@ -20,5 +20,9 @@ public interface PlayView extends BaseView{
 
     void comment();
 
+    void menu();
+
+    void updateDuration(int duration);
+
     //TODO
 }

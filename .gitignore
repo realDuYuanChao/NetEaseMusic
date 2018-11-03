@@ -6,3 +6,6 @@
 /build
 /captures
 .externalNativeBuild
+app/src/main/res/raw/
+app/src/main/java/shellhub/github/neteasemusic/model/entities/SingleItemEvent.java
+app/libs/
