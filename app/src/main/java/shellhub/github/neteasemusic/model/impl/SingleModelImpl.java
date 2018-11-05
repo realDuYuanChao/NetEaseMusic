@@ -31,7 +31,9 @@ public class SingleModelImpl implements SingleModel {
             single.setData(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
             single.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)));
             single.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
-            singles.add(single);
+            if (!singles.contains(single)) {
+                singles.add(single);
+            }
         }
         callback.loadSingle(singles);
     }

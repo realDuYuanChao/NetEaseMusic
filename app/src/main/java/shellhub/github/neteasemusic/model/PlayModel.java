@@ -7,7 +7,7 @@ public interface PlayModel {
     void deal(View view, PlayCallback callback);
 
     interface PlayCallback{
-        void onPlayType();
+        void onPlayType(int resId);
 
         void onPrevious();
 

@@ -21,8 +21,8 @@ public class PlayPresenterImpl implements PlayPresenter,PlayModel.PlayCallback {
     }
 
     @Override
-    public void onPlayType() {
-        mPlayView.playMode();
+    public void onPlayType(int resId) {
+        mPlayView.playType(resId);
     }
 
     @Override

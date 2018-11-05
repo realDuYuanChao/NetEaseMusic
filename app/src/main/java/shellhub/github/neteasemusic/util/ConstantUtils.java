@@ -32,6 +32,8 @@ public class ConstantUtils {
     public final static String SP_LOGIN_USER_UID_KEY = "uid";
     public final static String SP_LOGIN_USER_USERNAME_KEY = "username";
     public final static String SP_LOGIN_USER_PASSWORD_KEY = "password";
+    public final static String SP_NET_EASE_MUSIC_SETTING = "shellhub.github.neteasemusic_sp_net_ease_music_setting";
+    public final static String SP_PLAY_TYPE_KEY = "play_type";
 
     /**
      * message deliver key
@@ -47,6 +49,14 @@ public class ConstantUtils {
     public static final String ACTION_NEXT = "shellhub.github.neteasemusic.ACTION_NEXT";
     public static final String ACTION_STOP = "shellhub.github.neteasemusic.ACTION_STOP";
     public static final String ACTION_DOWNLOAD = "shellhub.github.neteasemusic.ACTION_DOWNLOAD";
+
+    /**
+     * Music Player Play Type
+     */
+    public static final int PLAY_MODE_LOOP_ALL_CODE = 0;
+    public static final int PLAY_MODE_LOOP_SINGLE_CODE = 1;
+    public static final int PLAY_MODE_SHUFFLE_CODE = 2;
+
 
     /**
      * Duration Constant

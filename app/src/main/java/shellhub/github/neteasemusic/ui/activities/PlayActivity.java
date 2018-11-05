@@ -15,6 +15,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.bumptech.glide.Glide;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import shellhub.github.neteasemusic.presenter.impl.PlayPresenterImpl;
 import shellhub.github.neteasemusic.service.impl.MusicServiceImpl;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.MusicUtils;
+import shellhub.github.neteasemusic.util.NetEaseMusicApp;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.PlayView;
 
@@ -66,8 +68,6 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     @BindView(R.id.tv_total_time)
     TextView tvTotalTime;
 
-    private boolean serviceBound = false;
-    private MusicServiceImpl musicService;
     private PlayPresenter mPlayPresenter;
     private Handler mHandler = new Handler();
     private Runnable runnable;
@@ -79,29 +79,18 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
         setContentView(R.layout.activity_play);
         ButterKnife.bind(this);
         sbDuration.setOnSeekBarChangeListener(this);
+        initPlayTypeIcon();
         setUpMVP();
 
         LogUtils.d(TAG, getIntent().getStringExtra(ConstantUtils.MUSIC_URI_KEY));
-        playAudio(mMediaUrl = getIntent().getStringExtra(ConstantUtils.MUSIC_URI_KEY));
-//        playAudio("/storage/emulated/0/Music/Kestutis K - Another Day.mp3");
+        mMediaUrl = getIntent().getStringExtra(ConstantUtils.MUSIC_URI_KEY);
+        playAudio(mMediaUrl);
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mHandler.removeCallbacks(runnable);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putBoolean("ServiceState", serviceBound);
-        super.onSaveInstanceState(savedInstanceState);
-    }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        serviceBound = savedInstanceState.getBoolean("ServiceState");
     }
 
     @Override
@@ -124,40 +113,29 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
         MusicServiceImpl.MusicBinder binder = (MusicServiceImpl.MusicBinder) service;
-        musicService = binder.getMusicService();
-        serviceBound = true;
-        sbDuration.setMax(musicService.getDuration() / 1000);
-
-        PlayActivity.this.runOnUiThread(runnable = new Runnable() {
-            @Override
-            public void run() {
-                LogUtils.d(TAG, musicService.getCurrentPosition());
-                int mCurrentPosition = musicService.getCurrentPosition() / 1000;
-                sbDuration.setProgress(mCurrentPosition);
-                tvCurrentTime.setText(MusicUtils.formatDuration(musicService.getCurrentPosition()));
-                tvTotalTime.setText(MusicUtils.formatDuration(musicService.getDuration()));
-                mHandler.postDelayed(this, 1000);
-            }
-        });
+        NetEaseMusicApp.musicService = binder.getMusicService();
+        updateDuration();
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        serviceBound = false;
+        NetEaseMusicApp.musicService = null;
     }
 
     private void playAudio(String media) {
-        //Check is service is active
-        if (!serviceBound) {
+        if (NetEaseMusicApp.musicService == null) {
+            LogUtils.d(TAG, "service is not bound");
             Intent playerIntent = new Intent(this, MusicServiceImpl.class);
             playerIntent.putExtra("media", media);
             startService(playerIntent);
-            if (!serviceBound) {
-                bindService(playerIntent, this, Context.BIND_AUTO_CREATE);
-            }
+            bindService(playerIntent, this, Context.BIND_AUTO_CREATE);
         } else {
-            //Service is active
-            //Send media with BroadcastReceiver
+            LogUtils.d(TAG, "service is bound");
+            Intent intent = new Intent(ConstantUtils.ACTION_PLAY);
+            intent.putExtra("media", media);
+            sendBroadcast(intent);
+
+            updateDuration();
         }
     }
 
@@ -170,8 +148,8 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     }
 
     @Override
-    public void playMode() {
-
+    public void playType(int resId) {
+        Glide.with(this).load(resId).into(ivPlayType);
     }
 
     @Override
@@ -223,8 +201,33 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     }
 
     @Override
-    public void updateDuration(int duration) {
+    public void updateDuration() {
+        sbDuration.setMax(NetEaseMusicApp.musicService.getDuration() / 1000);
+        PlayActivity.this.runOnUiThread(runnable = new Runnable() {
+            @Override
+            public void run() {
+                int mCurrentPosition = NetEaseMusicApp.musicService.getCurrentPosition() / 1000;
+                sbDuration.setProgress(mCurrentPosition);
+                tvCurrentTime.setText(MusicUtils.formatDuration(NetEaseMusicApp.musicService.getCurrentPosition()));
+                tvTotalTime.setText(MusicUtils.formatDuration(NetEaseMusicApp.musicService.getDuration()));
+                mHandler.postDelayed(this, 1000);
+            }
+        });
+    }
 
+    @Override
+    public void initPlayTypeIcon() {
+        switch (SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING).getInt(ConstantUtils.SP_PLAY_TYPE_KEY, 0)) {
+            case ConstantUtils.PLAY_MODE_LOOP_ALL_CODE:
+                Glide.with(this).load(R.drawable.ic_loop_all_black).into(ivPlayType);
+                break;
+            case ConstantUtils.PLAY_MODE_LOOP_SINGLE_CODE:
+                Glide.with(this).load(R.drawable.loop_single_black).into(ivPlayType);
+                break;
+            case ConstantUtils.PLAY_MODE_SHUFFLE_CODE:
+                Glide.with(this).load(R.drawable.shuffle_black).into(ivPlayType);
+                break;
+        }
     }
 
     @Override
@@ -248,6 +251,6 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     public void onStopTrackingTouch(SeekBar seekBar) {
         LogUtils.d(TAG, "onStopTrackingTouch");
         mHandler.post(runnable);
-        musicService.seekTo(seekBar.getProgress() * 1000);
+        NetEaseMusicApp.musicService.seekTo(seekBar.getProgress() * 1000);
     }
 }

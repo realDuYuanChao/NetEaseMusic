@@ -2,7 +2,7 @@ package shellhub.github.neteasemusic.view;
 
 public interface PlayView extends BaseView{
 
-    void playMode();
+    void playType(int resId);
 
     void previous();
 
@@ -22,7 +22,8 @@ public interface PlayView extends BaseView{
 
     void menu();
 
-    void updateDuration(int duration);
+    void updateDuration();
 
+    void initPlayTypeIcon();
     //TODO
 }

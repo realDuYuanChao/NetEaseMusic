@@ -12,9 +12,17 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.StringUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
+import shellhub.github.neteasemusic.model.SingleModel;
+import shellhub.github.neteasemusic.model.entities.Single;
+import shellhub.github.neteasemusic.model.impl.SingleModelImpl;
 import shellhub.github.neteasemusic.service.MusicService;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
@@ -34,6 +42,9 @@ public class MusicServiceImpl extends Service implements MusicService,
     private String mMusicUrl;
     private int resumePosition;
     private AudioManager audioManager;
+
+    private List<Single> localSingles = new ArrayList<>();
+    private List<Single> networkMusics = new ArrayList<>();
 
     public MusicServiceImpl() {
     }
@@ -141,17 +152,21 @@ public class MusicServiceImpl extends Service implements MusicService,
 
         if (mMusicUrl != null && mMusicUrl != "")
             initMediaPlayer();
+
+        new Thread(()->{
+            new SingleModelImpl().loadSingle(singles -> localSingles = singles);
+        }).start();
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        removeAudioFocus();
         if (mPlayer != null) {
             stopMedia();
             mPlayer.release();
         }
-        removeAudioFocus();
     }
 
     @Override
@@ -172,6 +187,65 @@ public class MusicServiceImpl extends Service implements MusicService,
             mPlayer.pause();
         }
         resumeMedia();
+    }
+
+    @Override
+    public Single next() {
+        switch (SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING).getInt(ConstantUtils.SP_PLAY_TYPE_KEY, 0)) {
+            case ConstantUtils.PLAY_MODE_LOOP_ALL_CODE:
+                for (int i = 0; i < localSingles.size(); i++) {
+                    if (localSingles.get(i).getData().equals(mMusicUrl)) {
+                        if (i == localSingles.size() - 1) {
+                            return localSingles.get(0);
+                        }else {
+                            return localSingles.get(i + 1);
+                        }
+                    }
+                }
+                break;
+            case ConstantUtils.PLAY_MODE_LOOP_SINGLE_CODE:
+                for (Single single : localSingles) {
+                    if (single.getData().equals(mMusicUrl)) {
+                        //this is slow
+                        //TODO
+                        return single;
+                    }
+                }
+                break;
+            case ConstantUtils.PLAY_MODE_SHUFFLE_CODE:
+                return localSingles.get(new Random().nextInt(localSingles.size()));
+        }
+        return null;
+    }
+
+
+    @Override
+    public Single previous() {
+        switch (SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING).getInt(ConstantUtils.SP_PLAY_TYPE_KEY, 0)) {
+            case ConstantUtils.PLAY_MODE_LOOP_ALL_CODE:
+                for (int i = 0; i < localSingles.size(); i++) {
+                    if (localSingles.get(i).getData().equals(mMusicUrl)) {
+                        if (i == 0) {
+                            return localSingles.get(localSingles.size() - 1);
+                        }else {
+                            return localSingles.get(i - 1);
+                        }
+                    }
+                }
+                break;
+            case ConstantUtils.PLAY_MODE_LOOP_SINGLE_CODE:
+                for (Single single : localSingles) {
+                    if (single.getData().equals(mMusicUrl)) {
+                        //this is slow
+                        //TODO
+                        return single;
+                    }
+                }
+                break;
+            case ConstantUtils.PLAY_MODE_SHUFFLE_CODE:
+                return localSingles.get(new Random().nextInt(localSingles.size()));
+        }
+        return null;
     }
 
     public class MusicBinder extends Binder {
@@ -206,6 +280,7 @@ public class MusicServiceImpl extends Service implements MusicService,
 
     private void playMedia() {
         if (!mPlayer.isPlaying()) {
+            LogUtils.d(TAG, "start");
             mPlayer.start();
         }
     }
@@ -268,14 +343,30 @@ public class MusicServiceImpl extends Service implements MusicService,
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case ConstantUtils.ACTION_PREVIOUS:
+                    mMusicUrl = previous().getData();
+                    stopMedia();
+                    LogUtils.d(TAG, "NEW MUSIC");
+                    initMediaPlayer();
                     break;
                 case ConstantUtils.ACTION_PLAY:
+                    String newMediaUrl = intent.getStringExtra("media");
+                    if (!StringUtils.isEmpty(newMediaUrl)) {
+                        stopMedia();
+                        LogUtils.d(TAG, "NEW MUSIC");
+                        mMusicUrl = newMediaUrl;
+                        initMediaPlayer();
+                        break;
+                    }
                     playMedia();
                     break;
                 case ConstantUtils.ACTION_PAUSE:
                     pauseMedia();
                     break;
                 case ConstantUtils.ACTION_NEXT:
+                    mMusicUrl = next().getData();
+                    stopMedia();
+                    LogUtils.d(TAG, "NEW MUSIC");
+                    initMediaPlayer();
                     break;
             }
             LogUtils.d(TAG, intent.getAction());
