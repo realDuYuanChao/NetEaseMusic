@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -97,6 +98,9 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     public void setUpMVP() {
         mLocalPresenter = new LocalPresenterImpl(this);
         mLocalPresenter.load();
+        new Handler().postDelayed(() -> {
+            mLocalPresenter.load();
+        }, 100);
     }
 
     @Override
