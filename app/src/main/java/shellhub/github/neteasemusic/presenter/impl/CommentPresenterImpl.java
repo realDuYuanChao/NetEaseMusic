@@ -32,7 +32,7 @@ public class CommentPresenterImpl implements CommentPresenter, CommentModel.Call
 
     @Override
     public void onLoaded(CommentResponse commentResponse) {
-
+        mCommentView.onLoaded(commentResponse.getComments());
     }
 
     @Override

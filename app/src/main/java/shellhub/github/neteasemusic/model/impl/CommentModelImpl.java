@@ -24,6 +24,7 @@ public class CommentModelImpl implements CommentModel {
             @Override
             public void onSuccess(CommentResponse data) {
                 LogUtils.d(TAG, data);
+                callback.onLoaded(data);
             }
 
             @Override

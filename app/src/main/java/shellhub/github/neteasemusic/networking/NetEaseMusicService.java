@@ -100,7 +100,7 @@ public class NetEaseMusicService {
 
     public void comment(int id, final Callback callback) {
         netEaseMusicAPI.comment(id).subscribeOn(Schedulers.io())
-                .subscribeOn(AndroidSchedulers.mainThread())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<CommentResponse>() {
                     @Override
                     public void onSubscribe(Disposable d) {
