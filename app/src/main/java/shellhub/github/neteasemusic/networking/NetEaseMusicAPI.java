@@ -21,4 +21,7 @@ public interface NetEaseMusicAPI {
 
     @GET(ConstantUtils.COMMENT_API)
     Observable<CommentResponse> comment(@Query("id") int id);
+
+    @GET(ConstantUtils.COMMENT_API)
+    Observable<CommentResponse> comment(@Query("id") int id, @Query(value = "limit") int limit);
 }

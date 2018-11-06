@@ -23,6 +23,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.LocalCategoryPagerAdapter;
+import shellhub.github.neteasemusic.model.entities.Album;
+import shellhub.github.neteasemusic.model.entities.AlbumEvent;
 import shellhub.github.neteasemusic.model.entities.Artist;
 import shellhub.github.neteasemusic.model.entities.ArtistEvent;
 import shellhub.github.neteasemusic.model.entities.Single;
@@ -100,7 +102,7 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
         mLocalPresenter.load();
         new Handler().postDelayed(() -> {
             mLocalPresenter.load();
-        }, 100);
+        }, 500);
     }
 
     @Override
@@ -113,6 +115,12 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     public void loadArtist(List<Artist> artists) {
         LogUtils.d(TAG, artists);
         EventBus.getDefault().post(new ArtistEvent(artists));
+    }
+
+    @Override
+    public void loadAlbum(List<Album> albums) {
+        LogUtils.d(TAG, albums);
+        EventBus.getDefault().post(new AlbumEvent(albums));
     }
 
     @Override
