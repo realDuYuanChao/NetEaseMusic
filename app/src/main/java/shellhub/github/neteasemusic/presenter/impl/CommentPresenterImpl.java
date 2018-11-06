@@ -1,7 +1,8 @@
 package shellhub.github.neteasemusic.presenter.impl;
 
-import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.Utils;
 
+import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.CommentModel;
 import shellhub.github.neteasemusic.model.impl.CommentModelImpl;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
@@ -28,15 +29,19 @@ public class CommentPresenterImpl implements CommentPresenter, CommentModel.Call
     @Override
     public void loadComment(int id) {
         mCommentModel.loadComment(id, this);
+        mCommentView.showProgress();
     }
 
     @Override
     public void onLoaded(CommentResponse commentResponse) {
-        mCommentView.onLoaded(commentResponse.getComments());
+        String title = Utils.getApp().getResources().getString(R.string.commment) + "(" + commentResponse.getTotal() + ")";
+        mCommentView.updateTitle(title);
+        mCommentView.onLoaded(commentResponse);
+        mCommentView.hideProgress();
     }
 
     @Override
     public void onFailed() {
-
+        mCommentView.hideProgress();
     }
 }

@@ -1,12 +1,13 @@
 package shellhub.github.neteasemusic.response.comment;
 
-import java.util.List;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 import lombok.Data;
 
 @Data
-public class HotCommentsItem{
+public class Comment {
 
 	@SerializedName("beReplied")
 	private List<Object> beReplied;

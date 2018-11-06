@@ -19,10 +19,10 @@ public class CommentResponse{
 	private int code;
 
 	@SerializedName("comments")
-	private List<CommentsItem> comments;
+	private List<Comment> comments;
 
 	@SerializedName("hotComments")
-	private List<HotCommentsItem> hotComments;
+	private List<Comment> hotComments;
 
 	@SerializedName("more")
 	private boolean more;

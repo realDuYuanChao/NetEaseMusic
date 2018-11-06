@@ -41,4 +41,7 @@
     <string name="confirm">Confirm</string>
     <string name="searching_local_file">Searching local files</string>
     <string name="share">Share</string>
+    <string name="top_comments">Top comments</string>
+    <string name="latest_comments">Latest comments</string>
+    <string name="commment">Comment</string>
 </resources>
