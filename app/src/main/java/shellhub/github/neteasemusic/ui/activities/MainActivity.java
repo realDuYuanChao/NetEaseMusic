@@ -1,6 +1,8 @@
 package shellhub.github.neteasemusic.ui.activities;
 
 import android.Manifest;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -9,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +20,7 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
+import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.SimpleTarget;
@@ -34,6 +38,7 @@ import javax.inject.Inject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -54,7 +59,9 @@ import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.MainPresenter;
 import shellhub.github.neteasemusic.presenter.impl.MainPresenterImpl;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
+import shellhub.github.neteasemusic.ui.fragments.MainFragment;
 import shellhub.github.neteasemusic.ui.fragments.MusicFragment;
+import shellhub.github.neteasemusic.ui.fragments.SingleFragment;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.MainView;
 
@@ -107,7 +114,7 @@ public class MainActivity extends BaseApp
         navigationView.setNavigationItemSelectedListener(this);
 
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_container, musicFragment = new MusicFragment())
+                .replace(R.id.main_container, new MainFragment())
                 .commit();
     }
 
@@ -278,4 +285,22 @@ public class MainActivity extends BaseApp
     public void updateMusicMenu(List<MusicMenu> musicMenus) {
         LogUtils.d(TAG, musicMenus);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_search:
+                ActivityUtils.startActivity(SearchActivity.class);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
 }

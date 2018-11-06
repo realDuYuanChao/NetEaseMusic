@@ -18,6 +18,7 @@ import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +45,9 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     @BindView(R.id.vp_local_files)
     ViewPager vpLocalFiles;
 
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+
     private LocalPresenter mLocalPresenter;
 
 
@@ -52,8 +56,15 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local);
         ButterKnife.bind(this);
+        initToolbar();
         vpLocalFiles.setAdapter(new LocalCategoryPagerAdapter(getSupportFragmentManager(), this));
         LogUtils.d(TAG, "onCreate");
+    }
+
+    private void initToolbar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     @Override
@@ -71,7 +82,7 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_local, menu);
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.action_local_search).getActionView();
+        SearchView searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
         searchView.setQueryHint(getResources().getString(R.string.searching_local_file));

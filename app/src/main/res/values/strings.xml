@@ -44,4 +44,5 @@
     <string name="top_comments">Top comments</string>
     <string name="latest_comments">Latest comments</string>
     <string name="commment">Comment</string>
+    <string name="search">Search</string>
 </resources>

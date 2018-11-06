@@ -55,7 +55,7 @@ public class MusicFragment extends Fragment {
     }
 
     private void setUp() {
-        LogUtils.d(TAG, "setUp");
+        LogUtils.d(TAG, "init");
         rvMusicMenu.setLayoutManager(new LinearLayoutManager(getContext()));
         rvMusicMenu.setAdapter(adapter = new MusicMenuAdapter());
     }
