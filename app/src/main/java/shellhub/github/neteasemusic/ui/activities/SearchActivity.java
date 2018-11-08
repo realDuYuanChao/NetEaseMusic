@@ -3,7 +3,6 @@ package shellhub.github.neteasemusic.ui.activities;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -51,6 +50,8 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
 
     private SearchPresenter mSearchPresenter;
 
+    private boolean isShowing = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +97,11 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
             @Override
             public boolean onQueryTextSubmit(String query) {
                 LogUtils.d(TAG, query);
-                return false;
+                showSearchResult();
+                mSearchPresenter.search(query);
+                mSearchPresenter.searchVideo(query);
+                mSearchPresenter.searchArtist(query);
+                return true;
             }
 
             @Override
@@ -105,7 +110,6 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
                 return true;
             }
         });
-
 
 
         return true;
@@ -118,7 +122,7 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
 
     @Override
     public void hideProgress() {
-        pbSearching.setVisibility(View.GONE);
+        pbSearching.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -147,7 +151,15 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     @Override
     public void showArtist(ArtistResponse artistResponse) {
         LogUtils.d(TAG, artistResponse);
-        new Handler().postDelayed(() -> EventBus.getDefault().post(artistResponse), 1000);
+        EventBus.getDefault().post(artistResponse);
+    }
+
+    @Override
+    public void showSearchResult() {
+        if (!isShowing) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.search_container, new SearchFragment()).commitAllowingStateLoss();
+            isShowing = true;
+        }
     }
 
     @Override
@@ -160,11 +172,9 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onHotClickEvent(Hot hot) {
         LogUtils.d(TAG, hot);
-//        searchView.setQuery(hot.getFirst(), false);
-        getSupportFragmentManager().beginTransaction().replace(R.id.search_container, new SearchFragment()).commitAllowingStateLoss();
+        showSearchResult();
         mSearchPresenter.search(hot.getFirst());
         mSearchPresenter.searchVideo(hot.getFirst());
-
-        new Handler().postDelayed(() -> mSearchPresenter.searchArtist(hot.getFirst()), 1000);
+        mSearchPresenter.searchArtist(hot.getFirst());
     }
 }

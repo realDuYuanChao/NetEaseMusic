@@ -23,6 +23,7 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
 
     @Override
     public void searchHot() {
+        mSearchView.showProgress();
         mSearchModel.searchHot(this);
     }
 
@@ -34,16 +35,19 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
 
     @Override
     public void searchVideo(String keyword) {
+        mSearchView.showProgress();
         mSearchModel.searchVideo(keyword, this);
     }
 
     @Override
     public void searchArtist(String keyword) {
+        mSearchView.showProgress();
         mSearchModel.searchArtist(keyword, this);
     }
 
     @Override
     public void onHotSuccess(HotResponse response) {
+        mSearchView.hideProgress();
         mSearchView.showHots(response);
     }
 
@@ -55,11 +59,13 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
 
     @Override
     public void onVideoSuccess(VideoResponse videoResponse) {
+        mSearchView.hideProgress();
         mSearchView.showVideos(videoResponse);
     }
 
     @Override
     public void onArtistSuccess(ArtistResponse artistResponse) {
+        mSearchView.hideProgress();
         mSearchView.showArtist(artistResponse);
     }
 

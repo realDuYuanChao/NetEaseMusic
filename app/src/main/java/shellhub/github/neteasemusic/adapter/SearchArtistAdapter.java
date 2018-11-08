@@ -1,5 +1,6 @@
 package shellhub.github.neteasemusic.adapter;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,7 +67,11 @@ public class SearchArtistAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void bind(int position) {
             Glide.with(itemView).load(artistsItems.get(position).getPicUrl()).into(ivArtistPic);
             tvArtistName.setText(artistsItems.get(position).getName());
-//            tvArtistAlias.setText(artistsItems.get(position).getAlia().get(0));
+            if (artistsItems.get(position).getAlia() != null) {
+                tvArtistAlias.setText("(" + artistsItems.get(position).getAlia().get(0) + ")");
+            }else{
+                tvArtistAlias.setText("");
+            }
         }
     }
 }

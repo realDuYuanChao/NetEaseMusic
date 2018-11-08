@@ -20,4 +20,6 @@ public interface SearchView extends BaseView {
     void showVideos(VideoResponse videoResponse);
 
     void showArtist(ArtistResponse artistResponse);
+
+    void showSearchResult();
 }
