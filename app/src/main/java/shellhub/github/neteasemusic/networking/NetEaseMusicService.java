@@ -1,6 +1,8 @@
 package shellhub.github.neteasemusic.networking;
 
 
+import com.blankj.utilcode.util.LogUtils;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -9,6 +11,7 @@ import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
+import shellhub.github.neteasemusic.response.search.hot.HotResponse;
 
 public class NetEaseMusicService {
     private NetEaseMusicAPI netEaseMusicAPI;
@@ -110,6 +113,34 @@ public class NetEaseMusicService {
                     @Override
                     public void onNext(CommentResponse commentResponse) {
                         callback.onSuccess(commentResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        callback.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void searchHot(final Callback callback) {
+        netEaseMusicAPI.searchHot().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<HotResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(HotResponse hotResponse) {
+                        if (hotResponse.getCode() == 200) {
+                            callback.onSuccess(hotResponse);
+                        }
                     }
 
                     @Override

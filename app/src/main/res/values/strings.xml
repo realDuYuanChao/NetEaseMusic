@@ -45,4 +45,6 @@
     <string name="latest_comments">Latest comments</string>
     <string name="commment">Comment</string>
     <string name="search">Search</string>
+    <string name="hot_search">Hot search</string>
+    <string name="history_record">历史纪录</string>
 </resources>

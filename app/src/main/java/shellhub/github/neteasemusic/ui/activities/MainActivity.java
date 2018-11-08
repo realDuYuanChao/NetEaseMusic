@@ -113,9 +113,10 @@ public class MainActivity extends BaseApp
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
 
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_container, new MainFragment())
-                .commit();
+    }
+
+    @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    public void init() {
     }
 
     @Override
@@ -204,6 +205,9 @@ public class MainActivity extends BaseApp
     @Override
     public void setUpMVP() {
         Log.d(TAG, "setUpMVP: ");
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.main_container, new MainFragment())
+                .commit();
         mainPresenter = new MainPresenterImpl(mNetEaseMusicService, this);
         mainPresenter.update(receiveData);
     }

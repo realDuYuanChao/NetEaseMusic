@@ -7,6 +7,7 @@ import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
+import shellhub.github.neteasemusic.response.search.hot.HotResponse;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 
 public interface NetEaseMusicAPI {
@@ -24,4 +25,7 @@ public interface NetEaseMusicAPI {
 
     @GET(ConstantUtils.COMMENT_API)
     Observable<CommentResponse> comment(@Query("id") int id, @Query(value = "limit") int limit);
+
+    @GET(ConstantUtils.SEARCH_HOT_API)
+    Observable<HotResponse> searchHot();
 }

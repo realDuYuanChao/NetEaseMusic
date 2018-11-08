@@ -11,6 +11,7 @@ public class ConstantUtils {
     public final static String USER_DETAIL_API = "/user/detail";
     public final static String SEARCH_API = "/search";
     public final static String COMMENT_API = "/comment/music";
+    public final static String SEARCH_HOT_API = "/search/hot";
 
 
     /**
