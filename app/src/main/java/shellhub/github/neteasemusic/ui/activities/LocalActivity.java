@@ -57,6 +57,7 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
         setContentView(R.layout.activity_local);
         ButterKnife.bind(this);
         initToolbar();
+        vpLocalFiles.setOffscreenPageLimit(4);
         vpLocalFiles.setAdapter(new LocalCategoryPagerAdapter(getSupportFragmentManager(), this));
         LogUtils.d(TAG, "onCreate");
     }
@@ -110,7 +111,6 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     @Override
     public void setUpMVP() {
         mLocalPresenter = new LocalPresenterImpl(this);
-        mLocalPresenter.load();
         new Handler().postDelayed(() -> {
             mLocalPresenter.load();
         }, 500);

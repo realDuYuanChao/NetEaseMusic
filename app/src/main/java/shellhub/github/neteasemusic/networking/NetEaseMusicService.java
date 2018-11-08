@@ -11,7 +11,9 @@ import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
+import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
+import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 
 public class NetEaseMusicService {
     private NetEaseMusicAPI netEaseMusicAPI;
@@ -146,6 +148,59 @@ public class NetEaseMusicService {
                     @Override
                     public void onError(Throwable e) {
                         callback.onError(e);
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void searchVideo(String keywords, Callback callback) {
+        netEaseMusicAPI.searchVideo(keywords).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<VideoResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(VideoResponse videoResponse) {
+                        callback.onSuccess(videoResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void searchArtist(String keyword, Callback callback) {
+        netEaseMusicAPI.searchArtist(keyword)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ArtistResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ArtistResponse artistResponse) {
+                        callback.onSuccess(artistResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
                     }
 
                     @Override

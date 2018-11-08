@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import shellhub.github.neteasemusic.R;
+import shellhub.github.neteasemusic.ui.fragments.ArtistSearchFragment;
 import shellhub.github.neteasemusic.ui.fragments.SingleSearchFragment;
+import shellhub.github.neteasemusic.ui.fragments.VideoSearchFragment;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 public class SearchCategoryAdapter extends FragmentPagerAdapter {
@@ -22,6 +24,13 @@ public class SearchCategoryAdapter extends FragmentPagerAdapter {
         super(fm);
         fragments.add(SingleSearchFragment.getInstance());
         categoryTitles.add(Utils.getApp().getResources().getString(R.string.single));
+
+        fragments.add(VideoSearchFragment.getInstance());
+        categoryTitles.add(Utils.getApp().getResources().getString(R.string.video));
+
+        fragments.add(ArtistSearchFragment.getInstance());
+        categoryTitles.add(Utils.getApp().getResources().getString(R.string.artist));
+
     }
 
     @Override

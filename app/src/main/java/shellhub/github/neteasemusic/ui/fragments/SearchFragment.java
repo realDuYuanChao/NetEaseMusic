@@ -47,6 +47,7 @@ public class SearchFragment extends Fragment {
     }
 
     private void setup(){
+        vpSearchCategory.setOffscreenPageLimit(3);
         vpSearchCategory.setAdapter(new SearchCategoryAdapter(getFragmentManager()));
         tbSearchCategory.setupWithViewPager(vpSearchCategory);
     }

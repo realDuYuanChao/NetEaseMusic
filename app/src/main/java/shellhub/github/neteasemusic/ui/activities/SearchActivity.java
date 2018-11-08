@@ -3,6 +3,7 @@ package shellhub.github.neteasemusic.ui.activities;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -26,8 +27,10 @@ import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.SearchPresenter;
 import shellhub.github.neteasemusic.presenter.impl.SearchPresenterImpl;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
+import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.Hot;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
+import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 import shellhub.github.neteasemusic.ui.fragments.HotFragment;
 import shellhub.github.neteasemusic.ui.fragments.SearchFragment;
 import shellhub.github.neteasemusic.util.TagUtils;
@@ -136,6 +139,18 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     }
 
     @Override
+    public void showVideos(VideoResponse videoResponse) {
+        LogUtils.d(TAG, videoResponse);
+        EventBus.getDefault().post(videoResponse);
+    }
+
+    @Override
+    public void showArtist(ArtistResponse artistResponse) {
+        LogUtils.d(TAG, artistResponse);
+        new Handler().postDelayed(() -> EventBus.getDefault().post(artistResponse), 1000);
+    }
+
+    @Override
     public void setUpMVP() {
         getSupportFragmentManager().beginTransaction().replace(R.id.search_container, new HotFragment()).commit();
         mSearchPresenter = new SearchPresenterImpl(this, mNetEaseMusicService);
@@ -146,7 +161,10 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     public void onHotClickEvent(Hot hot) {
         LogUtils.d(TAG, hot);
 //        searchView.setQuery(hot.getFirst(), false);
-        getSupportFragmentManager().beginTransaction().replace(R.id.search_container, new SearchFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.search_container, new SearchFragment()).commitAllowingStateLoss();
         mSearchPresenter.search(hot.getFirst());
+        mSearchPresenter.searchVideo(hot.getFirst());
+
+        new Handler().postDelayed(() -> mSearchPresenter.searchArtist(hot.getFirst()), 1000);
     }
 }

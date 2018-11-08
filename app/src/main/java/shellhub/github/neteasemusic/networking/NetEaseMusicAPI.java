@@ -7,7 +7,9 @@ import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
+import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
+import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 
 public interface NetEaseMusicAPI {
@@ -28,4 +30,10 @@ public interface NetEaseMusicAPI {
 
     @GET(ConstantUtils.SEARCH_HOT_API)
     Observable<HotResponse> searchHot();
+
+    @GET(ConstantUtils.SEARCH_API + "?type=1014")
+    Observable<VideoResponse> searchVideo(@Query("keywords") String keywords);
+
+    @GET(ConstantUtils.SEARCH_API + "?type=100")
+    Observable<ArtistResponse> searchArtist(@Query("keywords") String keyword);
 }

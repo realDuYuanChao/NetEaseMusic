@@ -5,7 +5,9 @@ import shellhub.github.neteasemusic.model.impl.SearchModelImpl;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.SearchPresenter;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
+import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
+import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 import shellhub.github.neteasemusic.view.SearchView;
 
 public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callback {
@@ -31,6 +33,16 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
     }
 
     @Override
+    public void searchVideo(String keyword) {
+        mSearchModel.searchVideo(keyword, this);
+    }
+
+    @Override
+    public void searchArtist(String keyword) {
+        mSearchModel.searchArtist(keyword, this);
+    }
+
+    @Override
     public void onHotSuccess(HotResponse response) {
         mSearchView.showHots(response);
     }
@@ -39,6 +51,16 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
     public void onKeywordSuccess(SearchResponse searchResponse) {
         mSearchView.hideProgress();
         mSearchView.showSearchResult(searchResponse);
+    }
+
+    @Override
+    public void onVideoSuccess(VideoResponse videoResponse) {
+        mSearchView.showVideos(videoResponse);
+    }
+
+    @Override
+    public void onArtistSuccess(ArtistResponse artistResponse) {
+        mSearchView.showArtist(artistResponse);
     }
 
     @Override
