@@ -2,6 +2,7 @@ package shellhub.github.neteasemusic.ui.activities;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -25,13 +26,16 @@ import shellhub.github.neteasemusic.model.entities.SearchHistory;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.SearchPresenter;
 import shellhub.github.neteasemusic.presenter.impl.SearchPresenterImpl;
+import shellhub.github.neteasemusic.response.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
+import shellhub.github.neteasemusic.response.search.SongsItem;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.Hot;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 import shellhub.github.neteasemusic.ui.fragments.HotFragment;
 import shellhub.github.neteasemusic.ui.fragments.SearchFragment;
+import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 public class SearchActivity extends BaseApp implements shellhub.github.neteasemusic.view.SearchView {
@@ -163,6 +167,14 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     }
 
     @Override
+    public void playSong(SongResponse songResponse) {
+        Intent intent = new Intent(this, PlayActivity.class);
+        intent.putExtra(ConstantUtils.MUSIC_URI_KEY, songResponse);
+//        intent.putExtra(ConstantUtils.MUSIC_URI_KEY, songResponse.getData().get(0).getUrl());
+        startActivity(intent);
+    }
+
+    @Override
     public void setUpMVP() {
         getSupportFragmentManager().beginTransaction().replace(R.id.search_container, new HotFragment()).commit();
         mSearchPresenter = new SearchPresenterImpl(this, mNetEaseMusicService);
@@ -176,5 +188,11 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
         mSearchPresenter.search(hot.getFirst());
         mSearchPresenter.searchVideo(hot.getFirst());
         mSearchPresenter.searchArtist(hot.getFirst());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onSearchSingleClickEvent(SongsItem songsItem) {
+        LogUtils.d(TAG, songsItem.getId());
+        mSearchPresenter.getSong(songsItem.getId());
     }
 }

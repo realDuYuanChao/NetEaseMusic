@@ -1,6 +1,7 @@
 package shellhub.github.neteasemusic.view;
 
 import shellhub.github.neteasemusic.model.entities.SearchHistory;
+import shellhub.github.neteasemusic.response.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
@@ -22,4 +23,6 @@ public interface SearchView extends BaseView {
     void showArtist(ArtistResponse artistResponse);
 
     void showSearchResult();
+
+    void playSong(SongResponse songResponse);
 }

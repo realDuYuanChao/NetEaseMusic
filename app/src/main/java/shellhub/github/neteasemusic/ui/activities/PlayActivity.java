@@ -25,6 +25,7 @@ import butterknife.OnClick;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.presenter.PlayPresenter;
 import shellhub.github.neteasemusic.presenter.impl.PlayPresenterImpl;
+import shellhub.github.neteasemusic.response.mp3.SongResponse;
 import shellhub.github.neteasemusic.service.impl.MusicServiceImpl;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.MusicUtils;
@@ -72,6 +73,8 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     private Handler mHandler = new Handler();
     private Runnable runnable;
     private String mMediaUrl;
+    private int songId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +85,13 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
         initPlayTypeIcon();
         setUpMVP();
 
-        LogUtils.d(TAG, getIntent().getStringExtra(ConstantUtils.MUSIC_URI_KEY));
-        mMediaUrl = getIntent().getStringExtra(ConstantUtils.MUSIC_URI_KEY);
+//        LogUtils.d(TAG, getIntent().getStringExtra(ConstantUtils.MUSIC_URI_KEY));
+//        mMediaUrl = getIntent().getStringExtra(ConstantUtils.MUSIC_URI_KEY);
+        SongResponse songResponse = (SongResponse) getIntent().getSerializableExtra(ConstantUtils.MUSIC_URI_KEY);
+        if (songResponse != null) {
+            songId = songResponse.getData().get(0).getId();
+            mMediaUrl = songResponse.getData().get(0).getUrl();
+        }
         playAudio(mMediaUrl);
     }
 
@@ -192,6 +200,7 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     @Override
     public void comment() {
         Intent intent = new Intent(this, CommentActivity.class);
+        intent.putExtra(ConstantUtils.MUSIC_ID_KEY, songId);
         startActivity(intent);
     }
 

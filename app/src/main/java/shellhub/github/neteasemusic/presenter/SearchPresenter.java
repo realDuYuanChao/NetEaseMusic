@@ -8,4 +8,6 @@ public interface SearchPresenter {
     void searchVideo(String keyword);
 
     void searchArtist(String keyword);
+
+    void getSong(int id);
 }

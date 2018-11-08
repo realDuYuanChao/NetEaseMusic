@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
@@ -64,6 +66,13 @@ public class SearchSingleAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public void bind(int position) {
             tvSearchSingleName.setText(songsItems.get(position).getName());
             tvSearchSingleArtistAlbum.setText(getArtistAndAlbum(songsItems.get(position)));
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    EventBus.getDefault().post(songsItems.get(position));
+                }
+            });
         }
     }
 

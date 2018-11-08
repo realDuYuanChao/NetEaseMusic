@@ -12,6 +12,7 @@ public class ConstantUtils {
     public final static String SEARCH_API = "/search";
     public final static String COMMENT_API = "/comment/music";
     public final static String SEARCH_HOT_API = "/search/hot";
+    public final static String SONG_URL_API = "/song/url";
 
 
     /**
@@ -40,6 +41,7 @@ public class ConstantUtils {
      * message deliver key
      */
     public final static String MUSIC_URI_KEY = "shellhub.github.neteasemusic_music_uri";
+    public final static String MUSIC_ID_KEY = "shellhub.github.neteasemusic_music_id_key";
 
     /**
      * Music Player Action Command

@@ -20,6 +20,7 @@ import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.CommentPresenter;
 import shellhub.github.neteasemusic.presenter.impl.CommentPresenterImpl;
 import shellhub.github.neteasemusic.response.comment.CommentResponse;
+import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.CommentView;
 
@@ -37,6 +38,8 @@ public class CommentActivity extends BaseApp implements CommentView {
     NetEaseMusicService mNetEaseMusicService;
 
     private CommentAdapter commentAdapter;
+
+    private int songId;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,7 @@ public class CommentActivity extends BaseApp implements CommentView {
         rvComment.setLayoutManager(new LinearLayoutManager(this));
         rvComment.setAdapter(commentAdapter= new CommentAdapter());
 
+        songId = getIntent().getIntExtra(ConstantUtils.MUSIC_ID_KEY, 0);
         setUpMVP();
     }
 
@@ -55,7 +59,7 @@ public class CommentActivity extends BaseApp implements CommentView {
     public void setUpMVP() {
         LogUtils.d(TAG, mNetEaseMusicService == null);
         mCommentPresenter = new CommentPresenterImpl(mNetEaseMusicService, this);
-        mCommentPresenter.loadComment(514055266);
+        mCommentPresenter.loadComment(songId);
     }
 
     @Override

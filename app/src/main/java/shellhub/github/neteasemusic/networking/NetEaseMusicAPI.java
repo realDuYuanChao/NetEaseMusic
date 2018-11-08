@@ -6,6 +6,7 @@ import retrofit2.http.Query;
 import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
+import shellhub.github.neteasemusic.response.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
@@ -36,4 +37,7 @@ public interface NetEaseMusicAPI {
 
     @GET(ConstantUtils.SEARCH_API + "?type=100")
     Observable<ArtistResponse> searchArtist(@Query("keywords") String keyword);
+
+    @GET(ConstantUtils.SONG_URL_API)
+    Observable<SongResponse> getSongUrl(@Query("id") int id);
 }
