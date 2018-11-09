@@ -201,6 +201,7 @@ public class MusicServiceImpl extends Service implements MusicService,
                     .setPriority(PRIORITY_MIN)
                     .setCategory(CATEGORY_SERVICE)
                     .build();
+
             startForeground(101, notification);
 
         }
@@ -363,7 +364,7 @@ public class MusicServiceImpl extends Service implements MusicService,
     }
 
     private void pauseMedia() {
-        if (mPlayer.isPlaying()) {
+        if (mPlayer != null && mPlayer.isPlaying()) {
             mPlayer.pause();
             resumePosition = mPlayer.getCurrentPosition();
         }

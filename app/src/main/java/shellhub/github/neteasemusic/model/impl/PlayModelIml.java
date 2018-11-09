@@ -82,6 +82,10 @@ public class PlayModelIml implements PlayModel {
 
     @Override
     public void getSongUrl(int id, PlayCallback callback) {
+        if (id == 0) {
+            //invalid id, do nothing
+            return;
+        }
         mNetEaseMusicService.getSongUrl(id, new NetEaseMusicService.Callback<SongResponse>(){
 
             @Override
@@ -98,6 +102,9 @@ public class PlayModelIml implements PlayModel {
 
     @Override
     public void getPicUrl(int id, PlayCallback callback) {
+        if (id == 0) {
+            return;
+        }
         mNetEaseMusicService.getSongDetail(id, new NetEaseMusicService.Callback<SongDetailResponse>(){
             @Override
             public void onSuccess(SongDetailResponse data) {

@@ -10,7 +10,7 @@ android {
         versionName "1.0"
 
         buildConfigField "int", "LIMIT", "100"
-        buildConfigField "String", "BASEURL", "\"http://192.168.23.7:3000\""
+        buildConfigField "String", "BASEURL", "\"http://192.168.199.192:3000\""
         buildConfigField "int", "CACHETIME", "432000" // 5days
 
         vectorDrawables.useSupportLibrary = true
