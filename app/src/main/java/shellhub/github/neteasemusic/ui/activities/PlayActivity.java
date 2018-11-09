@@ -293,7 +293,6 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         finish();
     }
 }
