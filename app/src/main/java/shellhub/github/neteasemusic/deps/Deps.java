@@ -7,6 +7,7 @@ import shellhub.github.neteasemusic.networking.NetworkModule;
 import shellhub.github.neteasemusic.ui.activities.CommentActivity;
 import shellhub.github.neteasemusic.ui.activities.LoginActivity;
 import shellhub.github.neteasemusic.ui.activities.MainActivity;
+import shellhub.github.neteasemusic.ui.activities.PlayActivity;
 import shellhub.github.neteasemusic.ui.activities.SearchActivity;
 
 @Singleton
@@ -19,4 +20,6 @@ public interface Deps {
     void inject(CommentActivity commentActivity);
 
     void inject(SearchActivity searchActivity);
+
+    void inject(PlayActivity playActivity);
 }

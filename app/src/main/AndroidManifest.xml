@@ -64,7 +64,7 @@
             android:label="@string/favs"
             android:parentActivityName=".ui.activities.MainActivity" />
         <activity
-            android:name=".ui.activities.PlayActivity">
+            android:name=".ui.activities.PlayActivity" android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

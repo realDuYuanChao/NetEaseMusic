@@ -8,6 +8,8 @@ public interface PlayView extends BaseView{
 
     void play();
 
+    void play(String audioUrl);
+
     void pause();
 
     void next();
@@ -25,5 +27,8 @@ public interface PlayView extends BaseView{
     void updateDuration();
 
     void initPlayTypeIcon();
+
+    void displayPic(String picUrl);
+
     //TODO
 }

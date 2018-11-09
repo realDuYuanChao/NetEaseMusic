@@ -4,20 +4,33 @@ import android.view.View;
 
 import shellhub.github.neteasemusic.model.PlayModel;
 import shellhub.github.neteasemusic.model.impl.PlayModelIml;
+import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.PlayPresenter;
 import shellhub.github.neteasemusic.view.PlayView;
 
 public class PlayPresenterImpl implements PlayPresenter,PlayModel.PlayCallback {
     PlayView mPlayView;
     PlayModel mPlayModel;
-    public PlayPresenterImpl(PlayView mPlayView) {
+    private NetEaseMusicService mNetEaseMusicService;
+    public PlayPresenterImpl(PlayView mPlayView, NetEaseMusicService netEaseMusicService) {
         this.mPlayView = mPlayView;
-        this.mPlayModel = new PlayModelIml();
+        this.mNetEaseMusicService = netEaseMusicService;
+        this.mPlayModel = new PlayModelIml(mNetEaseMusicService);
     }
 
     @Override
     public void executeClick(View view) {
         mPlayModel.deal(view, this);
+    }
+
+    @Override
+    public void getSongUrl(int id) {
+        mPlayModel.getSongUrl(id, this);
+    }
+
+    @Override
+    public void getSongPic(int id) {
+        mPlayModel.getPicUrl(id, this);
     }
 
     @Override
@@ -68,5 +81,15 @@ public class PlayPresenterImpl implements PlayPresenter,PlayModel.PlayCallback {
     @Override
     public void onMenu() {
         mPlayView.menu();
+    }
+
+    @Override
+    public void onSongUrl(String songUrl) {
+        mPlayView.play(songUrl);
+    }
+
+    @Override
+    public void onPicUrl(String picUrl) {
+        mPlayView.displayPic(picUrl);
     }
 }

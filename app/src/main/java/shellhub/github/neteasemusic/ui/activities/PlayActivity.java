@@ -4,6 +4,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -19,22 +22,30 @@ import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.bumptech.glide.Glide;
 
-import androidx.appcompat.app.AppCompatActivity;
+import java.io.IOException;
+import java.net.URL;
+
+import javax.inject.Inject;
+
+import androidx.palette.graphics.Palette;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import shellhub.github.neteasemusic.BaseApp;
 import shellhub.github.neteasemusic.R;
+import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.PlayPresenter;
 import shellhub.github.neteasemusic.presenter.impl.PlayPresenterImpl;
-import shellhub.github.neteasemusic.response.mp3.SongResponse;
+import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.service.MusicService;
 import shellhub.github.neteasemusic.service.impl.MusicServiceImpl;
+import shellhub.github.neteasemusic.util.ActivityUtils;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.PlayView;
 
-public class PlayActivity extends AppCompatActivity implements PlayView, ServiceConnection, SeekBar.OnSeekBarChangeListener {
+public class PlayActivity extends BaseApp implements PlayView, ServiceConnection, SeekBar.OnSeekBarChangeListener {
     private String TAG = TagUtils.getTag(this.getClass());
 
     @BindView(R.id.iv_play_type)
@@ -70,6 +81,9 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     @BindView(R.id.tv_total_time)
     TextView tvTotalTime;
 
+    @BindView(R.id.iv_song_pic)
+    ImageView ivSongPic;
+
     private PlayPresenter mPlayPresenter;
     private Handler mHandler = new Handler();
 
@@ -92,10 +106,16 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     private MusicService mMusicService;
     private boolean mBound = false;
 
+    View view;
+
+    @Inject
+    NetEaseMusicService mNetEaseMusicService;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getDeps().inject(this);
+        ActivityUtils.requestFullScreen(this, true);
         LogUtils.d(TAG, "onCreate");
         setContentView(R.layout.activity_play);
         ButterKnife.bind(this);
@@ -109,6 +129,8 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
             LogUtils.d(TAG, songResponse.getData().get(0).getUrl());
             mMediaUrl = songResponse.getData().get(0).getUrl();
         }
+
+        view = findViewById(R.id.bg_layout);
     }
 
     @Override
@@ -119,6 +141,8 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
         if (!mBound) {
             bindService(intent, this, Context.BIND_AUTO_CREATE);
         }
+
+        mPlayPresenter.getSongPic(songId);
     }
 
     @Override
@@ -139,7 +163,6 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     @Override
     protected void onDestroy() {
         super.onDestroy();
-//        unbindService(this);
     }
 
     @Override
@@ -209,6 +232,11 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     }
 
     @Override
+    public void play(String audioUrl) {
+        //TODO
+    }
+
+    @Override
     public void pause() {
         Glide.with(this).load(R.drawable.note_btn_play_white).into(ivPlayPause);
         sendBroadcast(new Intent(ConstantUtils.ACTION_PAUSE));
@@ -268,8 +296,56 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     }
 
     @Override
+    public void displayPic(String picUrl) {
+        Glide.with(this).load(picUrl).into(ivSongPic);
+        new Thread(()->{
+            Uri imageUri = Uri.parse(picUrl);
+            Bitmap bitmap = null;
+            try {
+                bitmap = BitmapFactory.decodeStream(new URL(picUrl).openConnection().getInputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            new Palette.Builder(bitmap).generate(new Palette.PaletteAsyncListener() {
+                @Override
+                public void onGenerated(Palette palette) {
+                    Palette.Swatch swatch = palette.getVibrantSwatch();
+                    if (swatch != null) {
+                        int color = swatch.getRgb();
+//                        itemHolder.footer.setBackgroundColor(color);
+//                        int textColor = TimberUtils.getBlackWhiteColor(swatch.getTitleTextColor());
+//                        itemHolder.title.setTextColor(textColor);
+//                        itemHolder.artist.setTextColor(textColor);
+                        runOnUiThread(()->{
+                            view.setBackgroundColor(color);
+                        });
+                    } else {
+                        Palette.Swatch mutedSwatch = palette.getMutedSwatch();
+                        if (mutedSwatch != null) {
+                            int color = mutedSwatch.getRgb();
+                            view.setBackgroundColor(color);
+//                            itemHolder.footer.setBackgroundColor(color);
+//                            int textColor = TimberUtils.getBlackWhiteColor(mutedSwatch.getTitleTextColor());
+//                            itemHolder.title.setTextColor(textColor);
+//                            itemHolder.artist.setTextColor(textColor);
+                            runOnUiThread(()->{
+                                view.setBackgroundColor(color);
+                            });
+                        }
+                    }
+
+
+                }
+            });
+
+
+        }).start();
+    }
+
+    @Override
     public void setUpMVP() {
-        mPlayPresenter = new PlayPresenterImpl(this);
+        mPlayPresenter = new PlayPresenterImpl(this, mNetEaseMusicService);
     }
 
     @Override

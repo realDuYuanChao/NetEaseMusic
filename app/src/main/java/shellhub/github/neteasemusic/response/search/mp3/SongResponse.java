@@ -1,4 +1,4 @@
-package shellhub.github.neteasemusic.response.mp3;
+package shellhub.github.neteasemusic.response.search.mp3;
 
 import java.io.Serializable;
 import java.util.List;

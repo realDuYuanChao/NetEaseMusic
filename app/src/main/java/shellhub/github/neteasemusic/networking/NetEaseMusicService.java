@@ -1,8 +1,6 @@
 package shellhub.github.neteasemusic.networking;
 
 
-import com.blankj.utilcode.util.LogUtils;
-
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -10,10 +8,11 @@ import io.reactivex.schedulers.Schedulers;
 import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
-import shellhub.github.neteasemusic.response.mp3.SongResponse;
+import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
+import shellhub.github.neteasemusic.response.search.song.detail.SongDetailResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 
 public class NetEaseMusicService {
@@ -224,6 +223,33 @@ public class NetEaseMusicService {
                     @Override
                     public void onNext(SongResponse songResponse) {
                         callback.onSuccess(songResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void getSongDetail(int ids, Callback callback) {
+        netEaseMusicAPI.getSongDetail(ids)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<SongDetailResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(SongDetailResponse songDetailResponse) {
+                        callback.onSuccess(songDetailResponse);
                     }
 
                     @Override

@@ -6,10 +6,11 @@ import shellhub.github.neteasemusic.model.impl.SearchModelImpl;
 import shellhub.github.neteasemusic.model.impl.SongModelImpl;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.SearchPresenter;
-import shellhub.github.neteasemusic.response.mp3.SongResponse;
+import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
+import shellhub.github.neteasemusic.response.search.song.detail.SongDetailResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 import shellhub.github.neteasemusic.view.SearchView;
 
@@ -88,6 +89,11 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
     @Override
     public void onSongSuccess(SongResponse songResponse) {
         mSearchView.playSong(songResponse);
+    }
+
+    @Override
+    public void onSongDetailSuccess(SongDetailResponse songDetailResponse) {
+
     }
 
     @Override

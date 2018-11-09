@@ -26,7 +26,7 @@ import shellhub.github.neteasemusic.model.entities.SearchHistory;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.SearchPresenter;
 import shellhub.github.neteasemusic.presenter.impl.SearchPresenterImpl;
-import shellhub.github.neteasemusic.response.mp3.SongResponse;
+import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.SongsItem;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
@@ -193,6 +193,7 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearchSingleClickEvent(SongsItem songsItem) {
         LogUtils.d(TAG, songsItem.getId());
+        LogUtils.d(TAG, songsItem.getAlbum().getPicId());
         mSearchPresenter.getSong(songsItem.getId());
     }
 }

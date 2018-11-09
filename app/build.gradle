@@ -4,13 +4,13 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "shellhub.github.neteasemusic"
-        minSdkVersion 16
+        minSdkVersion 24
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
 
         buildConfigField "int", "LIMIT", "100"
-        buildConfigField "String", "BASEURL", "\"http://192.168.23.1:3000\""
+        buildConfigField "String", "BASEURL", "\"http://192.168.23.7:3000\""
         buildConfigField "int", "CACHETIME", "432000" // 5days
 
         vectorDrawables.useSupportLibrary = true
@@ -70,9 +70,13 @@ dependencies {
     //PermissionsDispatcher
     implementation 'com.github.hotchemi:permissionsdispatcher:4.0.0'
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:4.0.0"
+    //flexbox
+    implementation 'com.google.android:flexbox:1.1.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     compileOnly files('libs/lombok-1.16.20.jar')
     annotationProcessor files('libs/lombok-1.16.20.jar')
+    implementation 'com.android.support:design:28.0.0'
+    implementation 'androidx.palette:palette:1.0.0'
 }

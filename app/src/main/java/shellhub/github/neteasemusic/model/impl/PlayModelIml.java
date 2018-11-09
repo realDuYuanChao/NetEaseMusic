@@ -8,11 +8,20 @@ import com.blankj.utilcode.util.SPUtils;
 
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.PlayModel;
+import shellhub.github.neteasemusic.networking.NetEaseMusicService;
+import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
+import shellhub.github.neteasemusic.response.search.song.detail.SongDetailResponse;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 public class PlayModelIml implements PlayModel {
     private String TAG = TagUtils.getTag(this.getClass());
+    private NetEaseMusicService mNetEaseMusicService;
+
+    public PlayModelIml(NetEaseMusicService mNetEaseMusicService) {
+        this.mNetEaseMusicService = mNetEaseMusicService;
+    }
+
     private boolean mPlaying = true;
     @Override
     public void deal(View view, PlayCallback callback) {
@@ -69,5 +78,36 @@ public class PlayModelIml implements PlayModel {
                 callback.onMenu();
                 break;
         }
+    }
+
+    @Override
+    public void getSongUrl(int id, PlayCallback callback) {
+        mNetEaseMusicService.getSongUrl(id, new NetEaseMusicService.Callback<SongResponse>(){
+
+            @Override
+            public void onSuccess(SongResponse data) {
+                callback.onSongUrl(data.getData().get(0).getUrl());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        });
+    }
+
+    @Override
+    public void getPicUrl(int id, PlayCallback callback) {
+        mNetEaseMusicService.getSongDetail(id, new NetEaseMusicService.Callback<SongDetailResponse>(){
+            @Override
+            public void onSuccess(SongDetailResponse data) {
+                callback.onPicUrl(data.getSongs().get(0).getAl().getPicUrl());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        });
     }
 }
