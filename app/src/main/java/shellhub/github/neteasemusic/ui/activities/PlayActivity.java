@@ -7,6 +7,7 @@ import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,10 +27,10 @@ import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.presenter.PlayPresenter;
 import shellhub.github.neteasemusic.presenter.impl.PlayPresenterImpl;
 import shellhub.github.neteasemusic.response.mp3.SongResponse;
+import shellhub.github.neteasemusic.service.MusicService;
 import shellhub.github.neteasemusic.service.impl.MusicServiceImpl;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.MusicUtils;
-import shellhub.github.neteasemusic.util.NetEaseMusicApp;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.PlayView;
 
@@ -71,34 +72,74 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
 
     private PlayPresenter mPlayPresenter;
     private Handler mHandler = new Handler();
-    private Runnable runnable;
+
+    private Runnable runnable  = new Runnable() {
+        @Override
+        public void run () {
+            if (mBound) {
+                sbDuration.setMax(mMusicService.getDuration() / 1000);
+                int mCurrentPosition = mMusicService.getCurrentPosition() / 1000;
+                sbDuration.setProgress(mCurrentPosition);
+                tvCurrentTime.setText(MusicUtils.formatDuration(mMusicService.getCurrentPosition()));
+                tvTotalTime.setText(MusicUtils.formatDuration(mMusicService.getDuration()));
+                mHandler.postDelayed(this, 1000);
+            }
+        }
+    };
     private String mMediaUrl;
     private int songId;
+
+    private MusicService mMusicService;
+    private boolean mBound = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LogUtils.d(TAG, "onCreate");
         setContentView(R.layout.activity_play);
         ButterKnife.bind(this);
         sbDuration.setOnSeekBarChangeListener(this);
         initPlayTypeIcon();
         setUpMVP();
 
-//        LogUtils.d(TAG, getIntent().getStringExtra(ConstantUtils.MUSIC_URI_KEY));
-//        mMediaUrl = getIntent().getStringExtra(ConstantUtils.MUSIC_URI_KEY);
         SongResponse songResponse = (SongResponse) getIntent().getSerializableExtra(ConstantUtils.MUSIC_URI_KEY);
         if (songResponse != null) {
             songId = songResponse.getData().get(0).getId();
+            LogUtils.d(TAG, songResponse.getData().get(0).getUrl());
             mMediaUrl = songResponse.getData().get(0).getUrl();
         }
-        playAudio(mMediaUrl);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, MusicServiceImpl.class);
+        intent.putExtra("media", mMediaUrl);
+        if (!mBound) {
+            bindService(intent, this, Context.BIND_AUTO_CREATE);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LogUtils.d(TAG, "onPause");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        LogUtils.d(TAG, "onStop");
         mHandler.removeCallbacks(runnable);
+        unbindService(this);
+        mBound = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+//        unbindService(this);
     }
 
     @Override
@@ -120,36 +161,32 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder service) {
+        LogUtils.d(TAG, "onServiceConnected");
+        mBound = true;
         MusicServiceImpl.MusicBinder binder = (MusicServiceImpl.MusicBinder) service;
-        NetEaseMusicApp.musicService = binder.getMusicService();
+        mMusicService = binder.getMusicService();
+        if (!TextUtils.isEmpty(mMediaUrl)) {
+            playAudio(mMediaUrl);
+        }
         updateDuration();
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        NetEaseMusicApp.musicService = null;
+        LogUtils.d(TAG, "onServiceDisconnected");
+        mBound = false;
     }
 
     private void playAudio(String media) {
-        if (NetEaseMusicApp.musicService == null) {
-            LogUtils.d(TAG, "service is not bound");
-            Intent playerIntent = new Intent(this, MusicServiceImpl.class);
-            playerIntent.putExtra("media", media);
-            startService(playerIntent);
-            bindService(playerIntent, this, Context.BIND_AUTO_CREATE);
-        } else {
-            LogUtils.d(TAG, "service is bound");
-            Intent intent = new Intent(ConstantUtils.ACTION_PLAY);
-            intent.putExtra("media", media);
-            sendBroadcast(intent);
-
-            updateDuration();
-        }
+        Intent intent = new Intent(ConstantUtils.ACTION_PLAY);
+        intent.putExtra("media", media);
+        sendBroadcast(intent);
+        updateDuration();
     }
 
     @OnClick({R.id.iv_play_type, R.id.iv_menu, R.id.iv_favorite,
-            R.id.iv_download,  R.id.iv_comment, R.id.iv_playlist,
-            R.id.iv_previous, R.id.iv_play_pause, R.id.iv_next })
+            R.id.iv_download, R.id.iv_comment, R.id.iv_playlist,
+            R.id.iv_previous, R.id.iv_play_pause, R.id.iv_next})
     public void onClick(View view) {
         LogUtils.d(TAG, "onClick");
         mPlayPresenter.executeClick(view);
@@ -209,19 +246,10 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
 
     }
 
+
     @Override
     public void updateDuration() {
-        sbDuration.setMax(NetEaseMusicApp.musicService.getDuration() / 1000);
-        PlayActivity.this.runOnUiThread(runnable = new Runnable() {
-            @Override
-            public void run() {
-                int mCurrentPosition = NetEaseMusicApp.musicService.getCurrentPosition() / 1000;
-                sbDuration.setProgress(mCurrentPosition);
-                tvCurrentTime.setText(MusicUtils.formatDuration(NetEaseMusicApp.musicService.getCurrentPosition()));
-                tvTotalTime.setText(MusicUtils.formatDuration(NetEaseMusicApp.musicService.getDuration()));
-                mHandler.postDelayed(this, 1000);
-            }
-        });
+        mHandler.post(runnable);
     }
 
     @Override
@@ -260,6 +288,12 @@ public class PlayActivity extends AppCompatActivity implements PlayView, Service
     public void onStopTrackingTouch(SeekBar seekBar) {
         LogUtils.d(TAG, "onStopTrackingTouch");
         mHandler.post(runnable);
-        NetEaseMusicApp.musicService.seekTo(seekBar.getProgress() * 1000);
+        mMusicService.seekTo(seekBar.getProgress() * 1000);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

@@ -1,15 +1,22 @@
 package shellhub.github.neteasemusic.service.impl;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
@@ -20,12 +27,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import shellhub.github.neteasemusic.model.SingleModel;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.NotificationCompat;
+import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.model.impl.SingleModelImpl;
 import shellhub.github.neteasemusic.service.MusicService;
+import shellhub.github.neteasemusic.ui.activities.PlayActivity;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
+
+import static android.app.Notification.CATEGORY_SERVICE;
+import static androidx.core.app.NotificationCompat.PRIORITY_MIN;
 
 public class MusicServiceImpl extends Service implements MusicService,
         MediaPlayer.OnCompletionListener,
@@ -52,8 +65,8 @@ public class MusicServiceImpl extends Service implements MusicService,
     @Override
     public void onCompletion(MediaPlayer mp) {
         LogUtils.d(TAG, "completed");
-        stopMedia();
-        stopSelf();
+        mPlayer.seekTo(0);
+        mPlayer.start();
     }
 
     @Override
@@ -131,27 +144,31 @@ public class MusicServiceImpl extends Service implements MusicService,
     @Override
     public void onCreate() {
         super.onCreate();
+        Log.d(TAG, "onCreate: ");
         registerBecomingNoisyReceiver();
         registerPlayerReceiver();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        try {
-            //An audio file is passed to the service through putExtra();
-            mMusicUrl = intent.getExtras().getString("media");
-        } catch (NullPointerException e) {
-            stopSelf();
-        }
-
-        //Request audio focus
-        if (requestAudioFocus() == false) {
-            //Could not gain focus
-            stopSelf();
-        }
-
-        if (mMusicUrl != null && mMusicUrl != "")
-            initMediaPlayer();
+        Log.d(TAG, "onStartCommand: ");
+        startForegroundService();
+//
+//        try {
+//            //An audio file is passed to the service through putExtra();
+//            mMusicUrl = intent.getExtras().getString("media");
+//        } catch (NullPointerException e) {
+//            stopSelf();
+//        }
+//
+//        //Request audio focus
+//        if (requestAudioFocus() == false) {
+//            //Could not gain focus
+//            stopSelf();
+//        }
+//
+//        if (mMusicUrl != null && mMusicUrl != "")
+//            initMediaPlayer();
 
         new Thread(()->{
             new SingleModelImpl().loadSingle(singles -> localSingles = singles);
@@ -159,24 +176,77 @@ public class MusicServiceImpl extends Service implements MusicService,
         return super.onStartCommand(intent, flags, startId);
     }
 
+
+
+    public void startForegroundService() {
+        Log.d(TAG, "startForegroundService: ");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = createNotificationChannel("my service", "my background service");
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
+
+            Intent notificationIntent = new Intent(this, PlayActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                    0, notificationIntent, 0);
+
+            RemoteViews notificationLayout = new RemoteViews(getPackageName(), R.layout.album_item);
+            RemoteViews notificationLayoutExpanded = new RemoteViews(getPackageName(), R.layout.single_item);
+
+            Notification notification = builder.setOngoing(true)
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.ic_launcher_background)
+                    .setContentTitle("title")
+                    .setContentText("content text")
+//                    .setCustomContentView(notificationLayout)
+//                    .setCustomBigContentView(notificationLayoutExpanded)
+                    .setPriority(PRIORITY_MIN)
+                    .setCategory(CATEGORY_SERVICE)
+                    .build();
+            startForeground(101, notification);
+
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private String createNotificationChannel(String channelId, String channelName) {
+
+
+        NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
+        notificationChannel.setLightColor(Color.BLUE);
+        notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.createNotificationChannel(notificationChannel);
+        return channelId;
+    }
+
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        removeAudioFocus();
+//        removeAudioFocus();todo
         if (mPlayer != null) {
             stopMedia();
             mPlayer.release();
         }
+        unregisterReceiver(playerReceiver);
+        unregisterReceiver(becomingNoisyReceiver);
+        stopSelf();
+        super.onDestroy();
     }
 
     @Override
     public int getCurrentPosition() {
-        return mPlayer.getCurrentPosition();
+        if (mPlayer != null) {
+            return mPlayer.getCurrentPosition();
+        }else {
+            return 0;
+        }
     }
 
     @Override
     public int getDuration() {
-        return mPlayer.getDuration();
+        if (mPlayer != null) {
+            return mPlayer.getDuration();
+        }else {
+            return 0;
+        }
     }
 
     @Override
@@ -349,8 +419,9 @@ public class MusicServiceImpl extends Service implements MusicService,
                     initMediaPlayer();
                     break;
                 case ConstantUtils.ACTION_PLAY:
+                    LogUtils.d(TAG, "ACTION_PLAY");
                     String newMediaUrl = intent.getStringExtra("media");
-                    if (!StringUtils.isEmpty(newMediaUrl)) {
+                    if (!StringUtils.isEmpty(newMediaUrl) && !newMediaUrl.equals(mMusicUrl)) {
                         stopMedia();
                         LogUtils.d(TAG, "NEW MUSIC");
                         mMusicUrl = newMediaUrl;
