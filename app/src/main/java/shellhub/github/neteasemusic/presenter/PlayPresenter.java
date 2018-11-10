@@ -9,4 +9,7 @@ public interface PlayPresenter {
 
     void getSongPic(int id);
 
+    void getSongId();
+
+    void saveSongID(int id);
 }

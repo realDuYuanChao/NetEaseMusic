@@ -10,6 +10,10 @@ public interface PlayModel {
 
     void getPicUrl(int id, PlayCallback callback);
 
+    void saveSongId(int id);
+
+    void readSongId(PlayCallback callback);
+
     interface PlayCallback{
         void onPlayType(int resId);
 
@@ -34,6 +38,8 @@ public interface PlayModel {
         void onSongUrl(String songUrl);
 
         void onPicUrl(String picUrl);
+
+        void onSongId(int id);
         //TODO
     }
 }

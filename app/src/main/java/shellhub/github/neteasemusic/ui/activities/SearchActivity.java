@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -14,6 +15,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import androidx.appcompat.widget.SearchView;
@@ -22,16 +26,16 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.BaseApp;
 import shellhub.github.neteasemusic.R;
-import shellhub.github.neteasemusic.model.entities.SearchHistory;
+import shellhub.github.neteasemusic.model.entities.HistoryEvent;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.SearchPresenter;
 import shellhub.github.neteasemusic.presenter.impl.SearchPresenterImpl;
-import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.SongsItem;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.Hot;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
+import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 import shellhub.github.neteasemusic.ui.fragments.HotFragment;
 import shellhub.github.neteasemusic.ui.fragments.SearchFragment;
@@ -55,6 +59,8 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     private SearchPresenter mSearchPresenter;
 
     private boolean isShowing = false;
+
+    private List<String> searchHistory = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +111,7 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
                 mSearchPresenter.search(query);
                 mSearchPresenter.searchVideo(query);
                 mSearchPresenter.searchArtist(query);
+                mSearchPresenter.saveHistory(query);
                 return true;
             }
 
@@ -136,8 +143,9 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     }
 
     @Override
-    public void showHistory(SearchHistory searchHistory) {
-
+    public void showHistory(List<String> searchHistory) {
+        LogUtils.d(TAG, searchHistory);
+        new Handler().postDelayed(() -> EventBus.getDefault().post(searchHistory), 500);
     }
 
     @Override
@@ -179,6 +187,7 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
         getSupportFragmentManager().beginTransaction().replace(R.id.search_container, new HotFragment()).commit();
         mSearchPresenter = new SearchPresenterImpl(this, mNetEaseMusicService);
         mSearchPresenter.searchHot();
+        mSearchPresenter.loadHistory();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -188,6 +197,16 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
         mSearchPresenter.search(hot.getFirst());
         mSearchPresenter.searchVideo(hot.getFirst());
         mSearchPresenter.searchArtist(hot.getFirst());
+        mSearchPresenter.saveHistory(hot.getFirst());
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onHistoryEvent(HistoryEvent historyEvent) {
+        LogUtils.d(TAG, historyEvent.getKeyword());
+        showSearchResult();
+        mSearchPresenter.search(historyEvent.getKeyword());
+
+        mSearchPresenter.saveHistory(historyEvent.getKeyword());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

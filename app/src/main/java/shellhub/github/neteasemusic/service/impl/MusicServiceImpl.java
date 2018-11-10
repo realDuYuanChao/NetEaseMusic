@@ -59,6 +59,8 @@ public class MusicServiceImpl extends Service implements MusicService,
     private List<Single> localSingles = new ArrayList<>();
     private List<Single> networkMusics = new ArrayList<>();
 
+    private int mBufferPercent = 0;
+
     public MusicServiceImpl() {
     }
 
@@ -71,7 +73,7 @@ public class MusicServiceImpl extends Service implements MusicService,
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        playMedia();
+        new Thread(this::playMedia);
     }
 
     @Override
@@ -103,8 +105,10 @@ public class MusicServiceImpl extends Service implements MusicService,
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
-
+        mBufferPercent = percent;
     }
+
+
 
     @Override
     public void onAudioFocusChange(int focusChange) {
@@ -319,6 +323,11 @@ public class MusicServiceImpl extends Service implements MusicService,
         return null;
     }
 
+    @Override
+    public int getBufferPercent() {
+        return mBufferPercent;
+    }
+
     public class MusicBinder extends Binder {
         public MusicServiceImpl getMusicService() {
             // Return this instance of LocalService so clients can call public methods
@@ -344,7 +353,10 @@ public class MusicServiceImpl extends Service implements MusicService,
             mPlayer.setDataSource(mMusicUrl);
         } catch (IOException e) {
             e.printStackTrace();
-            stopSelf();
+//            stopSelf();
+
+            //if network error, try again
+            initMediaPlayer();
         }
         mPlayer.prepareAsync();
     }

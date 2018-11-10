@@ -1,5 +1,7 @@
 package shellhub.github.neteasemusic.model;
 
+import java.util.List;
+
 import shellhub.github.neteasemusic.presenter.impl.SearchPresenterImpl;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
@@ -15,6 +17,10 @@ public interface SearchModel {
 
     void searchArtist(String keyword, Callback callback);
 
+    void loadHistory(Callback callback);
+
+    void saveHistory(String keyword);
+
     interface Callback{
         void onHotSuccess(HotResponse response);
 
@@ -23,6 +29,8 @@ public interface SearchModel {
         void onVideoSuccess(VideoResponse videoResponse);
 
         void onArtistSuccess(ArtistResponse artistResponse);
+
+        void onHistory(List<String> histories);
 
         void onHotFail();
     }

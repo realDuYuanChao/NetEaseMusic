@@ -36,7 +36,9 @@ public class ConstantUtils {
     public final static String SP_LOGIN_USER_USERNAME_KEY = "username";
     public final static String SP_LOGIN_USER_PASSWORD_KEY = "password";
     public final static String SP_NET_EASE_MUSIC_SETTING = "shellhub.github.neteasemusic_sp_net_ease_music_setting";
+    public final static String SP_NET_EASE_MUSIC_STATUS = "shellhub.github.neteasemusic_sp_net_ease_music_status";
     public final static String SP_PLAY_TYPE_KEY = "play_type";
+    public final static String SP_CURRENT_SONG_ID_KEY = "song_id";
 
     /**
      * message deliver key

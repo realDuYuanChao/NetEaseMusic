@@ -1,6 +1,7 @@
 package shellhub.github.neteasemusic.view;
 
-import shellhub.github.neteasemusic.model.entities.SearchHistory;
+import java.util.List;
+
 import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
@@ -14,7 +15,7 @@ public interface SearchView extends BaseView {
 
     void showHots(HotResponse hotResponse);
 
-    void showHistory(SearchHistory searchHistory);
+    void showHistory(List<String> searchHistory);
 
     void showSearchResult(SearchResponse searchResponse);
 

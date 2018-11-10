@@ -1,5 +1,9 @@
 package shellhub.github.neteasemusic.presenter.impl;
 
+import com.blankj.utilcode.util.LogUtils;
+
+import java.util.List;
+
 import shellhub.github.neteasemusic.model.SearchModel;
 import shellhub.github.neteasemusic.model.SongModel;
 import shellhub.github.neteasemusic.model.impl.SearchModelImpl;
@@ -12,9 +16,11 @@ import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
 import shellhub.github.neteasemusic.response.search.song.detail.SongDetailResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
+import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.SearchView;
 
 public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callback, SongModel.Callback {
+    private String TAG = TagUtils.getTag(this.getClass());
     private SearchModel mSearchModel;
     private NetEaseMusicService mNetEaseMusicService;
     private SearchView mSearchView;
@@ -32,6 +38,16 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
     public void searchHot() {
         mSearchView.showProgress();
         mSearchModel.searchHot(this);
+    }
+
+    @Override
+    public void loadHistory() {
+        mSearchModel.loadHistory(this);
+    }
+
+    @Override
+    public void saveHistory(String keyword) {
+        mSearchModel.saveHistory(keyword);
     }
 
     @Override
@@ -79,6 +95,12 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
     public void onArtistSuccess(ArtistResponse artistResponse) {
         mSearchView.hideProgress();
         mSearchView.showArtist(artistResponse);
+    }
+
+    @Override
+    public void onHistory(List<String> histories) {
+        LogUtils.d(TAG, histories);
+        mSearchView.showHistory(histories);
     }
 
     @Override

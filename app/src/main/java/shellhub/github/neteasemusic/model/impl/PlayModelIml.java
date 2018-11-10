@@ -117,4 +117,18 @@ public class PlayModelIml implements PlayModel {
             }
         });
     }
+
+    @Override
+    public void saveSongId(int id) {
+        LogUtils.d(TAG, id);
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ID_KEY, id);
+    }
+
+    @Override
+    public void readSongId(PlayCallback callback) {
+        int id = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE)
+                .getInt(ConstantUtils.SP_CURRENT_SONG_ID_KEY, 0);
+        callback.onSongId(id);
+    }
+
 }

@@ -13,4 +13,6 @@ public interface MusicService {
 
     Single previous();
 
+    int getBufferPercent();
+
 }

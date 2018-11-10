@@ -34,6 +34,16 @@ public class PlayPresenterImpl implements PlayPresenter,PlayModel.PlayCallback {
     }
 
     @Override
+    public void getSongId() {
+        mPlayModel.readSongId(this);
+    }
+
+    @Override
+    public void saveSongID(int id) {
+        mPlayModel.saveSongId(id);
+    }
+
+    @Override
     public void onPlayType(int resId) {
         mPlayView.playType(resId);
     }
@@ -91,5 +101,10 @@ public class PlayPresenterImpl implements PlayPresenter,PlayModel.PlayCallback {
     @Override
     public void onPicUrl(String picUrl) {
         mPlayView.displayPic(picUrl);
+    }
+
+    @Override
+    public void onSongId(int id) {
+        mPlayView.reloadSongId(id);
     }
 }

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -27,7 +27,6 @@ import java.net.URL;
 
 import javax.inject.Inject;
 
-import androidx.palette.graphics.Palette;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -40,6 +39,7 @@ import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.service.MusicService;
 import shellhub.github.neteasemusic.service.impl.MusicServiceImpl;
 import shellhub.github.neteasemusic.util.ActivityUtils;
+import shellhub.github.neteasemusic.util.BitmapUtils;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
@@ -92,6 +92,7 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
         public void run () {
             if (mBound) {
                 sbDuration.setMax(mMusicService.getDuration() / 1000);
+                sbDuration.setSecondaryProgress((int) (mMusicService.getDuration() * mMusicService.getBufferPercent() * 0.01) / 1000);
                 int mCurrentPosition = mMusicService.getCurrentPosition() / 1000;
                 sbDuration.setProgress(mCurrentPosition);
                 tvCurrentTime.setText(MusicUtils.formatDuration(mMusicService.getCurrentPosition()));
@@ -128,6 +129,9 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
             songId = songResponse.getData().get(0).getId();
             LogUtils.d(TAG, songResponse.getData().get(0).getUrl());
             mMediaUrl = songResponse.getData().get(0).getUrl();
+            mPlayPresenter.saveSongID(songId);
+        }else {
+            mPlayPresenter.getSongId();
         }
 
         view = findViewById(R.id.bg_layout);
@@ -299,7 +303,6 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
     public void displayPic(String picUrl) {
         Glide.with(this).load(picUrl).into(ivSongPic);
         new Thread(()->{
-            Uri imageUri = Uri.parse(picUrl);
             Bitmap bitmap = null;
             try {
                 bitmap = BitmapFactory.decodeStream(new URL(picUrl).openConnection().getInputStream());
@@ -307,40 +310,15 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
                 e.printStackTrace();
             }
 
-            new Palette.Builder(bitmap).generate(new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                    Palette.Swatch swatch = palette.getVibrantSwatch();
-                    if (swatch != null) {
-                        int color = swatch.getRgb();
-//                        itemHolder.footer.setBackgroundColor(color);
-//                        int textColor = TimberUtils.getBlackWhiteColor(swatch.getTitleTextColor());
-//                        itemHolder.title.setTextColor(textColor);
-//                        itemHolder.artist.setTextColor(textColor);
-                        runOnUiThread(()->{
-                            view.setBackgroundColor(color);
-                        });
-                    } else {
-                        Palette.Swatch mutedSwatch = palette.getMutedSwatch();
-                        if (mutedSwatch != null) {
-                            int color = mutedSwatch.getRgb();
-                            view.setBackgroundColor(color);
-//                            itemHolder.footer.setBackgroundColor(color);
-//                            int textColor = TimberUtils.getBlackWhiteColor(mutedSwatch.getTitleTextColor());
-//                            itemHolder.title.setTextColor(textColor);
-//                            itemHolder.artist.setTextColor(textColor);
-                            runOnUiThread(()->{
-                                view.setBackgroundColor(color);
-                            });
-                        }
-                    }
-
-
-                }
-            });
-
-
+            Bitmap result = BitmapUtils.fastblur(bitmap, 0.1f, 20);
+            BitmapDrawable ob = new BitmapDrawable(getResources(), result);
+            runOnUiThread(() -> view.setBackground(ob));
         }).start();
+    }
+
+    @Override
+    public void reloadSongId(int id) {
+        songId = id;
     }
 
     @Override

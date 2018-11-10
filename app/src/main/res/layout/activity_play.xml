@@ -101,6 +101,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:max="100"
+        android:secondaryProgressTint="@color/gray"
         android:progressTint="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="@+id/tv_current_time"
         app:layout_constraintEnd_toStartOf="@+id/tv_total_time"

@@ -30,5 +30,6 @@ public interface PlayView extends BaseView{
 
     void displayPic(String picUrl);
 
+    void reloadSongId(int id);
     //TODO
 }
