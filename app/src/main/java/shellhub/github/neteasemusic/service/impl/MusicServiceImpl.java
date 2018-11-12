@@ -18,7 +18,6 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.StringUtils;
@@ -61,8 +60,6 @@ public class MusicServiceImpl extends Service implements MusicService,
     private AudioManager audioManager;
 
     private List<Single> localSingles = new ArrayList<>();
-    private List<Single> networkMusics = new ArrayList<>();
-    private boolean mNetworkMedia;
 
     private int mBufferPercent = 0;
 
@@ -81,6 +78,7 @@ public class MusicServiceImpl extends Service implements MusicService,
     @Override
     public void onPrepared(MediaPlayer mp) {
         new Thread(this::playMedia);
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, true);
     }
 
     @Override
@@ -207,13 +205,13 @@ public class MusicServiceImpl extends Service implements MusicService,
 
         //previous
         Intent previousIntent = new Intent(this, ControllerListener.class);
-        playPauseIntent.setAction(ConstantUtils.ACTION_PREVIOUS);
+        previousIntent.setAction(ConstantUtils.ACTION_PREVIOUS);
         PendingIntent PreviousPendingIntent = PendingIntent.getBroadcast(this, 0, previousIntent, 0);
         controllerLayout.setOnClickPendingIntent(R.id.iv_control_previous, PreviousPendingIntent);
 
         //next
         Intent nextIntent = new Intent(this, ControllerListener.class);
-        playPauseIntent.setAction(ConstantUtils.ACTION_NEXT);
+        nextIntent.setAction(ConstantUtils.ACTION_NEXT);
         PendingIntent nextPendingIntent = PendingIntent.getBroadcast(this, 0, nextIntent, 0);
         controllerLayout.setOnClickPendingIntent(R.id.iv_control_next, nextPendingIntent);
 
@@ -267,9 +265,12 @@ public class MusicServiceImpl extends Service implements MusicService,
                     }else {
                         Utils.getApp().sendBroadcast(new Intent(ConstantUtils.ACTION_PLAY));
                     }
+                    break;
                 case ConstantUtils.ACTION_PREVIOUS:
+                    Utils.getApp().sendBroadcast(new Intent(ConstantUtils.ACTION_PREVIOUS));
                     break;
                 case ConstantUtils.ACTION_NEXT:
+                    Utils.getApp().sendBroadcast(new Intent(ConstantUtils.ACTION_PREVIOUS));
                     break;
             }
 
@@ -497,6 +498,7 @@ public class MusicServiceImpl extends Service implements MusicService,
                     stopMedia();
                     LogUtils.d(TAG, "NEW MUSIC");
                     initMediaPlayer();
+//                    playMedia();
                     break;
                 case ConstantUtils.ACTION_PLAY:
                     LogUtils.d(TAG, "ACTION_PLAY");
@@ -506,6 +508,7 @@ public class MusicServiceImpl extends Service implements MusicService,
                         LogUtils.d(TAG, "NEW MUSIC");
                         mMusicUrl = newMediaUrl;
                         initMediaPlayer();
+//                        playMedia();
                         break;
                     }
                     playMedia();
@@ -520,6 +523,7 @@ public class MusicServiceImpl extends Service implements MusicService,
                     stopMedia();
                     LogUtils.d(TAG, "NEW MUSIC");
                     initMediaPlayer();
+//                    playMedia();
                     break;
             }
             LogUtils.d(TAG, intent.getAction());

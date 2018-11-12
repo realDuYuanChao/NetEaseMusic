@@ -1,13 +1,9 @@
 package shellhub.github.neteasemusic.model.impl;
 
-import android.content.Context;
-
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.SPUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import shellhub.github.neteasemusic.model.SearchModel;
@@ -18,7 +14,6 @@ import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
-import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.NetEaseMusicApp;
 import shellhub.github.neteasemusic.util.TagUtils;
 
