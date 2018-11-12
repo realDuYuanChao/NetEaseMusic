@@ -18,9 +18,11 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.Utils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,11 +32,13 @@ import java.util.Random;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import shellhub.github.neteasemusic.R;
+import shellhub.github.neteasemusic.model.entities.NotificationElement;
 import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.model.impl.SingleModelImpl;
 import shellhub.github.neteasemusic.service.MusicService;
 import shellhub.github.neteasemusic.ui.activities.PlayActivity;
 import shellhub.github.neteasemusic.util.ConstantUtils;
+import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 import static android.app.Notification.CATEGORY_SERVICE;
@@ -51,15 +55,18 @@ public class MusicServiceImpl extends Service implements MusicService,
 
     private final IBinder mIBinder = new MusicBinder();
     private String TAG = TagUtils.getTag(this.getClass());
-    private MediaPlayer mPlayer;
+    private static MediaPlayer mPlayer;
     private String mMusicUrl;
     private int resumePosition;
     private AudioManager audioManager;
 
     private List<Single> localSingles = new ArrayList<>();
     private List<Single> networkMusics = new ArrayList<>();
+    private boolean mNetworkMedia;
 
     private int mBufferPercent = 0;
+
+    private int NOTIFICATION_ID = 101;
 
     public MusicServiceImpl() {
     }
@@ -107,7 +114,6 @@ public class MusicServiceImpl extends Service implements MusicService,
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
         mBufferPercent = percent;
     }
-
 
 
     @Override
@@ -174,53 +180,114 @@ public class MusicServiceImpl extends Service implements MusicService,
 //        if (mMusicUrl != null && mMusicUrl != "")
 //            initMediaPlayer();
 
-        new Thread(()->{
+        new Thread(() -> {
             new SingleModelImpl().loadSingle(singles -> localSingles = singles);
         }).start();
         return super.onStartCommand(intent, flags, startId);
     }
 
 
-
     public void startForegroundService() {
         Log.d(TAG, "startForegroundService: ");
+        startForeground(NOTIFICATION_ID, buildNotification(null));
+    }
+
+    private Notification buildNotification(NotificationElement notificationElement) {
+        Intent notificationIntent = new Intent(this, PlayActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, 0);
+
+        RemoteViews controllerLayout = new RemoteViews(getPackageName(), R.layout.control_notification);
+
+        //play or pause
+        Intent playPauseIntent = new Intent(this, ControllerListener.class);
+        playPauseIntent.setAction(ConstantUtils.ACTION_STATUS);
+        PendingIntent controllerPendingIntent = PendingIntent.getBroadcast(this, 0, playPauseIntent, 0);
+        controllerLayout.setOnClickPendingIntent(R.id.iv_control_play_pause, controllerPendingIntent);
+
+        //previous
+        Intent previousIntent = new Intent(this, ControllerListener.class);
+        playPauseIntent.setAction(ConstantUtils.ACTION_PREVIOUS);
+        PendingIntent PreviousPendingIntent = PendingIntent.getBroadcast(this, 0, previousIntent, 0);
+        controllerLayout.setOnClickPendingIntent(R.id.iv_control_previous, PreviousPendingIntent);
+
+        //next
+        Intent nextIntent = new Intent(this, ControllerListener.class);
+        playPauseIntent.setAction(ConstantUtils.ACTION_NEXT);
+        PendingIntent nextPendingIntent = PendingIntent.getBroadcast(this, 0, nextIntent, 0);
+        controllerLayout.setOnClickPendingIntent(R.id.iv_control_next, nextPendingIntent);
+
+        if (notificationElement != null) {
+            controllerLayout.setImageViewBitmap(R.id.iv_song_ablum, notificationElement.getSongAlbumBitmap());
+            controllerLayout.setTextViewText(R.id.tv_controller_name, notificationElement.getSongName());
+            controllerLayout.setTextViewText(R.id.tv_controller_artist_name, notificationElement.getSongArtistAndTitle());
+            if (notificationElement.isLoved()) {
+                controllerLayout.setImageViewResource(R.id.iv_control_fav, R.drawable.note_btn_loved);
+            } else {
+                controllerLayout.setImageViewResource(R.id.iv_control_fav, R.drawable.note_btn_love_white);
+            }
+
+            if (notificationElement.isPlaying()) {
+                controllerLayout.setImageViewResource(R.id.iv_control_play_pause, R.drawable.note_btn_pause_white);
+            } else {
+                controllerLayout.setImageViewResource(R.id.iv_control_play_pause, R.drawable.note_btn_play_white);
+            }
+
+            if (notificationElement.isOpenLyric()) {
+                controllerLayout.setImageViewResource(R.id.iv_control_lyric, R.drawable.note_btn_lyced);
+            } else {
+                controllerLayout.setImageViewResource(R.id.iv_control_lyric, R.drawable.note_btn_lyc_white);
+            }
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = createNotificationChannel("my service", "my background service");
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, channelId);
 
-            Intent notificationIntent = new Intent(this, PlayActivity.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                    0, notificationIntent, 0);
-
-            RemoteViews notificationLayout = new RemoteViews(getPackageName(), R.layout.album_item);
-            RemoteViews notificationLayoutExpanded = new RemoteViews(getPackageName(), R.layout.single_item);
-
-            Notification notification = builder.setOngoing(true)
+            return builder.setOngoing(true)
                     .setContentIntent(pendingIntent)
-                    .setSmallIcon(R.drawable.ic_launcher_background)
-                    .setContentTitle("title")
-                    .setContentText("content text")
-//                    .setCustomContentView(notificationLayout)
-//                    .setCustomBigContentView(notificationLayoutExpanded)
+                    .setSmallIcon(R.drawable.ic_small_logo)
+                    .setContent(controllerLayout)
                     .setPriority(PRIORITY_MIN)
                     .setCategory(CATEGORY_SERVICE)
                     .build();
+        } else {
+            return null;
+            //TODO
+        }
+    }
 
-            startForeground(101, notification);
+    public static class ControllerListener extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch (intent.getAction()) {
+                case ConstantUtils.ACTION_STATUS:
+                    if (SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getBoolean(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY)) {
+                        Utils.getApp().sendBroadcast(new Intent(ConstantUtils.ACTION_PAUSE));
+                    }else {
+                        Utils.getApp().sendBroadcast(new Intent(ConstantUtils.ACTION_PLAY));
+                    }
+                case ConstantUtils.ACTION_PREVIOUS:
+                    break;
+                case ConstantUtils.ACTION_NEXT:
+                    break;
+            }
 
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(String channelId, String channelName) {
-
-
         NotificationChannel notificationChannel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_NONE);
         notificationChannel.setLightColor(Color.BLUE);
         notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.createNotificationChannel(notificationChannel);
         return channelId;
+    }
+
+    private void updateNotification(NotificationElement notificationElement) {
+        startForeground(NOTIFICATION_ID, buildNotification(notificationElement));
     }
 
     @Override
@@ -240,7 +307,7 @@ public class MusicServiceImpl extends Service implements MusicService,
     public int getCurrentPosition() {
         if (mPlayer != null) {
             return mPlayer.getCurrentPosition();
-        }else {
+        } else {
             return 0;
         }
     }
@@ -249,7 +316,7 @@ public class MusicServiceImpl extends Service implements MusicService,
     public int getDuration() {
         if (mPlayer != null) {
             return mPlayer.getDuration();
-        }else {
+        } else {
             return 0;
         }
     }
@@ -272,7 +339,7 @@ public class MusicServiceImpl extends Service implements MusicService,
                     if (localSingles.get(i).getData().equals(mMusicUrl)) {
                         if (i == localSingles.size() - 1) {
                             return localSingles.get(0);
-                        }else {
+                        } else {
                             return localSingles.get(i + 1);
                         }
                     }
@@ -302,7 +369,7 @@ public class MusicServiceImpl extends Service implements MusicService,
                     if (localSingles.get(i).getData().equals(mMusicUrl)) {
                         if (i == 0) {
                             return localSingles.get(localSingles.size() - 1);
-                        }else {
+                        } else {
                             return localSingles.get(i - 1);
                         }
                     }
@@ -405,7 +472,7 @@ public class MusicServiceImpl extends Service implements MusicService,
                 audioManager.abandonAudioFocus(this);
     }
 
-    private BroadcastReceiver becomingNoisyReceiver  = new BroadcastReceiver() {
+    private BroadcastReceiver becomingNoisyReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             pauseMedia();
@@ -442,9 +509,11 @@ public class MusicServiceImpl extends Service implements MusicService,
                         break;
                     }
                     playMedia();
+                    SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, true);
                     break;
                 case ConstantUtils.ACTION_PAUSE:
                     pauseMedia();
+                    SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false);
                     break;
                 case ConstantUtils.ACTION_NEXT:
                     mMusicUrl = next().getData();
@@ -454,6 +523,17 @@ public class MusicServiceImpl extends Service implements MusicService,
                     break;
             }
             LogUtils.d(TAG, intent.getAction());
+
+            new Thread(() -> {
+                NotificationElement notificationElement = new NotificationElement();
+                notificationElement.setSongName(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, "unknow name"));
+                notificationElement.setSongArtistAndTitle(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_NAME, "unknow artist and title"));
+                notificationElement.setSongAlbumBitmap(MusicUtils.getBitmap(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY)));
+
+                notificationElement.setPlaying(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getBoolean(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false));
+                notificationElement.setOpenLyric(true); //TODO
+                updateNotification(notificationElement);
+            }).start();
         }
     };
 

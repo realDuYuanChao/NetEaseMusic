@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -26,7 +27,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.BaseApp;
 import shellhub.github.neteasemusic.R;
+import shellhub.github.neteasemusic.model.PlayModel;
 import shellhub.github.neteasemusic.model.entities.HistoryEvent;
+import shellhub.github.neteasemusic.model.impl.PlayModelIml;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.SearchPresenter;
 import shellhub.github.neteasemusic.presenter.impl.SearchPresenterImpl;
@@ -40,6 +43,8 @@ import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 import shellhub.github.neteasemusic.ui.fragments.HotFragment;
 import shellhub.github.neteasemusic.ui.fragments.SearchFragment;
 import shellhub.github.neteasemusic.util.ConstantUtils;
+import shellhub.github.neteasemusic.util.MusicUtils;
+import shellhub.github.neteasemusic.util.NetEaseMusicApp;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 public class SearchActivity extends BaseApp implements shellhub.github.neteasemusic.view.SearchView {
@@ -169,6 +174,7 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     @Override
     public void showSearchResult() {
         if (!isShowing) {
+
             getSupportFragmentManager().beginTransaction().replace(R.id.search_container, new SearchFragment()).commitAllowingStateLoss();
             isShowing = true;
         }
@@ -211,6 +217,76 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearchSingleClickEvent(SongsItem songsItem) {
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, songsItem.getName());
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_NAME, MusicUtils.getArtistAndAlbum(songsItem));
+
+        new PlayModelIml(NetEaseMusicApp.getNetEaseMusicService()).getPicUrl(songsItem.getId(), new PlayModel.PlayCallback() {
+            @Override
+            public void onPlayType(int resId) {
+
+            }
+
+            @Override
+            public void onPrevious() {
+
+            }
+
+            @Override
+            public void onPlay() {
+
+            }
+
+            @Override
+            public void onPause() {
+
+            }
+
+            @Override
+            public void onNext() {
+
+            }
+
+            @Override
+            public void onPlaylist() {
+
+            }
+
+            @Override
+            public void onFavorite() {
+
+            }
+
+            @Override
+            public void onDownload() {
+
+            }
+
+            @Override
+            public void onComment() {
+
+            }
+
+            @Override
+            public void onMenu() {
+
+            }
+
+            @Override
+            public void onSongUrl(String songUrl) {
+
+            }
+
+            @Override
+            public void onPicUrl(String picUrl) {
+                SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY, picUrl);
+            }
+
+            @Override
+            public void onSongId(int id) {
+
+            }
+        });
+        //ARTIST NAME AND TITLE TODO
         LogUtils.d(TAG, songsItem.getId());
         LogUtils.d(TAG, songsItem.getAlbum().getPicId());
         mSearchPresenter.getSong(songsItem.getId());

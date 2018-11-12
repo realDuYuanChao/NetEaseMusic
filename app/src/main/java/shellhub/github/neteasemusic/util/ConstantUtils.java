@@ -39,6 +39,11 @@ public class ConstantUtils {
     public final static String SP_NET_EASE_MUSIC_STATUS = "shellhub.github.neteasemusic_sp_net_ease_music_status";
     public final static String SP_PLAY_TYPE_KEY = "play_type";
     public final static String SP_CURRENT_SONG_ID_KEY = "song_id";
+    public final static String SP_CURRENT_SONG_URL_KEY = "song_url";
+    public final static String SP_CURRENT_SONG_NAME_KEY = "song_name";
+    public final static String SP_CURRENT_SONG_ARTIST_AND_NAME = "song_artist_and_name";
+    public final static String SP_CURRENT_SONG_ALBUM_URL_KEY = "song_album";
+    public final static String SP_CURRENT_IS_PLAYING_STATUS_KEY = "song_play_status";
 
     /**
      * message deliver key
@@ -51,6 +56,7 @@ public class ConstantUtils {
      */
     public static final String ACTION_PLAY = "shellhub.github.neteasemusic.ACTION_PLAY";
     public static final String ACTION_PAUSE = "shellhub.github.neteasemusic.ACTION_PAUSE";
+    public static final String ACTION_STATUS = "shellhub.github.neteasemusic.ACTION_STATUS"; //is playing or not
     public static final String ACTION_PREVIOUS = "shellhub.github.neteasemusic.ACTION_PREVIOUS";
     public static final String ACTION_NEXT = "shellhub.github.neteasemusic.ACTION_NEXT";
     public static final String ACTION_STOP = "shellhub.github.neteasemusic.ACTION_STOP";

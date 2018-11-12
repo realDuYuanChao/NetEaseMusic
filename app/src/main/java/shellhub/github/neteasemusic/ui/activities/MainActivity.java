@@ -62,6 +62,7 @@ import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.ui.fragments.MainFragment;
 import shellhub.github.neteasemusic.ui.fragments.MusicFragment;
 import shellhub.github.neteasemusic.ui.fragments.SingleFragment;
+import shellhub.github.neteasemusic.util.NetEaseMusicApp;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.MainView;
 
@@ -95,6 +96,7 @@ public class MainActivity extends BaseApp
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getDeps().inject(this);
+        NetEaseMusicApp.setNetEaseMusicService(mNetEaseMusicService);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         setSupportActionBar(toolbar);

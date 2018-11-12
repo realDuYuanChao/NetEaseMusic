@@ -45,6 +45,9 @@ public class SearchArtistAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     @Override
     public int getItemCount() {
+        if (artistsItems == null) {
+            return 0;
+        }
         return artistsItems.size();
     }
 

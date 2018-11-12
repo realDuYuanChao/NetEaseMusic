@@ -113,6 +113,7 @@
             android:name=".service.impl.MusicServiceImpl"
             android:enabled="true"
             android:exported="true" />
+        <receiver android:name=".service.impl.MusicServiceImpl$ControllerListener" />
     </application>
 
 </manifest>
