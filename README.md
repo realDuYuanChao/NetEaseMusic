@@ -7,10 +7,10 @@
 
 NeteaseMusic            |  网易云音乐APP
 :-------------------------:|:-------------------------:
-![](capture\login.png)  |  ![](capture\main.png)
-![](capture\local.png)  |  ![](capture\album.png)
-![](capture\profile.png) | ![](capture\permission.png)
-![](capture\comment.png) |
+![](capture/login.png)  |  ![](capture/main.png)
+![](capture/local.png)  |  ![](capture/album.png)
+![](capture/profile.png) | ![](capture/permission.png)
+![](capture/comment.png) |
 
 ## 感谢
 [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi)
