@@ -10,7 +10,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,7 +34,6 @@ import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.PlayPresenter;
 import shellhub.github.neteasemusic.presenter.impl.PlayPresenterImpl;
-import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.service.MusicService;
 import shellhub.github.neteasemusic.service.impl.MusicServiceImpl;
 import shellhub.github.neteasemusic.util.ActivityUtils;
@@ -101,9 +99,6 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
             }
         }
     };
-    private String mMediaUrl;
-    private int songId;
-
     private MusicService mMusicService;
     private boolean mBound = false;
 
@@ -123,17 +118,6 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
         sbDuration.setOnSeekBarChangeListener(this);
         initPlayTypeIcon();
         setUpMVP();
-
-        SongResponse songResponse = (SongResponse) getIntent().getSerializableExtra(ConstantUtils.MUSIC_URI_KEY);
-        if (songResponse != null) {
-            songId = songResponse.getData().get(0).getId();
-            LogUtils.d(TAG, songResponse.getData().get(0).getUrl());
-            mMediaUrl = songResponse.getData().get(0).getUrl();
-            mPlayPresenter.saveSongID(songId);
-        }else {
-            mPlayPresenter.getSongId();
-        }
-
         view = findViewById(R.id.bg_layout);
     }
 
@@ -141,12 +125,11 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
     protected void onStart() {
         super.onStart();
         Intent intent = new Intent(this, MusicServiceImpl.class);
-        intent.putExtra("media", mMediaUrl);
         if (!mBound) {
             bindService(intent, this, Context.BIND_AUTO_CREATE);
         }
 
-        mPlayPresenter.getSongPic(songId);
+        mPlayPresenter.getSongPic();
     }
 
     @Override
@@ -192,9 +175,6 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
         mBound = true;
         MusicServiceImpl.MusicBinder binder = (MusicServiceImpl.MusicBinder) service;
         mMusicService = binder.getMusicService();
-        if (!TextUtils.isEmpty(mMediaUrl)) {
-            playAudio(mMediaUrl);
-        }
         updateDuration();
     }
 
@@ -202,13 +182,6 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
     public void onServiceDisconnected(ComponentName name) {
         LogUtils.d(TAG, "onServiceDisconnected");
         mBound = false;
-    }
-
-    private void playAudio(String media) {
-        Intent intent = new Intent(ConstantUtils.ACTION_PLAY);
-        intent.putExtra("media", media);
-        sendBroadcast(intent);
-        updateDuration();
     }
 
     @OnClick({R.id.iv_play_type, R.id.iv_menu, R.id.iv_favorite,
@@ -229,15 +202,13 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
         sendBroadcast(new Intent(ConstantUtils.ACTION_PREVIOUS));
     }
 
-    @Override
-    public void play() {
-        Glide.with(this).load(R.drawable.note_btn_pause_white).into(ivPlayPause);
-        sendBroadcast(new Intent(ConstantUtils.ACTION_PLAY));
-    }
 
     @Override
     public void play(String audioUrl) {
-        //TODO
+        Glide.with(this).load(R.drawable.note_btn_pause_white).into(ivPlayPause);
+        Intent intent = new Intent(ConstantUtils.ACTION_PLAY);
+        intent.putExtra(ConstantUtils.MUSIC_URI_KEY, audioUrl);
+        sendBroadcast(intent);
     }
 
     @Override
@@ -253,21 +224,21 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
 
     @Override
     public void playlist() {
-
+        //TODO
     }
 
     @Override
     public void favorite() {
-
+        //TODO
     }
 
     @Override
     public void download() {
-
+        //TODO
     }
 
     @Override
-    public void comment() {
+    public void comment(int songId) {
         Intent intent = new Intent(this, CommentActivity.class);
         intent.putExtra(ConstantUtils.MUSIC_ID_KEY, songId);
         startActivity(intent);
@@ -275,7 +246,7 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
 
     @Override
     public void menu() {
-
+        //TODO
     }
 
 
@@ -314,11 +285,6 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
             BitmapDrawable ob = new BitmapDrawable(getResources(), result);
             runOnUiThread(() -> view.setBackground(ob));
         }).start();
-    }
-
-    @Override
-    public void reloadSongId(int id) {
-        songId = id;
     }
 
     @Override

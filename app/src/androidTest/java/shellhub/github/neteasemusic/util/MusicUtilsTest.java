@@ -10,4 +10,15 @@ public class MusicUtilsTest {
     public void getCount() {
         assertEquals(18, MusicUtils.getCount());
     }
+
+
+    @Test
+    public void formatDuration() {
+        System.out.println(MusicUtils.formatDuration(258508));
+    }
+
+    @Test
+    public void random() {
+        System.out.println(MusicUtils.random(10));
+    }
 }

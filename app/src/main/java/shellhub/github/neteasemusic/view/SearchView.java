@@ -25,5 +25,6 @@ public interface SearchView extends BaseView {
 
     void showSearchResult();
 
-    void playSong(SongResponse songResponse);
+    void playSong(String songUrl);
+
 }

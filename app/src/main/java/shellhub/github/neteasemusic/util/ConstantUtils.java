@@ -41,9 +41,10 @@ public class ConstantUtils {
     public final static String SP_CURRENT_SONG_ID_KEY = "song_id";
     public final static String SP_CURRENT_SONG_URL_KEY = "song_url";
     public final static String SP_CURRENT_SONG_NAME_KEY = "song_name";
-    public final static String SP_CURRENT_SONG_ARTIST_AND_NAME = "song_artist_and_name";
+    public final static String SP_CURRENT_SONG_ARTIST_AND_ALBUM = "song_artist_and_album";
     public final static String SP_CURRENT_SONG_ALBUM_URL_KEY = "song_album";
     public final static String SP_CURRENT_IS_PLAYING_STATUS_KEY = "song_play_status";
+    public final static String SP_CURRENT_PLAYLIST_INDEX_KEY = "play_list_index";
 
     /**
      * message deliver key
@@ -61,6 +62,7 @@ public class ConstantUtils {
     public static final String ACTION_NEXT = "shellhub.github.neteasemusic.ACTION_NEXT";
     public static final String ACTION_STOP = "shellhub.github.neteasemusic.ACTION_STOP";
     public static final String ACTION_DOWNLOAD = "shellhub.github.neteasemusic.ACTION_DOWNLOAD";
+    public static final String ACTION_UPDATE_NOTIFICATION = "shellhub.github.neteasemusic.ACTION_UPDATE_NOTIFICATION";
 
     /**
      * Music Player Play Type

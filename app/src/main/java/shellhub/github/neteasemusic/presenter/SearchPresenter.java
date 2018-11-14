@@ -1,5 +1,7 @@
 package shellhub.github.neteasemusic.presenter;
 
+import shellhub.github.neteasemusic.response.search.SongsItem;
+
 public interface SearchPresenter {
     void searchHot();
 
@@ -13,5 +15,6 @@ public interface SearchPresenter {
 
     void searchArtist(String keyword);
 
-    void getSong(int id);
+    void saveSong(SongsItem songsItem);
+
 }

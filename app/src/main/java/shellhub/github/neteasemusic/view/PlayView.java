@@ -6,8 +6,6 @@ public interface PlayView extends BaseView{
 
     void previous();
 
-    void play();
-
     void play(String audioUrl);
 
     void pause();
@@ -20,7 +18,7 @@ public interface PlayView extends BaseView{
 
     void download();
 
-    void comment();
+    void comment(int songId);
 
     void menu();
 
@@ -30,6 +28,5 @@ public interface PlayView extends BaseView{
 
     void displayPic(String picUrl);
 
-    void reloadSongId(int id);
     //TODO
 }

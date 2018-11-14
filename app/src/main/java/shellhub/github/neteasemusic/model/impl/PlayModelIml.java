@@ -22,7 +22,7 @@ public class PlayModelIml implements PlayModel {
         this.mNetEaseMusicService = mNetEaseMusicService;
     }
 
-    private boolean mPlaying = true;
+    private boolean mPlaying = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getBoolean(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false);
     @Override
     public void deal(View view, PlayCallback callback) {
         switch (view.getId()) {
@@ -53,9 +53,11 @@ public class PlayModelIml implements PlayModel {
                 if (!mPlaying) {
                     callback.onPlay();
                     LogUtils.d(TAG, "onPlay");
+                    SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, true);
                 } else {
                     callback.onPause();
                     LogUtils.d(TAG, "onPause");
+                    SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false);
                 }
                 mPlaying = !mPlaying;
                 break;
@@ -72,7 +74,8 @@ public class PlayModelIml implements PlayModel {
                 callback.onDownload();
                 break;
             case R.id.iv_comment:
-                callback.onComment();
+                int songId = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getInt(ConstantUtils.SP_CURRENT_SONG_ID_KEY, 0);
+                callback.onComment(songId);
                 break;
             case R.id.iv_menu:
                 callback.onMenu();
@@ -101,14 +104,15 @@ public class PlayModelIml implements PlayModel {
     }
 
     @Override
-    public void getPicUrl(int id, PlayCallback callback) {
-        if (id == 0) {
+    public void getPicUrl(PlayCallback callback) {
+        int songId = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getInt(ConstantUtils.SP_CURRENT_SONG_ID_KEY, 0);
+        if (songId == 0) {
             return;
         }
-        mNetEaseMusicService.getSongDetail(id, new NetEaseMusicService.Callback<SongDetailResponse>(){
+        mNetEaseMusicService.getSongDetail(songId, new NetEaseMusicService.Callback<SongDetailResponse>(){
             @Override
             public void onSuccess(SongDetailResponse data) {
-                callback.onPicUrl(data.getSongs().get(0).getAl().getPicUrl());
+                callback.onAlbumUrl(data.getSongs().get(0).getAl().getPicUrl());
             }
 
             @Override
@@ -128,7 +132,27 @@ public class PlayModelIml implements PlayModel {
     public void readSongId(PlayCallback callback) {
         int id = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE)
                 .getInt(ConstantUtils.SP_CURRENT_SONG_ID_KEY, 0);
-        callback.onSongId(id);
+    }
+
+    @Override
+    public void getPlayType(PlayCallback callback) {
+        SPUtils spUtils = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING);
+        int resId = 0;
+        switch (spUtils.getInt(ConstantUtils.SP_PLAY_TYPE_KEY, 0)) {
+            case ConstantUtils.PLAY_MODE_LOOP_ALL_CODE:
+                spUtils.put(ConstantUtils.SP_PLAY_TYPE_KEY, ConstantUtils.PLAY_MODE_LOOP_SINGLE_CODE);
+                resId = R.drawable.loop_single_black;
+                break;
+            case ConstantUtils.PLAY_MODE_LOOP_SINGLE_CODE:
+                spUtils.put(ConstantUtils.SP_PLAY_TYPE_KEY, ConstantUtils.PLAY_MODE_SHUFFLE_CODE);
+                resId = R.drawable.shuffle_black;
+                break;
+            case ConstantUtils.PLAY_MODE_SHUFFLE_CODE:
+                spUtils.put(ConstantUtils.SP_PLAY_TYPE_KEY, ConstantUtils.PLAY_MODE_LOOP_ALL_CODE);
+                resId = R.drawable.ic_loop_all_black;
+                break;
+        }
+        callback.onPlayType(resId);
     }
 
 }

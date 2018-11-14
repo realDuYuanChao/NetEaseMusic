@@ -1,14 +1,19 @@
 package shellhub.github.neteasemusic.util;
 
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
 
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.Utils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
+import java.util.Random;
 import java.util.StringJoiner;
 
 import io.reactivex.Observer;
@@ -38,6 +43,7 @@ public class MusicUtils {
     }
 
     public static String formatDuration(long duration) {
+        LogUtils.d("formatDuration", duration);
         long hours = duration / ConstantUtils.ONE_HOUR;
         long minutes = (duration - hours * ConstantUtils.ONE_HOUR) / ConstantUtils.ONE_MINUTE;
         long seconds = (duration - hours * ConstantUtils.ONE_HOUR - minutes * ConstantUtils.ONE_MINUTE) / ConstantUtils.ONE_SECOND;
@@ -88,4 +94,51 @@ public class MusicUtils {
     public static Bitmap getBitmap(int songId) {
         return null;
     }
+
+    public static <T> T next(List<T> songs) {
+        int playlistIndex = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING, Context.MODE_PRIVATE)
+                .getInt(ConstantUtils.SP_CURRENT_PLAYLIST_INDEX_KEY, 0);
+
+        switch (SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING, Context.MODE_PRIVATE).getInt(ConstantUtils.SP_PLAY_TYPE_KEY)) {
+            case ConstantUtils.PLAY_MODE_LOOP_ALL_CODE:
+                if (playlistIndex == songs.size() - 1) { //end of playlist
+                    playlistIndex = 0;
+                    break;
+                }
+                playlistIndex++;
+                break;
+            case ConstantUtils.PLAY_MODE_LOOP_SINGLE_CODE:
+                break;
+
+            case ConstantUtils.PLAY_MODE_SHUFFLE_CODE:
+                playlistIndex = new Random().nextInt(songs.size());
+                break;
+        }
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_PLAYLIST_INDEX_KEY, playlistIndex);
+        return songs.get(playlistIndex); // don't return null
+    }
+
+    public static <T> T previous(List<T> songs) {
+        int playlistIndex = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING, Context.MODE_PRIVATE)
+                .getInt(ConstantUtils.SP_CURRENT_PLAYLIST_INDEX_KEY, 0);
+
+        switch (SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING, Context.MODE_PRIVATE).getInt(ConstantUtils.SP_PLAY_TYPE_KEY)) {
+            case ConstantUtils.PLAY_MODE_LOOP_ALL_CODE:
+                if (playlistIndex == 0) { //end of playlist
+                    playlistIndex = songs.size() - 1;
+                    break;
+                }
+                playlistIndex++;
+                break;
+            case ConstantUtils.PLAY_MODE_LOOP_SINGLE_CODE:
+                break;
+
+            case ConstantUtils.PLAY_MODE_SHUFFLE_CODE:
+                playlistIndex = new Random().nextInt(songs.size());
+                break;
+        }
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_PLAYLIST_INDEX_KEY, playlistIndex);
+        return songs.get(playlistIndex); // don't return null
+    }
+
 }

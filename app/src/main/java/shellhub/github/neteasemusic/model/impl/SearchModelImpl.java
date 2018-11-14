@@ -1,7 +1,14 @@
 package shellhub.github.neteasemusic.model.impl;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.Utils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +18,17 @@ import shellhub.github.neteasemusic.model.entities.SearchHistory;
 import shellhub.github.neteasemusic.model.entities.dao.SearchHistoryDao;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
+import shellhub.github.neteasemusic.response.search.SongsItem;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
+import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
+import shellhub.github.neteasemusic.response.search.song.detail.SongDetailResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
+import shellhub.github.neteasemusic.util.ConstantUtils;
+import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.NetEaseMusicApp;
 import shellhub.github.neteasemusic.util.TagUtils;
+import shellhub.github.neteasemusic.vo.NetworkMusic;
 
 public class SearchModelImpl implements SearchModel {
     private String TAG = TagUtils.getTag(this.getClass());
@@ -49,6 +62,29 @@ public class SearchModelImpl implements SearchModel {
             @Override
             public void onSuccess(SearchResponse searchResponse) {
                 callback.onKeywordSuccess(searchResponse);
+
+                //store search result
+                for (SongsItem songsItem : searchResponse.getResult().getSongs()) {
+                    mNetEaseMusicService.getSongUrl(songsItem.getId(), new NetEaseMusicService.Callback<SongResponse>(){
+
+                        @Override
+                        public void onSuccess(SongResponse data) {
+                            data.getData().get(0).getUrl();
+                            NetworkMusic networkMusic = new NetworkMusic();
+                            networkMusic.setId(songsItem.getId());
+                            networkMusic.setUrl(data.getData().get(0).getUrl());
+                            networkMusic.setName(songsItem.getName());
+                            networkMusic.setArtistAndAlbum(MusicUtils.getArtistAndAlbum(songsItem));
+                            EventBus.getDefault().post(networkMusic);
+                            LogUtils.d(TAG, networkMusic);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+                    });
+                }
             }
 
             @Override
@@ -158,5 +194,37 @@ public class SearchModelImpl implements SearchModel {
                 searchHistoryDao.insertAll(searchHistory);
             }
         }).start();
+    }
+
+    @Override
+    public void saveSong(SongsItem songsItem, Callback callback) {
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, songsItem.getName());
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM, MusicUtils.getArtistAndAlbum(songsItem));
+
+        mNetEaseMusicService.getSongUrl(songsItem.getId(), new NetEaseMusicService.Callback<SongResponse>(){
+
+            @Override
+            public void onSuccess(SongResponse data) {
+                callback.onSongReady(data.getData().get(0).getUrl());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        });
+        mNetEaseMusicService.getSongDetail(songsItem.getId(), new NetEaseMusicService.Callback<SongDetailResponse>(){
+            @Override
+            public void onSuccess(SongDetailResponse data) {
+                //store pic
+                SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY, data.getSongs().get(0).getAl().getPicUrl());
+                Utils.getApp().sendBroadcast(new Intent(ConstantUtils.ACTION_UPDATE_NOTIFICATION));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        });
     }
 }

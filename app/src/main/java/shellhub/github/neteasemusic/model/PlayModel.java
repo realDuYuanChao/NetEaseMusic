@@ -8,11 +8,13 @@ public interface PlayModel {
 
     void getSongUrl(int id, PlayCallback callback);
 
-    void getPicUrl(int id, PlayCallback callback);
+    void getPicUrl(PlayCallback callback);
 
     void saveSongId(int id);
 
     void readSongId(PlayCallback callback);
+
+    void getPlayType(PlayCallback callback);
 
     interface PlayCallback{
         void onPlayType(int resId);
@@ -31,15 +33,13 @@ public interface PlayModel {
 
         void onDownload();
 
-        void onComment();
+        void onComment(int songId);
 
         void onMenu();
 
         void onSongUrl(String songUrl);
 
-        void onPicUrl(String picUrl);
-
-        void onSongId(int id);
+        void onAlbumUrl(String albumUrl);
         //TODO
     }
 }

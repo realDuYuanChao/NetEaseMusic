@@ -4,6 +4,7 @@ import java.util.List;
 
 import shellhub.github.neteasemusic.presenter.impl.SearchPresenterImpl;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
+import shellhub.github.neteasemusic.response.search.SongsItem;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
@@ -21,6 +22,8 @@ public interface SearchModel {
 
     void saveHistory(String keyword);
 
+    void saveSong(SongsItem songsItem, Callback callback);
+
     interface Callback{
         void onHotSuccess(HotResponse response);
 
@@ -31,6 +34,8 @@ public interface SearchModel {
         void onArtistSuccess(ArtistResponse artistResponse);
 
         void onHistory(List<String> histories);
+
+        void onSongReady(String url);
 
         void onHotFail();
     }

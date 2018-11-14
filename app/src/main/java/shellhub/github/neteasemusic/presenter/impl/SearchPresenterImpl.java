@@ -5,32 +5,27 @@ import com.blankj.utilcode.util.LogUtils;
 import java.util.List;
 
 import shellhub.github.neteasemusic.model.SearchModel;
-import shellhub.github.neteasemusic.model.SongModel;
 import shellhub.github.neteasemusic.model.impl.SearchModelImpl;
-import shellhub.github.neteasemusic.model.impl.SongModelImpl;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.SearchPresenter;
-import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
+import shellhub.github.neteasemusic.response.search.SongsItem;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
-import shellhub.github.neteasemusic.response.search.song.detail.SongDetailResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.SearchView;
 
-public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callback, SongModel.Callback {
+public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callback {
     private String TAG = TagUtils.getTag(this.getClass());
     private SearchModel mSearchModel;
     private NetEaseMusicService mNetEaseMusicService;
     private SearchView mSearchView;
-    private SongModel mSongModel;
 
     public SearchPresenterImpl(SearchView searchView, NetEaseMusicService netEaseMusicService) {
         this.mSearchView = searchView;
         this.mNetEaseMusicService = netEaseMusicService;
         this.mSearchModel = new SearchModelImpl(this.mNetEaseMusicService);
-        this.mSongModel = new SongModelImpl(this.mNetEaseMusicService);
 
     }
 
@@ -69,8 +64,8 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
     }
 
     @Override
-    public void getSong(int id) {
-        mSongModel.getSongUrl(id, this);
+    public void saveSong(SongsItem songsItem) {
+        mSearchModel.saveSong(songsItem, this);
     }
 
     @Override
@@ -104,22 +99,13 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
     }
 
     @Override
+    public void onSongReady(String url) {
+        mSearchView.playSong(url);
+    }
+
+    @Override
     public void onHotFail() {
         //TODO
     }
 
-    @Override
-    public void onSongSuccess(SongResponse songResponse) {
-        mSearchView.playSong(songResponse);
-    }
-
-    @Override
-    public void onSongDetailSuccess(SongDetailResponse songDetailResponse) {
-
-    }
-
-    @Override
-    public void onFail() {
-
-    }
 }

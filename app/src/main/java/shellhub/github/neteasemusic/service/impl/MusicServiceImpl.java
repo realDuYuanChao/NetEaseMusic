@@ -21,7 +21,12 @@ import android.widget.RemoteViews;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.StringUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.blankj.utilcode.util.Utils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,6 +44,7 @@ import shellhub.github.neteasemusic.ui.activities.PlayActivity;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
+import shellhub.github.neteasemusic.vo.NetworkMusic;
 
 import static android.app.Notification.CATEGORY_SERVICE;
 import static androidx.core.app.NotificationCompat.PRIORITY_MIN;
@@ -60,7 +66,10 @@ public class MusicServiceImpl extends Service implements MusicService,
     private AudioManager audioManager;
 
     private List<Single> localSingles = new ArrayList<>();
-
+    private List<NetworkMusic> networkMusics = new ArrayList<>();
+    private NetworkMusic mCurrentMusic;
+    private Single mCurrentLocalMusic;
+    private boolean mNetworkMedia = true;
     private int mBufferPercent = 0;
 
     private int NOTIFICATION_ID = 101;
@@ -71,13 +80,13 @@ public class MusicServiceImpl extends Service implements MusicService,
     @Override
     public void onCompletion(MediaPlayer mp) {
         LogUtils.d(TAG, "completed");
-        mPlayer.seekTo(0);
-        mPlayer.start();
+//        sendBroadcast(new Intent(ConstantUtils.ACTION_NEXT)); //default next song
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        new Thread(this::playMedia);
+        ToastUtils.showShort("开始播放");
+        mPlayer.start();
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, true);
     }
 
@@ -153,8 +162,12 @@ public class MusicServiceImpl extends Service implements MusicService,
     public void onCreate() {
         super.onCreate();
         Log.d(TAG, "onCreate: ");
+        mMusicUrl = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_URL_KEY);
         registerBecomingNoisyReceiver();
         registerPlayerReceiver();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
@@ -177,10 +190,10 @@ public class MusicServiceImpl extends Service implements MusicService,
 //
 //        if (mMusicUrl != null && mMusicUrl != "")
 //            initMediaPlayer();
-
-        new Thread(() -> {
-            new SingleModelImpl().loadSingle(singles -> localSingles = singles);
-        }).start();
+//
+//        new Thread(() -> {
+//            new SingleModelImpl().loadSingle(singles -> localSingles = singles);
+//        }).start();
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -249,8 +262,15 @@ public class MusicServiceImpl extends Service implements MusicService,
                     .setCategory(CATEGORY_SERVICE)
                     .build();
         } else {
-            return null;
-            //TODO
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
+
+            return builder.setOngoing(true)
+                    .setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.ic_small_logo)
+                    .setContent(controllerLayout)
+                    .setPriority(PRIORITY_MIN)
+                    .setCategory(CATEGORY_SERVICE)
+                    .build();
         }
     }
 
@@ -270,7 +290,7 @@ public class MusicServiceImpl extends Service implements MusicService,
                     Utils.getApp().sendBroadcast(new Intent(ConstantUtils.ACTION_PREVIOUS));
                     break;
                 case ConstantUtils.ACTION_NEXT:
-                    Utils.getApp().sendBroadcast(new Intent(ConstantUtils.ACTION_PREVIOUS));
+                    Utils.getApp().sendBroadcast(new Intent(ConstantUtils.ACTION_NEXT));
                     break;
             }
 
@@ -301,6 +321,7 @@ public class MusicServiceImpl extends Service implements MusicService,
         unregisterReceiver(playerReceiver);
         unregisterReceiver(becomingNoisyReceiver);
         stopSelf();
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false);
         super.onDestroy();
     }
 
@@ -333,62 +354,26 @@ public class MusicServiceImpl extends Service implements MusicService,
     }
 
     @Override
-    public Single next() {
-        switch (SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING).getInt(ConstantUtils.SP_PLAY_TYPE_KEY, 0)) {
-            case ConstantUtils.PLAY_MODE_LOOP_ALL_CODE:
-                for (int i = 0; i < localSingles.size(); i++) {
-                    if (localSingles.get(i).getData().equals(mMusicUrl)) {
-                        if (i == localSingles.size() - 1) {
-                            return localSingles.get(0);
-                        } else {
-                            return localSingles.get(i + 1);
-                        }
-                    }
-                }
-                break;
-            case ConstantUtils.PLAY_MODE_LOOP_SINGLE_CODE:
-                for (Single single : localSingles) {
-                    if (single.getData().equals(mMusicUrl)) {
-                        //this is slow
-                        //TODO
-                        return single;
-                    }
-                }
-                break;
-            case ConstantUtils.PLAY_MODE_SHUFFLE_CODE:
-                return localSingles.get(new Random().nextInt(localSingles.size()));
+    public String next() {
+        if (mNetworkMedia) {
+            mCurrentMusic = MusicUtils.next(networkMusics);
+            return mCurrentMusic.getUrl();
+        } else {
+            mCurrentLocalMusic = MusicUtils.next(localSingles);
+            return mCurrentLocalMusic.getData();
         }
-        return null;
     }
 
 
     @Override
-    public Single previous() {
-        switch (SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING).getInt(ConstantUtils.SP_PLAY_TYPE_KEY, 0)) {
-            case ConstantUtils.PLAY_MODE_LOOP_ALL_CODE:
-                for (int i = 0; i < localSingles.size(); i++) {
-                    if (localSingles.get(i).getData().equals(mMusicUrl)) {
-                        if (i == 0) {
-                            return localSingles.get(localSingles.size() - 1);
-                        } else {
-                            return localSingles.get(i - 1);
-                        }
-                    }
-                }
-                break;
-            case ConstantUtils.PLAY_MODE_LOOP_SINGLE_CODE:
-                for (Single single : localSingles) {
-                    if (single.getData().equals(mMusicUrl)) {
-                        //this is slow
-                        //TODO
-                        return single;
-                    }
-                }
-                break;
-            case ConstantUtils.PLAY_MODE_SHUFFLE_CODE:
-                return localSingles.get(new Random().nextInt(localSingles.size()));
+    public String previous() {
+        if (mNetworkMedia) {
+            mCurrentMusic = MusicUtils.previous(networkMusics);
+            return mCurrentMusic.getUrl();
+        } else {
+            mCurrentLocalMusic = MusicUtils.previous(localSingles);
+            return mCurrentLocalMusic.getData();
         }
-        return null;
     }
 
     @Override
@@ -404,6 +389,9 @@ public class MusicServiceImpl extends Service implements MusicService,
     }
 
     private void initMediaPlayer() {
+        if (mPlayer != null && mPlayer.isPlaying()) {
+            mPlayer.stop();
+        }
         mPlayer = new MediaPlayer();
         //Set up MediaPlayer event listeners
         mPlayer.setOnCompletionListener(this);
@@ -418,20 +406,23 @@ public class MusicServiceImpl extends Service implements MusicService,
         mPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             // Set the data source to the mediaFile location
-            mPlayer.setDataSource(mMusicUrl);
+            if (mMusicUrl != null) {
+                mPlayer.setDataSource(mMusicUrl);
+            }
         } catch (IOException e) {
+            ToastUtils.showShort("初始化错误");
             e.printStackTrace();
-//            stopSelf();
-
-            //if network error, try again
             initMediaPlayer();
         }
         mPlayer.prepareAsync();
     }
 
     private void playMedia() {
-        if (!mPlayer.isPlaying()) {
-            LogUtils.d(TAG, "start");
+        if (mPlayer == null) {
+            initMediaPlayer();
+            return;
+        }
+        if (mPlayer != null && !mPlayer.isPlaying()) {
             mPlayer.start();
         }
     }
@@ -494,52 +485,68 @@ public class MusicServiceImpl extends Service implements MusicService,
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case ConstantUtils.ACTION_PREVIOUS:
-                    mMusicUrl = previous().getData();
-                    stopMedia();
-                    LogUtils.d(TAG, "NEW MUSIC");
+                    mMusicUrl = previous();
+//                    stopMedia();
+                    LogUtils.d(TAG, "ACTION_PREVIOUS");
                     initMediaPlayer();
-//                    playMedia();
+                    mPlayer.start();
+
                     break;
                 case ConstantUtils.ACTION_PLAY:
                     LogUtils.d(TAG, "ACTION_PLAY");
-                    String newMediaUrl = intent.getStringExtra("media");
+                    String newMediaUrl = intent.getStringExtra(ConstantUtils.MUSIC_URI_KEY);
                     if (!StringUtils.isEmpty(newMediaUrl) && !newMediaUrl.equals(mMusicUrl)) {
-                        stopMedia();
-                        LogUtils.d(TAG, "NEW MUSIC");
                         mMusicUrl = newMediaUrl;
                         initMediaPlayer();
-//                        playMedia();
                         break;
                     }
                     playMedia();
                     SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, true);
+                    mPlayer.start();
+
                     break;
                 case ConstantUtils.ACTION_PAUSE:
+                    LogUtils.d(TAG, "ACTION_PAUSE");
                     pauseMedia();
                     SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false);
                     break;
                 case ConstantUtils.ACTION_NEXT:
-                    mMusicUrl = next().getData();
-                    stopMedia();
-                    LogUtils.d(TAG, "NEW MUSIC");
+                    LogUtils.d(TAG, "ACTION_NEXT");
+                    mMusicUrl = next();
+//                    stopMedia();
                     initMediaPlayer();
+                    mPlayer.start();
 //                    playMedia();
                     break;
+                case ConstantUtils.ACTION_UPDATE_NOTIFICATION:
+                    updateNotification();
+                    break;
             }
-            LogUtils.d(TAG, intent.getAction());
-
-            new Thread(() -> {
-                NotificationElement notificationElement = new NotificationElement();
-                notificationElement.setSongName(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, "unknow name"));
-                notificationElement.setSongArtistAndTitle(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_NAME, "unknow artist and title"));
-                notificationElement.setSongAlbumBitmap(MusicUtils.getBitmap(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY)));
-
-                notificationElement.setPlaying(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getBoolean(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false));
-                notificationElement.setOpenLyric(true); //TODO
-                updateNotification(notificationElement);
-            }).start();
+            LogUtils.d(TAG, mMusicUrl);
+            updateNotification();
         }
     };
+
+    private void updateNotification() {
+        if (mMusicUrl != null && mMusicUrl.contains("http")) {
+            mNetworkMedia = true;
+            SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ID_KEY, mCurrentMusic.getId());
+            SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_URL_KEY, mCurrentMusic.getUrl());
+            SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, mCurrentMusic.getName());
+            SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM, mCurrentMusic.getName());
+        }else {
+            mNetworkMedia = false;
+        }
+        new Thread(() -> {
+            NotificationElement notificationElement = new NotificationElement();
+            notificationElement.setSongName(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, "unknow name"));
+            notificationElement.setSongArtistAndTitle(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM, "unknow artist and title"));
+            notificationElement.setSongAlbumBitmap(MusicUtils.getBitmap(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY)));
+            notificationElement.setPlaying(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getBoolean(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false));
+            notificationElement.setOpenLyric(true); //TODO
+            updateNotification(notificationElement);
+        }).start();
+    }
 
     private void registerPlayerReceiver() {
         IntentFilter intentFilter = new IntentFilter();
@@ -548,5 +555,20 @@ public class MusicServiceImpl extends Service implements MusicService,
         intentFilter.addAction(ConstantUtils.ACTION_PAUSE);
         intentFilter.addAction(ConstantUtils.ACTION_NEXT);
         registerReceiver(playerReceiver, intentFilter);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNetworkMusicEvent(NetworkMusic networkMusic) {
+        if (mCurrentMusic == null) {
+            mCurrentMusic = networkMusic;
+        }
+        this.networkMusics.add(networkMusic);
+        LogUtils.d(TAG, networkMusic);
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLocalMusicEvent(Single single) {
+        localSingles.add(single);
     }
 }

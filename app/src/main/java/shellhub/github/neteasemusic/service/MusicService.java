@@ -9,9 +9,9 @@ public interface MusicService {
 
     void seekTo(int position);
 
-    Single next();
+    String next();
 
-    Single previous();
+    String previous();
 
     int getBufferPercent();
 
