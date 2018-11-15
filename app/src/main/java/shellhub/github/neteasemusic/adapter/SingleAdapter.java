@@ -1,7 +1,5 @@
 package shellhub.github.neteasemusic.adapter;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +12,19 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import lombok.Data;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.Single;
-import shellhub.github.neteasemusic.model.entities.SingleEvent;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 @Data
 public class SingleAdapter extends RecyclerView.Adapter<SingleAdapter.SingleViewHolder> {
     private String TAG = TagUtils.getTag(this.getClass());
-    private List<Single> singles = new ArrayList<Single>();
+    private List<Single> singles = new ArrayList<>();
 
     @NonNull
     @Override

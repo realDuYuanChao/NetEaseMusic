@@ -1,12 +1,13 @@
 package shellhub.github.neteasemusic.model;
 
+import android.graphics.Bitmap;
 import android.view.View;
 
 public interface PlayModel {
 
     void deal(View view, PlayCallback callback);
 
-    void getSongUrl(int id, PlayCallback callback);
+    void getSongUrl(PlayCallback callback);
 
     void getPicUrl(PlayCallback callback);
 
@@ -40,6 +41,8 @@ public interface PlayModel {
         void onSongUrl(String songUrl);
 
         void onAlbumUrl(String albumUrl);
+
+        void onLoadedAlbum(Bitmap bitmap);
         //TODO
     }
 }

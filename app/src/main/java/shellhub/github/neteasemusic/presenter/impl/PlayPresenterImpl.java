@@ -1,5 +1,6 @@
 package shellhub.github.neteasemusic.presenter.impl;
 
+import android.graphics.Bitmap;
 import android.view.View;
 
 import shellhub.github.neteasemusic.model.PlayModel;
@@ -25,7 +26,7 @@ public class PlayPresenterImpl implements PlayPresenter,PlayModel.PlayCallback {
 
     @Override
     public void getSongPic() {
-        mPlayModel.getPicUrl(this);
+        mPlayModel.getSongUrl(this);
     }
 
     @Override
@@ -91,6 +92,11 @@ public class PlayPresenterImpl implements PlayPresenter,PlayModel.PlayCallback {
 
     @Override
     public void onAlbumUrl(String picUrl) {
-        mPlayView.displayPic(picUrl);
+//        mPlayView.displayPic(picUrl);
+    }
+
+    @Override
+    public void onLoadedAlbum(Bitmap bitmap) {
+        mPlayView.displayPic(bitmap);
     }
 }

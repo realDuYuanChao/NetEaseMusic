@@ -1,9 +1,11 @@
 package shellhub.github.neteasemusic.util;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -16,18 +18,12 @@ import java.util.List;
 import java.util.Random;
 import java.util.StringJoiner;
 
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.schedulers.Schedulers;
-import okhttp3.internal.http.RetryAndFollowUpInterceptor;
-import retrofit2.Retrofit;
-import shellhub.github.neteasemusic.model.impl.PlayModelIml;
-import shellhub.github.neteasemusic.networking.NetEaseMusicAPI;
+import shellhub.github.neteasemusic.model.entities.Single;
+import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.response.search.ArtistsItem;
 import shellhub.github.neteasemusic.response.search.SongsItem;
 import shellhub.github.neteasemusic.response.search.song.detail.SongDetailResponse;
-import shellhub.github.neteasemusic.service.MusicService;
+import shellhub.github.neteasemusic.vo.NetworkMusic;
 
 public class MusicUtils {
     public static int getCount() {
@@ -91,6 +87,26 @@ public class MusicUtils {
         }
     }
 
+    public static Bitmap getAlbumCover() {
+        String albumUrl = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY);
+        if (albumUrl.contains("http")) {
+            //network album
+            LogUtils.d("album url" + albumUrl);
+            return getBitmap(albumUrl);
+        }else {
+            //local album
+            albumUrl = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY);
+            LogUtils.d("album url" + albumUrl);
+            try {
+                return MediaStore.Images.Media.getBitmap(Utils.getApp().getContentResolver(), Uri.parse(albumUrl));
+            } catch (IOException e) {
+                LogUtils.d("NOT SUCH ALBUM");
+                e.printStackTrace();
+                return null;//TODO
+            }
+        }
+    }
+
     public static Bitmap getBitmap(int songId) {
         return null;
     }
@@ -115,7 +131,10 @@ public class MusicUtils {
                 break;
         }
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_PLAYLIST_INDEX_KEY, playlistIndex);
-        return songs.get(playlistIndex); // don't return null
+        T item = songs.get(playlistIndex);
+        saveSongDetail(item);
+        return item;
+//        return songs.get(playlistIndex); // don't return null
     }
 
     public static <T> T previous(List<T> songs) {
@@ -138,7 +157,84 @@ public class MusicUtils {
                 break;
         }
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_SETTING, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_PLAYLIST_INDEX_KEY, playlistIndex);
-        return songs.get(playlistIndex); // don't return null
+        T item = songs.get(playlistIndex);
+        saveSongDetail(item);
+        return item;
+//        return songs.get(playlistIndex); // don't return null
     }
 
+    public static <T> void saveSongDetail(T item) {
+        if (item instanceof NetworkMusic) {
+            NetEaseMusicApp.getNetEaseMusicService().getSongDetail(((NetworkMusic) item).getId(), new NetEaseMusicService.Callback<SongDetailResponse>(){
+                @Override
+                public void onSuccess(SongDetailResponse data) {
+                    String albumUrl = data.getSongs().get(0).getAl().getPicUrl();
+                    saveAlbumCover(albumUrl);
+                    saveSongId(((NetworkMusic) item).getId());
+                    saveSongUrl(((NetworkMusic) item).getUrl());
+                    saveSongName(((NetworkMusic) item).getName());
+                    saveArtistAndAlbum(((NetworkMusic) item).getArtistAndAlbum());
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+            });
+        }else if (item instanceof Single){
+            String albumUrl = getAlbumArtUri(((Single) item).getAlbumId()).toString();
+            saveAlbumCover(albumUrl);
+            saveSongUrl(((Single) item).getData());
+            saveSongName(((Single) item).getTitle());
+            saveArtistAndAlbum(((Single) item).getArtist() + " - " + ((Single) item).getTitle());
+//            saveSongId(((NetworkMusic) item).getId());
+//            saveSongUrl(((NetworkMusic) item).getUrl());
+//            saveSongName(((NetworkMusic) item).getName());
+//            saveArtistAndAlbum(((NetworkMusic) item).getArtistAndAlbum());
+        }
+    }
+
+    public static Uri getAlbumArtUri(long albumId) {
+        return ContentUris.withAppendedId(Uri.parse("content://media/external/audio/albumart"), albumId);
+    }
+
+    public static void saveAlbumCover(String albumCoverUrl) {
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY, albumCoverUrl);
+    }
+
+    public static String readAlbumCover() {
+        return SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY);
+    }
+
+    public static void saveSongId(int songId) {
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ID_KEY, songId);
+    }
+
+    public static int readSongId() {
+        return SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getInt(ConstantUtils.SP_CURRENT_SONG_ID_KEY);
+    }
+
+    public static void saveSongUrl(String songUrl) {
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_URL_KEY, songUrl);
+    }
+
+    public static String readSongUrl() {
+        return SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_URL_KEY);
+    }
+
+    public static void saveSongName(String songName) {
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, songName);
+    }
+
+    public static String readSongName() {
+       return SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_NAME_KEY);
+    }
+
+    public static void saveArtistAndAlbum(String artistAndAlbum) {
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM_KEY, artistAndAlbum);
+    }
+
+    public static String readArtistAndAlbum() {
+        return SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM_KEY);
+    }
 }

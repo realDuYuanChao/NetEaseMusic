@@ -1,5 +1,7 @@
 package shellhub.github.neteasemusic.view;
 
+import android.graphics.Bitmap;
+
 public interface PlayView extends BaseView{
 
     void playType(int resId);
@@ -26,7 +28,8 @@ public interface PlayView extends BaseView{
 
     void initPlayTypeIcon();
 
-    void displayPic(String picUrl);
+
+    void displayPic(Bitmap bitmap);
 
     //TODO
 }

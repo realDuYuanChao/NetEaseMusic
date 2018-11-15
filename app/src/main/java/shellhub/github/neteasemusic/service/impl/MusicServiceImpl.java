@@ -31,14 +31,12 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.NotificationElement;
 import shellhub.github.neteasemusic.model.entities.Single;
-import shellhub.github.neteasemusic.model.impl.SingleModelImpl;
 import shellhub.github.neteasemusic.service.MusicService;
 import shellhub.github.neteasemusic.ui.activities.PlayActivity;
 import shellhub.github.neteasemusic.util.ConstantUtils;
@@ -85,7 +83,6 @@ public class MusicServiceImpl extends Service implements MusicService,
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-        ToastUtils.showShort("开始播放");
         mPlayer.start();
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, true);
     }
@@ -513,10 +510,8 @@ public class MusicServiceImpl extends Service implements MusicService,
                 case ConstantUtils.ACTION_NEXT:
                     LogUtils.d(TAG, "ACTION_NEXT");
                     mMusicUrl = next();
-//                    stopMedia();
                     initMediaPlayer();
                     mPlayer.start();
-//                    playMedia();
                     break;
                 case ConstantUtils.ACTION_UPDATE_NOTIFICATION:
                     updateNotification();
@@ -530,18 +525,20 @@ public class MusicServiceImpl extends Service implements MusicService,
     private void updateNotification() {
         if (mMusicUrl != null && mMusicUrl.contains("http")) {
             mNetworkMedia = true;
-            SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ID_KEY, mCurrentMusic.getId());
-            SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_URL_KEY, mCurrentMusic.getUrl());
-            SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, mCurrentMusic.getName());
-            SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM, mCurrentMusic.getName());
+            if (mCurrentLocalMusic != null) {
+                SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ID_KEY, mCurrentMusic.getId());
+                SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_URL_KEY, mCurrentMusic.getUrl());
+                SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, mCurrentMusic.getName());
+                SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM_KEY, mCurrentMusic.getName());
+            }
         }else {
             mNetworkMedia = false;
         }
         new Thread(() -> {
             NotificationElement notificationElement = new NotificationElement();
-            notificationElement.setSongName(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, "unknow name"));
-            notificationElement.setSongArtistAndTitle(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM, "unknow artist and title"));
-            notificationElement.setSongAlbumBitmap(MusicUtils.getBitmap(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS).getString(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY)));
+            notificationElement.setSongName(MusicUtils.readSongName());
+            notificationElement.setSongArtistAndTitle(MusicUtils.readArtistAndAlbum());
+            notificationElement.setSongAlbumBitmap(MusicUtils.getAlbumCover());
             notificationElement.setPlaying(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getBoolean(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false));
             notificationElement.setOpenLyric(true); //TODO
             updateNotification(notificationElement);

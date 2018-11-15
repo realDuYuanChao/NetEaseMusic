@@ -138,11 +138,16 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     public void navigatePlay(String data) {
     }
 
+    @Override
+    public void play(String songUrl) {
+        Intent intent = new Intent(ConstantUtils.ACTION_PLAY);
+        intent.putExtra(ConstantUtils.MUSIC_URI_KEY, songUrl);
+        sendBroadcast(intent);
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSingleEvent(Single single) {
         LogUtils.d(TAG, single);
-        Intent intent = new Intent(ConstantUtils.ACTION_PLAY);
-        intent.putExtra("media", single.getData());
-        sendBroadcast(intent);
+        mLocalPresenter.loadSong(single);
     }
 }

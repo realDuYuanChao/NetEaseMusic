@@ -1,13 +1,11 @@
 package shellhub.github.neteasemusic.ui.activities;
 
 import android.Manifest;
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -20,11 +18,7 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
-import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.bumptech.glide.request.transition.Transition;
 import com.google.android.material.navigation.NavigationView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -38,7 +32,6 @@ import javax.inject.Inject;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -61,7 +54,8 @@ import shellhub.github.neteasemusic.presenter.impl.MainPresenterImpl;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.ui.fragments.MainFragment;
 import shellhub.github.neteasemusic.ui.fragments.MusicFragment;
-import shellhub.github.neteasemusic.ui.fragments.SingleFragment;
+import shellhub.github.neteasemusic.util.BitmapUtils;
+import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.NetEaseMusicApp;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.MainView;
@@ -267,16 +261,13 @@ public class MainActivity extends BaseApp
         Glide.with(this).load(navProfile.getAvatarUrl()).into(ivAvatar);
         tvNickname.setText(navProfile.getNickname());
 
-        Glide.with(this).load(navProfile.getBackgroundUrl()).apply(new RequestOptions().centerCrop()
-                .fitCenter()).into(new SimpleTarget<Drawable>() {
-            @Override
-            public void onResourceReady(Drawable resource, Transition<? super Drawable> transition) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                    navHeader.setBackground(resource);
-                    //background bug TODO
-                }
-            }
-        });
+        new Thread(()->{
+            Bitmap bitmap = MusicUtils.getBitmap(navProfile.getBackgroundUrl());
+            Bitmap bitmap1 = BitmapUtils.fastblur(bitmap, 01, 25);
+            runOnUiThread(()->{
+                navHeader.setBackground(new BitmapDrawable(getResources(), bitmap1));
+            });
+        }).start();
 
     }
 

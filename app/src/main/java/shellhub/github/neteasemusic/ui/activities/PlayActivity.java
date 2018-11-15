@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -20,9 +19,6 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.bumptech.glide.Glide;
-
-import java.io.IOException;
-import java.net.URL;
 
 import javax.inject.Inject;
 
@@ -85,9 +81,9 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
     private PlayPresenter mPlayPresenter;
     private Handler mHandler = new Handler();
 
-    private Runnable runnable  = new Runnable() {
+    private Runnable runnable = new Runnable() {
         @Override
-        public void run () {
+        public void run() {
             if (mBound) {
                 sbDuration.setMax(mMusicService.getDuration() / 1000);
                 sbDuration.setSecondaryProgress((int) (mMusicService.getDuration() * mMusicService.getBufferPercent() * 0.01) / 1000);
@@ -271,20 +267,14 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
     }
 
     @Override
-    public void displayPic(String picUrl) {
-        Glide.with(this).load(picUrl).into(ivSongPic);
-        new Thread(()->{
-            Bitmap bitmap = null;
-            try {
-                bitmap = BitmapFactory.decodeStream(new URL(picUrl).openConnection().getInputStream());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void displayPic(Bitmap bitmap) {
+        LogUtils.d(TAG, (bitmap == null) + "------");
 
-            Bitmap result = BitmapUtils.fastblur(bitmap, 0.1f, 20);
-            BitmapDrawable ob = new BitmapDrawable(getResources(), result);
-            runOnUiThread(() -> view.setBackground(ob));
-        }).start();
+        Bitmap result = BitmapUtils.fastblur(bitmap, 0.1f, 20);
+        BitmapDrawable ob = new BitmapDrawable(getResources(), result);
+        Bitmap finalBitmap = bitmap;
+        view.setBackground(ob);
+        ivSongPic.setImageBitmap(bitmap);
     }
 
     @Override

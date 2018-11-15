@@ -31,7 +31,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/iv_play_type"
         app:layout_constraintTop_toTopOf="@+id/iv_play_type"
-        app:srcCompat="@drawable/previous" />
+        app:srcCompat="@drawable/note_btn_pre_white" />
 
     <ImageView
         android:id="@+id/iv_play_pause"
@@ -55,7 +55,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/iv_play_pause"
         app:layout_constraintTop_toTopOf="@+id/iv_play_pause"
-        app:srcCompat="@drawable/next" />
+        app:srcCompat="@drawable/note_btn_next_white" />
 
     <ImageView
         android:id="@+id/iv_playlist"

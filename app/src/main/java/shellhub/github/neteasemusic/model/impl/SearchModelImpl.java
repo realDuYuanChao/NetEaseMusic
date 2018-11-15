@@ -199,7 +199,7 @@ public class SearchModelImpl implements SearchModel {
     @Override
     public void saveSong(SongsItem songsItem, Callback callback) {
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, songsItem.getName());
-        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM, MusicUtils.getArtistAndAlbum(songsItem));
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM_KEY, MusicUtils.getArtistAndAlbum(songsItem));
 
         mNetEaseMusicService.getSongUrl(songsItem.getId(), new NetEaseMusicService.Callback<SongResponse>(){
 
@@ -227,4 +227,5 @@ public class SearchModelImpl implements SearchModel {
             }
         });
     }
+
 }

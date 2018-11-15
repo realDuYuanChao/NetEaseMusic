@@ -1,6 +1,5 @@
 package shellhub.github.neteasemusic.view;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import shellhub.github.neteasemusic.model.entities.Album;
@@ -15,4 +14,6 @@ public interface LocalView extends BaseView{
     void loadAlbum(List<Album> albums);
 
     void navigatePlay(String data);
+
+    void play(String songUrl);
 }

@@ -7,4 +7,5 @@ public class Single {
     private String data;
     private String title;
     private String artist;
+    private int albumId;
 }

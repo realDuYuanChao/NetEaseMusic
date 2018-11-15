@@ -1,17 +1,18 @@
 package shellhub.github.neteasemusic.model.impl;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.view.View;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
+import com.blankj.utilcode.util.Utils;
 
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.PlayModel;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
-import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
-import shellhub.github.neteasemusic.response.search.song.detail.SongDetailResponse;
 import shellhub.github.neteasemusic.util.ConstantUtils;
+import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 public class PlayModelIml implements PlayModel {
@@ -47,6 +48,7 @@ public class PlayModelIml implements PlayModel {
                 break;
             case R.id.iv_previous:
                 callback.onPrevious();
+                getPicUrl(callback);
                 break;
             case R.id.iv_play_pause:
                 //TODO
@@ -63,6 +65,7 @@ public class PlayModelIml implements PlayModel {
                 break;
             case R.id.iv_next:
                 callback.onNext();
+                getPicUrl(callback);
                 break;
             case R.id.iv_playlist:
                 callback.onPlaylist();
@@ -84,42 +87,58 @@ public class PlayModelIml implements PlayModel {
     }
 
     @Override
-    public void getSongUrl(int id, PlayCallback callback) {
-        if (id == 0) {
-            //invalid id, do nothing
-            return;
-        }
-        mNetEaseMusicService.getSongUrl(id, new NetEaseMusicService.Callback<SongResponse>(){
-
-            @Override
-            public void onSuccess(SongResponse data) {
-                callback.onSongUrl(data.getData().get(0).getUrl());
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-        });
+    public void getSongUrl(PlayCallback callback) {
+        getPicUrl(callback);
     }
+//
+//    @Override
+//    public void getSongUrl(int id, PlayCallback callback) {
+//        if (id == 0) {
+//            //invalid id, do nothing
+//            return;
+//        }
+//        mNetEaseMusicService.getSongUrl(id, new NetEaseMusicService.Callback<SongResponse>(){
+//
+//            @Override
+//            public void onSuccess(SongResponse data) {
+//                callback.onSongUrl(data.getData().get(0).getUrl());
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//        });
+//    }
 
     @Override
     public void getPicUrl(PlayCallback callback) {
-        int songId = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getInt(ConstantUtils.SP_CURRENT_SONG_ID_KEY, 0);
-        if (songId == 0) {
-            return;
-        }
-        mNetEaseMusicService.getSongDetail(songId, new NetEaseMusicService.Callback<SongDetailResponse>(){
-            @Override
-            public void onSuccess(SongDetailResponse data) {
-                callback.onAlbumUrl(data.getSongs().get(0).getAl().getPicUrl());
+        new Thread(()->{
+            Bitmap bitmap = MusicUtils.getAlbumCover();
+            if (bitmap == null) {
+                LogUtils.d(TAG, "no such album");
+                return;
+            }else {
+                com.blankj.utilcode.util.ActivityUtils.getTopActivity().runOnUiThread(()->{
+                    callback.onLoadedAlbum(bitmap);
+                });
             }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-        });
+        }).start();
+//        int songId = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getInt(ConstantUtils.SP_CURRENT_SONG_ID_KEY, 0);
+//        if (songId == 0) {
+//            return;
+//        }
+//        mNetEaseMusicService.getSongDetail(songId, new NetEaseMusicService.Callback<SongDetailResponse>() {
+//            @Override
+//            public void onSuccess(SongDetailResponse data) {
+//                callback.onAlbumUrl(data.getSongs().get(0).getAl().getPicUrl());
+//            }
+//
+//            @Override
+//            public void onError(Throwable e) {
+//
+//            }
+//        });
     }
 
     @Override
