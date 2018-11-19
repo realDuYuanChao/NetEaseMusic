@@ -198,6 +198,7 @@ public class SearchModelImpl implements SearchModel {
 
     @Override
     public void saveSong(SongsItem songsItem, Callback callback) {
+        MusicUtils.saveSongId(songsItem.getId());
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, songsItem.getName());
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM_KEY, MusicUtils.getArtistAndAlbum(songsItem));
 
@@ -217,7 +218,9 @@ public class SearchModelImpl implements SearchModel {
             @Override
             public void onSuccess(SongDetailResponse data) {
                 //store pic
-                SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY, data.getSongs().get(0).getAl().getPicUrl());
+                LogUtils.d(TAG, data.getSongs().get(0).getAl().getPicUrl());
+                SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE)
+                        .put(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY, data.getSongs().get(0).getAl().getPicUrl());
                 Utils.getApp().sendBroadcast(new Intent(ConstantUtils.ACTION_UPDATE_NOTIFICATION));
             }
 

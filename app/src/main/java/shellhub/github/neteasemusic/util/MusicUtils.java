@@ -178,15 +178,15 @@ public class MusicUtils {
 
     public static <T> void saveSongDetail(T item) {
         if (item instanceof NetworkMusic) {
+            saveSongId(((NetworkMusic) item).getId());
+            saveSongUrl(((NetworkMusic) item).getUrl());
+            saveSongName(((NetworkMusic) item).getName());
+            saveArtistAndAlbum(((NetworkMusic) item).getArtistAndAlbum());
             NetEaseMusicApp.getNetEaseMusicService().getSongDetail(((NetworkMusic) item).getId(), new NetEaseMusicService.Callback<SongDetailResponse>(){
                 @Override
                 public void onSuccess(SongDetailResponse data) {
                     String albumUrl = data.getSongs().get(0).getAl().getPicUrl();
                     saveAlbumCover(albumUrl);
-                    saveSongId(((NetworkMusic) item).getId());
-                    saveSongUrl(((NetworkMusic) item).getUrl());
-                    saveSongName(((NetworkMusic) item).getName());
-                    saveArtistAndAlbum(((NetworkMusic) item).getArtistAndAlbum());
                 }
 
                 @Override
