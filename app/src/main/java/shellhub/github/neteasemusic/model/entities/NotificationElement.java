@@ -8,7 +8,7 @@ import lombok.Data;
 public class NotificationElement {
     Bitmap songAlbumBitmap;
     String songName;
-    String songArtistAndTitle;
+    String songArtistAndAlbum;
     boolean playing;
     boolean loved;
     boolean openLyric;

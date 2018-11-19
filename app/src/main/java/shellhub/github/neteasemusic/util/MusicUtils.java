@@ -215,6 +215,14 @@ public class MusicUtils {
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY, albumCoverUrl);
     }
 
+    public static boolean getPlayStatus() {
+        return SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getBoolean(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false);
+    }
+
+    public static void savePlayStatus(boolean isPlaying) {
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, isPlaying);
+    }
+
     public static String readAlbumCover() {
         return SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY);
     }
@@ -250,4 +258,5 @@ public class MusicUtils {
     public static String readArtistAndAlbum() {
         return SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM_KEY);
     }
+
 }

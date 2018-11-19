@@ -78,7 +78,8 @@ public class MusicServiceImpl extends Service implements MusicService,
     @Override
     public void onCompletion(MediaPlayer mp) {
         LogUtils.d(TAG, "completed");
-//        sendBroadcast(new Intent(ConstantUtils.ACTION_NEXT)); //default next song
+        mPlayer.seekTo(0);
+        mPlayer.start();//default repeat todo
     }
 
     @Override
@@ -197,7 +198,16 @@ public class MusicServiceImpl extends Service implements MusicService,
 
     public void startForegroundService() {
         Log.d(TAG, "startForegroundService: ");
-        startForeground(NOTIFICATION_ID, buildNotification(null));
+        new Thread(()->{
+            NotificationElement notificationElement = new NotificationElement();
+            notificationElement.setPlaying(MusicUtils.getPlayStatus());
+            notificationElement.setSongAlbumBitmap(MusicUtils.getAlbumCover());
+            notificationElement.setSongArtistAndAlbum(MusicUtils.readArtistAndAlbum());
+            notificationElement.setSongName(MusicUtils.readSongName());
+            notificationElement.setLoved(true);//todo
+            notificationElement.setOpenLyric(true);//todo
+            startForeground(NOTIFICATION_ID, buildNotification(notificationElement));
+        }).start();
     }
 
     private Notification buildNotification(NotificationElement notificationElement) {
@@ -228,7 +238,7 @@ public class MusicServiceImpl extends Service implements MusicService,
         if (notificationElement != null) {
             controllerLayout.setImageViewBitmap(R.id.iv_song_ablum, notificationElement.getSongAlbumBitmap());
             controllerLayout.setTextViewText(R.id.tv_controller_name, notificationElement.getSongName());
-            controllerLayout.setTextViewText(R.id.tv_controller_artist_name, notificationElement.getSongArtistAndTitle());
+            controllerLayout.setTextViewText(R.id.tv_controller_artist_name, notificationElement.getSongArtistAndAlbum());
             if (notificationElement.isLoved()) {
                 controllerLayout.setImageViewResource(R.id.iv_control_fav, R.drawable.note_btn_loved);
             } else {
@@ -537,7 +547,7 @@ public class MusicServiceImpl extends Service implements MusicService,
         new Thread(() -> {
             NotificationElement notificationElement = new NotificationElement();
             notificationElement.setSongName(MusicUtils.readSongName());
-            notificationElement.setSongArtistAndTitle(MusicUtils.readArtistAndAlbum());
+            notificationElement.setSongArtistAndAlbum(MusicUtils.readArtistAndAlbum());
             notificationElement.setSongAlbumBitmap(MusicUtils.getAlbumCover());
             notificationElement.setPlaying(SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getBoolean(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false));
             notificationElement.setOpenLyric(true); //TODO
