@@ -551,6 +551,7 @@ public class MusicServiceImpl extends Service implements MusicService,
         intentFilter.addAction(ConstantUtils.ACTION_PLAY);
         intentFilter.addAction(ConstantUtils.ACTION_PAUSE);
         intentFilter.addAction(ConstantUtils.ACTION_NEXT);
+        intentFilter.addAction(ConstantUtils.ACTION_UPDATE_NOTIFICATION);
         registerReceiver(playerReceiver, intentFilter);
     }
 
