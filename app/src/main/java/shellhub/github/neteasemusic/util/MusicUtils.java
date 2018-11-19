@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -70,12 +71,24 @@ public class MusicUtils {
     }
 
     public static String getArtistAndAlbum(SongsItem songsItem) {
-        StringJoiner joiner = new StringJoiner("/");
-        for (ArtistsItem artist : songsItem.getArtists()) {
-            joiner.add(artist.getName());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            StringJoiner joiner = new StringJoiner("/");
+            for (ArtistsItem artist : songsItem.getArtists()) {
+                joiner.add(artist.getName());
+            }
+            return joiner.toString() + " - " + songsItem.getAlbum().getName();
+        }else {
+            return formatArtistAndAlbum(songsItem);
         }
+    }
 
-        return joiner.toString() + " - " + songsItem.getAlbum().getName();
+    public static String formatArtistAndAlbum(SongsItem songsItem) {
+        StringBuilder builder = new StringBuilder();
+        for (ArtistsItem artistsItem : songsItem.getArtists()) {
+            builder.append(artistsItem.getName()).append("/");
+        }
+        builder.setLength(builder.length() - 1);
+        return builder.toString();
     }
 
     public static Bitmap getBitmap(String url) {
