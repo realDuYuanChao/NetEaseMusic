@@ -2,7 +2,8 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground">
 
 
     <ImageView
@@ -30,9 +31,9 @@
         android:id="@+id/tv_artist_alias"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/gray"
         android:layout_marginStart="8dp"
         android:text="(艾兰·沃克)"
+        android:textColor="@color/gray"
         app:layout_constraintBaseline_toBaselineOf="@+id/tv_artist_name"
         app:layout_constraintStart_toEndOf="@+id/tv_artist_name" />
 </androidx.constraintlayout.widget.ConstraintLayout>

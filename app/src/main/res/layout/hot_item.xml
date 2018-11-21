@@ -2,13 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_hot"
         android:layout_width="wrap_content"
-        android:layout_margin="8dp"
         android:layout_height="wrap_content"
+        android:layout_margin="8dp"
         android:background="@drawable/item_flex_bg"
         android:text="地方萨芬大"
         android:textColor="@color/dark" />
