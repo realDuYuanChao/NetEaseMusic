@@ -69,6 +69,11 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
     }
 
     @Override
+    public void loadMore(String keyword, int offset) {
+        mSearchModel.loadMore(keyword, offset, this);
+    }
+
+    @Override
     public void onHotSuccess(HotResponse response) {
         mSearchView.hideProgress();
         mSearchView.showHots(response);
@@ -77,6 +82,12 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
     @Override
     public void onKeywordSuccess(SearchResponse searchResponse) {
         mSearchView.hideProgress();
+        mSearchView.showSearchResult(searchResponse);
+    }
+
+    @Override
+    public void onLoadMoreSuccess(SearchResponse searchResponse) {
+//        showSearchResult
         mSearchView.showSearchResult(searchResponse);
     }
 

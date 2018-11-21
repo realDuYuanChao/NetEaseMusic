@@ -19,6 +19,6 @@ public class MusicUtilsTest {
 
     @Test
     public void random() {
-        System.out.println(MusicUtils.random(10));
+//        System.out.println(MusicUtils.random(10));
     }
 }

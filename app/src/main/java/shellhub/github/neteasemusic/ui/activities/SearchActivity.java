@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.BaseApp;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.HistoryEvent;
+import shellhub.github.neteasemusic.model.entities.LoadMoreEvent;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.SearchPresenter;
 import shellhub.github.neteasemusic.presenter.impl.SearchPresenterImpl;
@@ -40,6 +41,7 @@ import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 import shellhub.github.neteasemusic.ui.fragments.HotFragment;
 import shellhub.github.neteasemusic.ui.fragments.SearchFragment;
 import shellhub.github.neteasemusic.util.ConstantUtils;
+import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 public class SearchActivity extends BaseApp implements shellhub.github.neteasemusic.view.SearchView {
@@ -61,6 +63,9 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     private boolean isShowing = false;
 
     private List<String> searchHistory = new ArrayList<>();
+
+    private String searchKeyword;
+    private int searchOffset = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,6 +117,10 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
                 mSearchPresenter.searchVideo(query);
                 mSearchPresenter.searchArtist(query);
                 mSearchPresenter.saveHistory(query);
+
+                searchKeyword = query;
+                MusicUtils.saveSearchKeyword(query);
+                searchOffset = 1;
                 return true;
             }
 
@@ -198,6 +207,9 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
         mSearchPresenter.searchVideo(hot.getFirst());
         mSearchPresenter.searchArtist(hot.getFirst());
         mSearchPresenter.saveHistory(hot.getFirst());
+
+        MusicUtils.saveSearchKeyword(hot.getFirst());
+        searchOffset = 1;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -212,5 +224,14 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearchSingleClickEvent(SongsItem songsItem) {
         mSearchPresenter.saveSong(songsItem);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoadMoreEvent(LoadMoreEvent loadMoreEvent) {
+        if (searchKeyword == null) {
+            searchKeyword = MusicUtils.readSearchKeyword();
+        }
+        searchOffset++;
+        mSearchPresenter.loadMore(searchKeyword, searchOffset);
     }
 }

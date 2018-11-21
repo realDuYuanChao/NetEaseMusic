@@ -259,4 +259,11 @@ public class MusicUtils {
         return SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM_KEY);
     }
 
+    public static String readSearchKeyword() {
+        return SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SEARCH_KEYWORD_KEY);
+    }
+
+    public static void saveSearchKeyword(String keyword) {
+        SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SEARCH_KEYWORD_KEY, keyword);
+    }
 }

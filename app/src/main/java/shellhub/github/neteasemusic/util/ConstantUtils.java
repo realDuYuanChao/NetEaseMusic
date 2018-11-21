@@ -45,6 +45,8 @@ public class ConstantUtils {
     public final static String SP_CURRENT_SONG_ALBUM_URL_KEY = "song_album";
     public final static String SP_CURRENT_IS_PLAYING_STATUS_KEY = "song_play_status";
     public final static String SP_CURRENT_PLAYLIST_INDEX_KEY = "play_list_index";
+    public final static String SP_CURRENT_SEARCH_KEYWORD_KEY = "search_keyword";
+    public final static String SP_CURRENT_SEARCH_OFFSET_KEY = "search_offset";
 
     /**
      * message deliver key

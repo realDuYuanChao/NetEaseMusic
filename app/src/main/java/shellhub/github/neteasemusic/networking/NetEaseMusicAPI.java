@@ -24,6 +24,9 @@ public interface NetEaseMusicAPI {
     @GET(ConstantUtils.SEARCH_API)
     Observable<SearchResponse> search(@Query("keywords") String keywords);
 
+    @GET(ConstantUtils.SEARCH_API)
+    Observable<SearchResponse> search(@Query("keywords") String keywords, @Query("offset") int offset); //page
+
     @GET(ConstantUtils.COMMENT_API)
     Observable<CommentResponse> comment(@Query("id") int id);
 

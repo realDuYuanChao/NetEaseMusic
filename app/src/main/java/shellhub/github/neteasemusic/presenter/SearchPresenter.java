@@ -17,4 +17,6 @@ public interface SearchPresenter {
 
     void saveSong(SongsItem songsItem);
 
+    void loadMore(String keyword, int offset);
+
 }

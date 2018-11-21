@@ -4,6 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
+
+import com.blankj.utilcode.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -18,17 +21,24 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.R;
+import shellhub.github.neteasemusic.adapter.EndlessRecyclerOnScrollListener;
 import shellhub.github.neteasemusic.adapter.SearchSingleAdapter;
+import shellhub.github.neteasemusic.model.entities.LoadMoreEvent;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 
 public class SingleSearchFragment extends Fragment {
 
-//    private static String TAG = SingleSearchFragment.class.getSimpleName();
+    private static String TAG = SingleSearchFragment.class.getSimpleName();
 
     @BindView(R.id.rv_single)
     RecyclerView rvSingle;
 
+    @BindView(R.id.pb_loading)
+    ProgressBar pbLoading;
+
     public static SearchSingleAdapter adapter;
+
+    private boolean isLoading = false;
 
     private static class SingletonHelper {
         private static final SingleSearchFragment INSTANCE = new SingleSearchFragment();
@@ -57,12 +67,28 @@ public class SingleSearchFragment extends Fragment {
             adapter = new SearchSingleAdapter();
         }
         rvSingle.setAdapter(adapter);
+
+        rvSingle.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+            @Override
+            public void onLoadMore() {
+                LogUtils.d(TAG, "loading...");
+                isLoading = true;
+                pbLoading.setVisibility(View.VISIBLE);
+                EventBus.getDefault().post(new LoadMoreEvent());
+            }
+        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearchSingleEvent(SearchResponse searchResponse) {
-//        LogUtils.d(TAG, searchResponse.getResult().getSongCount());
-        adapter.setSongsItems(searchResponse.getResult().getSongs());
+        if (!isLoading) {
+            adapter.setSongsItems(searchResponse.getResult().getSongs());
+        } else {
+            adapter.getSongsItems().addAll(searchResponse.getResult().getSongs());
+            pbLoading.setVisibility(View.GONE);
+            isLoading = false;
+        }
         adapter.notifyDataSetChanged();
     };
+
 }

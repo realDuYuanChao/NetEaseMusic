@@ -103,6 +103,30 @@ public class NetEaseMusicService {
                 });
     }
 
+    public void search(String keywords, int offset, final Callback callback) {
+        netEaseMusicAPI.search(keywords, offset).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<SearchResponse>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(SearchResponse searchResponse) {
+                callback.onSuccess(searchResponse);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
     public void comment(int id, final Callback callback) {
         netEaseMusicAPI.comment(id).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

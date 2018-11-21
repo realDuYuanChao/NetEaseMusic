@@ -95,6 +95,22 @@ public class SearchModelImpl implements SearchModel {
     }
 
     @Override
+    public void loadMore(String keyword, int offset, Callback callback) {
+        mNetEaseMusicService.search(keyword, offset, new NetEaseMusicService.Callback<SearchResponse>(){
+            @Override
+            public void onSuccess(SearchResponse data) {
+                LogUtils.d(TAG, "loading");
+                callback.onLoadMoreSuccess(data);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+        });
+    }
+
+    @Override
     public void searchVideo(String keyword, Callback callback) {
         mNetEaseMusicService.searchVideo(keyword, new NetEaseMusicService.Callback<VideoResponse>() {
             @Override

@@ -24,10 +24,14 @@ public interface SearchModel {
 
     void saveSong(SongsItem songsItem, Callback callback);
 
+    void loadMore(String keyword, int offset, Callback callback);
+
     interface Callback{
         void onHotSuccess(HotResponse response);
 
         void onKeywordSuccess(SearchResponse searchResponse);
+
+        void onLoadMoreSuccess(SearchResponse searchResponse);
 
         void onVideoSuccess(VideoResponse videoResponse);
 
