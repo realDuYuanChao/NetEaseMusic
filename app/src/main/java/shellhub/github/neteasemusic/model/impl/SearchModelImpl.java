@@ -101,6 +101,29 @@ public class SearchModelImpl implements SearchModel {
             public void onSuccess(SearchResponse data) {
                 LogUtils.d(TAG, "loading");
                 callback.onLoadMoreSuccess(data);
+
+                //store search result
+                for (SongsItem songsItem : data.getResult().getSongs()) {
+                    mNetEaseMusicService.getSongUrl(songsItem.getId(), new NetEaseMusicService.Callback<SongResponse>(){
+
+                        @Override
+                        public void onSuccess(SongResponse data) {
+                            data.getData().get(0).getUrl();
+                            NetworkMusic networkMusic = new NetworkMusic();
+                            networkMusic.setId(songsItem.getId());
+                            networkMusic.setUrl(data.getData().get(0).getUrl());
+                            networkMusic.setName(songsItem.getName());
+                            networkMusic.setArtistAndAlbum(MusicUtils.getArtistAndAlbum(songsItem));
+                            EventBus.getDefault().post(networkMusic);
+                            LogUtils.d(TAG, networkMusic);
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+                    });
+                }
             }
 
             @Override
@@ -222,6 +245,7 @@ public class SearchModelImpl implements SearchModel {
 
             @Override
             public void onSuccess(SongResponse data) {
+                LogUtils.d(TAG, data.getData().get(0).getUrl());
                 callback.onSongReady(data.getData().get(0).getUrl());
             }
 

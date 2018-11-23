@@ -23,12 +23,9 @@ public class SplashActivity extends AppCompatActivity implements SplashView {
         setContentView(R.layout.activity_splash);
         setUpMVP();
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mSplashPresenter.navigate();
-            }
-        }, 0);
+        new Handler().postDelayed(()->{
+            mSplashPresenter.navigate();
+        } , 0);
     }
 
     @Override
@@ -39,6 +36,7 @@ public class SplashActivity extends AppCompatActivity implements SplashView {
     @Override
     public void navigateMain() {
         com.blankj.utilcode.util.ActivityUtils.startActivity(MainActivity.class);
+        finish();
     }
 
     @Override

@@ -64,7 +64,6 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
 
     private List<String> searchHistory = new ArrayList<>();
 
-    private String searchKeyword;
     private int searchOffset = 0;
 
     @Override
@@ -118,7 +117,7 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
                 mSearchPresenter.searchArtist(query);
                 mSearchPresenter.saveHistory(query);
 
-                searchKeyword = query;
+//                searchKeyword = query;
                 MusicUtils.saveSearchKeyword(query);
                 searchOffset = 1;
                 return true;
@@ -186,6 +185,7 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
 
     @Override
     public void playSong(String songUrl) {
+        LogUtils.d(TAG, songUrl);
         Intent intent = new Intent(ConstantUtils.ACTION_PLAY);
         intent.putExtra(ConstantUtils.MUSIC_URI_KEY, songUrl);
         Utils.getApp().sendBroadcast(intent);
@@ -217,21 +217,28 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
         LogUtils.d(TAG, historyEvent.getKeyword());
         showSearchResult();
         mSearchPresenter.search(historyEvent.getKeyword());
-
         mSearchPresenter.saveHistory(historyEvent.getKeyword());
+
+        MusicUtils.saveSearchKeyword(historyEvent.getKeyword());
+        searchOffset = 1;
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSearchSingleClickEvent(SongsItem songsItem) {
+        LogUtils.d(TAG, songsItem.getName());
         mSearchPresenter.saveSong(songsItem);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onLoadMoreEvent(LoadMoreEvent loadMoreEvent) {
-        if (searchKeyword == null) {
-            searchKeyword = MusicUtils.readSearchKeyword();
-        }
-        searchOffset++;
+//        if (searchKeyword == null) {
+//            searchKeyword = MusicUtils.readSearchKeyword();
+//        }
+
+
+        String searchKeyword = MusicUtils.readSearchKeyword();
+        LogUtils.d(TAG, "searchKeyword:"  + searchKeyword + " searchOffset:" + searchOffset);
         mSearchPresenter.loadMore(searchKeyword, searchOffset);
+        searchOffset++;
     }
 }
