@@ -54,8 +54,9 @@ dependencies {
     //util code
     implementation 'com.blankj:utilcode:1.21.1'
     //lombok
-    //    compileOnly 'org.projectlombok:lombok:1.16.22'
-    //    annotationProcessor 'org.projectlombok:lombok:1.16.22'
+    compileOnly 'org.projectlombok:lombok:1.16.20'
+    annotationProcessor 'org.projectlombok:lombok:1.16.20'
+
     //dagger
     implementation 'com.google.dagger:dagger:2.18'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.18'
@@ -75,8 +76,6 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
-    compileOnly files('libs/lombok-1.16.20.jar')
-    annotationProcessor files('libs/lombok-1.16.20.jar')
     implementation 'com.android.support:design:28.0.0'
     implementation 'androidx.palette:palette:1.0.0'
 

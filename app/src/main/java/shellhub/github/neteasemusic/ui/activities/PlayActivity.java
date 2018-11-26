@@ -273,7 +273,7 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
         Bitmap result = BitmapUtils.fastblur(bitmap, 0.1f, 20);
         BitmapDrawable ob = new BitmapDrawable(getResources(), result);
         Bitmap finalBitmap = bitmap;
-        view.setBackground(ob);
+        view.setBackground(BitmapUtils.createBlurredImageFromBitmap(bitmap, this, 6));
         ivSongPic.setImageBitmap(bitmap);
     }
 

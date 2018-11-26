@@ -9,6 +9,7 @@ import lombok.Data;
 import shellhub.github.neteasemusic.deps.DaggerDeps;
 import shellhub.github.neteasemusic.deps.Deps;
 import shellhub.github.neteasemusic.networking.NetworkModule;
+import shellhub.github.neteasemusic.ui.fragments.ControllerCardFragment;
 
 
 @Data
@@ -19,6 +20,10 @@ public class BaseApp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         File cacheFile = new File(getCacheDir(), "responses");
         deps = DaggerDeps.builder().networkModule(new NetworkModule(cacheFile)).build();
+    }
+
+    public void initControllerCard() {
+        getSupportFragmentManager().beginTransaction().replace(R.id.quick_controller_container, new ControllerCardFragment()).commit();
     }
 
 }

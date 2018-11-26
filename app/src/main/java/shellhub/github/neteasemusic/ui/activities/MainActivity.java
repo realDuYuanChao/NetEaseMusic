@@ -108,6 +108,7 @@ public class MainActivity extends BaseApp
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        initControllerCard();
 
     }
 
