@@ -3,7 +3,6 @@ package shellhub.github.neteasemusic.model.impl;
 import android.content.Context;
 import android.content.Intent;
 
-import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
 import com.blankj.utilcode.util.Utils;
@@ -13,9 +12,12 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import shellhub.github.neteasemusic.model.SearchModel;
 import shellhub.github.neteasemusic.model.entities.SearchHistory;
-import shellhub.github.neteasemusic.model.entities.dao.SearchHistoryDao;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.SongsItem;
@@ -65,7 +67,7 @@ public class SearchModelImpl implements SearchModel {
 
                 //store search result
                 for (SongsItem songsItem : searchResponse.getResult().getSongs()) {
-                    mNetEaseMusicService.getSongUrl(songsItem.getId(), new NetEaseMusicService.Callback<SongResponse>(){
+                    mNetEaseMusicService.getSongUrl(songsItem.getId(), new NetEaseMusicService.Callback<SongResponse>() {
 
                         @Override
                         public void onSuccess(SongResponse data) {
@@ -96,15 +98,15 @@ public class SearchModelImpl implements SearchModel {
 
     @Override
     public void loadMore(String keyword, int offset, Callback callback) {
-        mNetEaseMusicService.search(keyword, offset, new NetEaseMusicService.Callback<SearchResponse>(){
+        mNetEaseMusicService.search(keyword, offset, new NetEaseMusicService.Callback<SearchResponse>() {
             @Override
             public void onSuccess(SearchResponse data) {
                 LogUtils.d(TAG, "loading");
                 callback.onLoadMoreSuccess(data);
 
-                //store search result
+                //store search re
                 for (SongsItem songsItem : data.getResult().getSongs()) {
-                    mNetEaseMusicService.getSongUrl(songsItem.getId(), new NetEaseMusicService.Callback<SongResponse>(){
+                    mNetEaseMusicService.getSongUrl(songsItem.getId(), new NetEaseMusicService.Callback<SongResponse>() {
 
                         @Override
                         public void onSuccess(SongResponse data) {
@@ -166,72 +168,57 @@ public class SearchModelImpl implements SearchModel {
     @Override
     public void loadHistory(Callback callback) {
         histories.clear();
-        new Thread(() -> {
-            for (SearchHistory searchHistory : NetEaseMusicApp.getDBInstance().searchHistoryDao().getAll()) {
-                histories.add(searchHistory.getKeyword());
-            }
-            ActivityUtils.getTopActivity().runOnUiThread(() -> {
-                callback.onHistory(histories);
-                LogUtils.d(TAG, histories + "restore");
-            });
+        NetEaseMusicApp.getDBInstance().searchHistoryDao().getAll().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<List<SearchHistory>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-        }).start();
+                    }
+
+                    @Override
+                    public void onNext(List<SearchHistory> searchHistories) {
+                        for (SearchHistory searchHistory : searchHistories) {
+                            histories.add(searchHistory.getKeyword());
+                        }
+                        callback.onHistory(histories);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+
     }
 
     @Override
     public void saveHistory(String keyword) {
-//        LogUtils.d(TAG, keyword);
-//        if (histories.size() != 0 && keyword.equals(histories.get(0))) {
-//            return;
-//        }
-//
-//        if (histories.contains(keyword)) {
-//            histories.remove(keyword);
-//        }
-//        histories.add(0, keyword);
-//        //just store top 5 search history
-//        if (histories.size() > 5) {
-//            histories.remove(histories.size() - 1);
-//        }
-//
-//        LogUtils.d(TAG, histories);
+        if (histories.contains(keyword)) {
+            histories.remove(keyword);
+        }
+        if (histories.size() > 5) {
+            //remove bottom history element
+            histories.remove(0);
+        }
+        histories.add(keyword);
 
-//        histories.remove(keyword);
-//        histories.add(0, keyword);
-//
-//        if (histories.size() > 5) { //just store top 5
-//            histories = histories.subList(0, 5);
-//        }
-
-
-        //save history to db
-        new Thread(() -> {
-
-            histories.clear();
-            for (SearchHistory searchHistory : NetEaseMusicApp.getDBInstance().searchHistoryDao().getAll()) {
-                histories.add(searchHistory.getKeyword());
-            }
-
-            if (histories.contains(keyword)) {
-                histories.remove(keyword);
-                histories.add(0, keyword);
-            }else {
-                histories.add(0, keyword);
-            }
-
-            if (histories.size() > 5) {
-                histories = histories.subList(5, histories.size());
-            }
-
-            //delete all database
+        //store history to database
+        new Thread(()->{
+            //remove history
             NetEaseMusicApp.getDBInstance().searchHistoryDao().deleteAll();
 
-            LogUtils.d(TAG, histories + "store");
-            SearchHistoryDao searchHistoryDao = NetEaseMusicApp.getDBInstance().searchHistoryDao();
-            for (int i = 0; i < histories.size() ; i++) {
+            List<SearchHistory> searchHistories = new ArrayList<>();
+            for (int i = 0; i < histories.size(); i++) {
                 SearchHistory searchHistory = new SearchHistory(i, histories.get(i));
-                searchHistoryDao.insertAll(searchHistory);
+                searchHistories.add(searchHistory);
             }
+            NetEaseMusicApp.getDBInstance().searchHistoryDao().insertAll();
         }).start();
     }
 
@@ -241,7 +228,7 @@ public class SearchModelImpl implements SearchModel {
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_NAME_KEY, songsItem.getName());
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ARTIST_AND_ALBUM_KEY, MusicUtils.getArtistAndAlbum(songsItem));
 
-        mNetEaseMusicService.getSongUrl(songsItem.getId(), new NetEaseMusicService.Callback<SongResponse>(){
+        mNetEaseMusicService.getSongUrl(songsItem.getId(), new NetEaseMusicService.Callback<SongResponse>() {
 
             @Override
             public void onSuccess(SongResponse data) {
@@ -254,7 +241,7 @@ public class SearchModelImpl implements SearchModel {
 
             }
         });
-        mNetEaseMusicService.getSongDetail(songsItem.getId(), new NetEaseMusicService.Callback<SongDetailResponse>(){
+        mNetEaseMusicService.getSongDetail(songsItem.getId(), new NetEaseMusicService.Callback<SongDetailResponse>() {
             @Override
             public void onSuccess(SongDetailResponse data) {
                 //store pic
