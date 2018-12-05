@@ -7,7 +7,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+import shellhub.github.neteasemusic.ui.fragments.DiscoveryFragment;
 import shellhub.github.neteasemusic.ui.fragments.MusicFragment;
+import shellhub.github.neteasemusic.ui.fragments.VideoFragment;
 
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
@@ -16,8 +18,8 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     public MainPagerAdapter(FragmentManager fm) {
         super(fm);
         fragments.add(new MusicFragment());
-        fragments.add(new MusicFragment());
-        fragments.add(new MusicFragment());
+        fragments.add(new DiscoveryFragment());
+        fragments.add(new VideoFragment());
         //TODO
     }
 

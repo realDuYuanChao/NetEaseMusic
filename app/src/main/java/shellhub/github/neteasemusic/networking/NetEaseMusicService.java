@@ -5,6 +5,7 @@ import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import shellhub.github.neteasemusic.response.banner.BannerResponse;
 import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
@@ -274,6 +275,33 @@ public class NetEaseMusicService {
                     @Override
                     public void onNext(SongDetailResponse songDetailResponse) {
                         callback.onSuccess(songDetailResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void getBanner(Callback callback) {
+        netEaseMusicAPI.getBanner()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<BannerResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(BannerResponse bannerResponse) {
+                        callback.onSuccess(bannerResponse);
                     }
 
                     @Override

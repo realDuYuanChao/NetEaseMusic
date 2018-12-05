@@ -39,7 +39,7 @@ import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.Hot;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
-import shellhub.github.neteasemusic.ui.fragments.HotFragment;
+import shellhub.github.neteasemusic.ui.fragments.HotSearchFragment;
 import shellhub.github.neteasemusic.ui.fragments.SearchFragment;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.MusicUtils;
@@ -193,7 +193,7 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
 
     @Override
     public void setUpMVP() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.search_container, new HotFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.search_container, new HotSearchFragment()).commit();
         mSearchPresenter = new SearchPresenterImpl(this, mNetEaseMusicService);
         mSearchPresenter.searchHot();
         mSearchPresenter.loadHistory();

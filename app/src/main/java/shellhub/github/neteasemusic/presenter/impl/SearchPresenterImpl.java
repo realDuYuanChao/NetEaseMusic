@@ -2,6 +2,7 @@ package shellhub.github.neteasemusic.presenter.impl;
 
 import com.blankj.utilcode.util.LogUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import shellhub.github.neteasemusic.model.SearchModel;
@@ -41,8 +42,9 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
     }
 
     @Override
-    public void saveHistory(String keyword) {
-        mSearchModel.saveHistory(keyword);
+    public void removeHistory() {
+        mSearchView.showHistory(new ArrayList<>());
+        mSearchModel.removeHistory();
     }
 
     @Override

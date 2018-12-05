@@ -4,6 +4,7 @@ import java.util.List;
 
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
+import shellhub.github.neteasemusic.response.banner.BannersItem;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 
 public interface MainView extends BaseView {
@@ -27,5 +28,7 @@ public interface MainView extends BaseView {
     void navigateToFavorites();
 
     void showNetworkError(String errorMsg);
+
+    void showBanner(List<BannersItem> bannersItems);
 
 }

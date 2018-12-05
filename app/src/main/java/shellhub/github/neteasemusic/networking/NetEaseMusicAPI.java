@@ -3,6 +3,7 @@ package shellhub.github.neteasemusic.networking;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
+import shellhub.github.neteasemusic.response.banner.BannerResponse;
 import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
@@ -47,4 +48,7 @@ public interface NetEaseMusicAPI {
 
     @GET(ConstantUtils.SONG_DETAIL_API)
     Observable<SongDetailResponse> getSongDetail(@Query("ids") int ids);
+
+    @GET(ConstantUtils.BANNER_API)
+    Observable<BannerResponse> getBanner();
 }

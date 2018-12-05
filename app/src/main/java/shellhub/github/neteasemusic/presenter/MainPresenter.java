@@ -9,4 +9,5 @@ public interface MainPresenter {
 
     void musicMenuNavigate(MusicMenuIndexEvent musicMenuIndexEvent);
 
+    void getBanner();
 }

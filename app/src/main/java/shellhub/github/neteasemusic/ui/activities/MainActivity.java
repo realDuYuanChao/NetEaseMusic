@@ -51,6 +51,7 @@ import shellhub.github.neteasemusic.model.entities.NavProfile;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.MainPresenter;
 import shellhub.github.neteasemusic.presenter.impl.MainPresenterImpl;
+import shellhub.github.neteasemusic.response.banner.BannersItem;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.ui.fragments.MainFragment;
 import shellhub.github.neteasemusic.ui.fragments.MusicFragment;
@@ -198,6 +199,12 @@ public class MainActivity extends BaseApp
         ToastUtils.showLong(R.string.network_error);
     }
 
+    @Override
+    public void showBanner(List<BannersItem> bannersItems) {
+        LogUtils.d(TAG, "bannerSize=" + bannersItems.size());
+        EventBus.getDefault().post(bannersItems);
+    }
+
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     @Override
     public void setUpMVP() {
@@ -207,6 +214,7 @@ public class MainActivity extends BaseApp
                 .commit();
         mainPresenter = new MainPresenterImpl(mNetEaseMusicService, this);
         mainPresenter.update(receiveData);
+        mainPresenter.getBanner();
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)

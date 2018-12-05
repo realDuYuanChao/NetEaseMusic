@@ -48,4 +48,17 @@
     <string name="hot_search">Hot search</string>
     <string name="history_record">历史纪录</string>
     <string name="video">Video</string>
+    <string name="hot">Hot</string>Performance
+    <string name="contact">Contact</string>
+    <string name="radio">Radio</string>
+    <string name="suggest">Suggest</string>
+    <string name="look_live">LOOK直播</string>
+    <string name="live">直播</string>
+    <string name="cover">翻唱</string>
+    <string name="bgm">听BGM</string>
+    <string name="mv">MV</string>
+    <string name="dance">舞蹈</string>
+    <string name="acg_music">ACG音乐</string>
+    <string name="performance">演奏</string>
+    <string name="video_top">视频榜</string>
 </resources>

@@ -4,30 +4,35 @@ import android.os.Bundle;
 
 import java.util.List;
 
+import shellhub.github.neteasemusic.model.HotModel;
 import shellhub.github.neteasemusic.model.MainModel;
 import shellhub.github.neteasemusic.model.MusicMenuModel;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
+import shellhub.github.neteasemusic.model.impl.HotModelImpl;
 import shellhub.github.neteasemusic.model.impl.MainModelImpl;
 import shellhub.github.neteasemusic.model.impl.MusicMenuModelImpl;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.MainPresenter;
+import shellhub.github.neteasemusic.response.banner.BannersItem;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.MainView;
 
-public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback, MusicMenuModel.MusicMenuCallback {
+public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback, MusicMenuModel.MusicMenuCallback, HotModel.Callback {
     private String TAG = TagUtils.getTag(this.getClass());
     private MainView mainView;
     private MainModel mainModel;
     private MusicMenuModel musicMenuModel;
+    private HotModel mHotModel;
 
 
     public MainPresenterImpl(NetEaseMusicService netEaseMusicService, MainView mainView) {
         this.mainView = mainView;
         this.mainModel = new MainModelImpl(netEaseMusicService);
         musicMenuModel = new MusicMenuModelImpl();
+        mHotModel = new HotModelImpl();
     }
 
     @Override
@@ -38,6 +43,11 @@ public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback,
     @Override
     public void musicMenuNavigate(MusicMenuIndexEvent musicMenuIndexEvent) {
         musicMenuModel.navigate(musicMenuIndexEvent,this);
+    }
+
+    @Override
+    public void getBanner() {
+        mHotModel.getBanner(this);
     }
 
     @Override
@@ -79,5 +89,10 @@ public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback,
     @Override
     public void navigateToFavorites() {
         mainView.navigateToFavorites();
+    }
+
+    @Override
+    public void onBanner(List<BannersItem> bannersItems) {
+        mainView.showBanner(bannersItems);
     }
 }
