@@ -53,6 +53,7 @@ import shellhub.github.neteasemusic.presenter.MainPresenter;
 import shellhub.github.neteasemusic.presenter.impl.MainPresenterImpl;
 import shellhub.github.neteasemusic.response.banner.BannersItem;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
+import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongItem;
 import shellhub.github.neteasemusic.ui.fragments.MainFragment;
 import shellhub.github.neteasemusic.ui.fragments.MusicFragment;
 import shellhub.github.neteasemusic.util.BitmapUtils;
@@ -205,6 +206,11 @@ public class MainActivity extends BaseApp
         EventBus.getDefault().post(bannersItems);
     }
 
+    @Override
+    public void showRecommendSongList(List<RecommendSongItem> recommendSongItems) {
+        EventBus.getDefault().post(recommendSongItems);
+    }
+
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     @Override
     public void setUpMVP() {
@@ -215,6 +221,7 @@ public class MainActivity extends BaseApp
         mainPresenter = new MainPresenterImpl(mNetEaseMusicService, this);
         mainPresenter.update(receiveData);
         mainPresenter.getBanner();
+        mainPresenter.getRecommendSongList();
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)

@@ -9,6 +9,7 @@ import shellhub.github.neteasemusic.response.banner.BannerResponse;
 import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
+import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongListResponse;
 import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
@@ -302,6 +303,33 @@ public class NetEaseMusicService {
                     @Override
                     public void onNext(BannerResponse bannerResponse) {
                         callback.onSuccess(bannerResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+    public void getRecommendSongList(Callback callback) {
+        netEaseMusicAPI.getRecommendSongList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<RecommendSongListResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(RecommendSongListResponse recommendSongListResponse) {
+                        callback.onSuccess(recommendSongListResponse);
                     }
 
                     @Override

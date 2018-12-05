@@ -6,6 +6,7 @@ import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
 import shellhub.github.neteasemusic.response.banner.BannersItem;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
+import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongItem;
 
 public interface MainView extends BaseView {
 
@@ -30,5 +31,7 @@ public interface MainView extends BaseView {
     void showNetworkError(String errorMsg);
 
     void showBanner(List<BannersItem> bannersItems);
+
+    void showRecommendSongList(List<RecommendSongItem> recommendSongItems);
 
 }

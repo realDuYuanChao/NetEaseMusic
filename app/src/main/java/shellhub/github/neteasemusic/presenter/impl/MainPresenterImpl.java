@@ -7,7 +7,6 @@ import java.util.List;
 import shellhub.github.neteasemusic.model.HotModel;
 import shellhub.github.neteasemusic.model.MainModel;
 import shellhub.github.neteasemusic.model.MusicMenuModel;
-import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
 import shellhub.github.neteasemusic.model.impl.HotModelImpl;
@@ -17,6 +16,7 @@ import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.MainPresenter;
 import shellhub.github.neteasemusic.response.banner.BannersItem;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
+import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongItem;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.MainView;
 
@@ -48,6 +48,11 @@ public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback,
     @Override
     public void getBanner() {
         mHotModel.getBanner(this);
+    }
+
+    @Override
+    public void getRecommendSongList() {
+        mHotModel.getRecommendSongList(this);
     }
 
     @Override
@@ -94,5 +99,10 @@ public class MainPresenterImpl implements MainPresenter, MainModel.MainCallback,
     @Override
     public void onBanner(List<BannersItem> bannersItems) {
         mainView.showBanner(bannersItems);
+    }
+
+    @Override
+    public void onRecommendSongList(List<RecommendSongItem> recommendSongItems) {
+        mainView.showRecommendSongList(recommendSongItems);
     }
 }

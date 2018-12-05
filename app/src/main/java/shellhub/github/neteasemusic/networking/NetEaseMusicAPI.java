@@ -1,5 +1,7 @@
 package shellhub.github.neteasemusic.networking;
 
+import androidx.constraintlayout.widget.ConstraintLayout;
+import io.reactivex.CompletableOnSubscribe;
 import io.reactivex.Observable;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
@@ -7,6 +9,7 @@ import shellhub.github.neteasemusic.response.banner.BannerResponse;
 import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
+import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongListResponse;
 import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
@@ -51,4 +54,7 @@ public interface NetEaseMusicAPI {
 
     @GET(ConstantUtils.BANNER_API)
     Observable<BannerResponse> getBanner();
+
+    @GET(ConstantUtils.RECOMMEND_SONG_LIST_API)
+    Observable<RecommendSongListResponse> getRecommendSongList();
 }

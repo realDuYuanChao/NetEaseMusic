@@ -15,6 +15,8 @@ public class ConstantUtils {
     public final static String SONG_URL_API = "/song/url";
     public final static String SONG_DETAIL_API = "/song/detail";
     public final static String BANNER_API = "/banner";
+    public final static String RECOMMEND_SONG_LIST_API = "recommend/resource";
+
 
 
     /**

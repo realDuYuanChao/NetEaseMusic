@@ -79,6 +79,9 @@ dependencies {
     implementation 'com.android.support:design:28.0.0'
     implementation 'androidx.palette:palette:1.0.0'
 
+    //banner
+    implementation 'com.youth.banner:banner:1.4.10'
+
     //android room orm framework
 //    def room_version = "2.1.0-alpha02"
     implementation "androidx.room:room-runtime:2.1.0-alpha02"

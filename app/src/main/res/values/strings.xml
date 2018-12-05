@@ -61,4 +61,9 @@
     <string name="acg_music">ACG音乐</string>
     <string name="performance">演奏</string>
     <string name="video_top">视频榜</string>
+    <string name="priviate_fm">私人FM</string>
+    <string name="daily_recommendation">每日推荐</string>
+    <string name="song_list">歌单</string>
+    <string name="ranking">排行榜</string>
+    <string name="recommended_song_list">推荐歌单</string>
 </resources>
