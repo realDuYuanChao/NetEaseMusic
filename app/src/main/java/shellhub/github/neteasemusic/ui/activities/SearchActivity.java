@@ -29,6 +29,7 @@ import shellhub.github.neteasemusic.BaseApp;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.HistoryEvent;
 import shellhub.github.neteasemusic.model.entities.LoadMoreEvent;
+import shellhub.github.neteasemusic.model.entities.RemoveHistoryEvent;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.SearchPresenter;
 import shellhub.github.neteasemusic.presenter.impl.SearchPresenterImpl;
@@ -115,7 +116,6 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
                 mSearchPresenter.search(query);
                 mSearchPresenter.searchVideo(query);
                 mSearchPresenter.searchArtist(query);
-                mSearchPresenter.saveHistory(query);
 
 //                searchKeyword = query;
                 MusicUtils.saveSearchKeyword(query);
@@ -206,7 +206,6 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
         mSearchPresenter.search(hot.getFirst());
         mSearchPresenter.searchVideo(hot.getFirst());
         mSearchPresenter.searchArtist(hot.getFirst());
-        mSearchPresenter.saveHistory(hot.getFirst());
 
         MusicUtils.saveSearchKeyword(hot.getFirst());
         searchOffset = 1;
@@ -217,7 +216,6 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
         LogUtils.d(TAG, historyEvent.getKeyword());
         showSearchResult();
         mSearchPresenter.search(historyEvent.getKeyword());
-        mSearchPresenter.saveHistory(historyEvent.getKeyword());
 
         MusicUtils.saveSearchKeyword(historyEvent.getKeyword());
         searchOffset = 1;
@@ -240,5 +238,10 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
         LogUtils.d(TAG, "searchKeyword:"  + searchKeyword + " searchOffset:" + searchOffset);
         mSearchPresenter.loadMore(searchKeyword, searchOffset);
         searchOffset++;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRemoveHistoryEvent(RemoveHistoryEvent event) {
+        mSearchPresenter.removeHistory();
     }
 }

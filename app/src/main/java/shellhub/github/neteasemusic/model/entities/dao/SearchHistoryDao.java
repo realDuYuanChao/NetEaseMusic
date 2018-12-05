@@ -15,11 +15,20 @@ public interface SearchHistoryDao {
     @Query("SELECT * FROM search_history")
     Observable<List<SearchHistory>> getAll();
 
+    @Query("SELECT keyword FROM search_history")
+    List<String> getAllKeywords();
+
+    @Query("SELECT * FROM search_history LIMIT 1")
+    SearchHistory getTopRow();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(SearchHistory... histories);
 
-    @Delete()
-    void delete(SearchHistory history);
+    @Query("SELECT COUNT(*) FROM search_history")
+    int getRows();
+
+    @Query("DELETE FROM search_history WHERE keyword = :keyword")
+    void delete(String keyword);
 
     @Query("DELETE  FROM search_history")
     void deleteAll();

@@ -7,7 +7,7 @@ public interface SearchPresenter {
 
     void loadHistory();
 
-    void saveHistory(String keyword);
+    void removeHistory();
 
     void search(String keyword);
 

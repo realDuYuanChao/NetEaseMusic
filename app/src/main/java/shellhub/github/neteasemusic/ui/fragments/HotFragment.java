@@ -21,9 +21,11 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.HistoryAdapter;
 import shellhub.github.neteasemusic.adapter.HotAdapter;
+import shellhub.github.neteasemusic.model.entities.RemoveHistoryEvent;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
 import shellhub.github.neteasemusic.util.TagUtils;
 
@@ -66,6 +68,7 @@ public class HotFragment extends Fragment {
 
         rvHistory.setAdapter(mHistoryAdapter = new HistoryAdapter());
         rvHistory.setLayoutManager(new FlexboxLayoutManager(getContext()));
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -80,5 +83,16 @@ public class HotFragment extends Fragment {
         LogUtils.d(TAG, histories);
         mHistoryAdapter.setHistories(histories);
         mHistoryAdapter.notifyDataSetChanged();
+    }
+
+    @OnClick({R.id.iv_remove_history})
+    public void click(View view){
+        switch (view.getId()) {
+            case R.id.iv_remove_history:
+                EventBus.getDefault().post(new RemoveHistoryEvent());
+                break;
+            default:
+                //todo
+        }
     }
 }
