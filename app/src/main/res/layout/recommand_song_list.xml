@@ -3,4 +3,5 @@
     android:id="@+id/rv_recommend_song_list"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
     android:background="@color/white" />

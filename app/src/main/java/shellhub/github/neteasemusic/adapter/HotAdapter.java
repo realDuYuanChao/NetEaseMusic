@@ -12,6 +12,10 @@ import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.youth.banner.Banner;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lombok.Data;
 import shellhub.github.neteasemusic.R;
+import shellhub.github.neteasemusic.model.entities.RecommendSongItemEvent;
 import shellhub.github.neteasemusic.response.banner.BannersItem;
 import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongItem;
 import shellhub.github.neteasemusic.util.GlideImageLoader;
@@ -32,7 +37,6 @@ import shellhub.github.neteasemusic.util.TagUtils;
 public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private String TAG = TagUtils.getTag(this.getClass());
     private List<BannersItem> bannersItems = new ArrayList<>();
-    private List<RecommendSongItem> recommendSongItems = new ArrayList<>();
     private final int TYPE_BANNER = 0;
     private final int TYPE_TOP_RECOMMEND = 1;
     private final int TYPE_RECOMMENDED_SONG_LIST_HEADER = 2;
@@ -87,6 +91,9 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     @Override
     public int getItemViewType(int position) {
+        if (position >= 3) {
+            return TYPE_RECOMMEND_SONG_LIST;
+        }
         return position;
     }
 
@@ -161,7 +168,15 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         public RecommendSongListViewHolder(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            EventBus.getDefault().register(this);
             init();
+        }
+
+        @Subscribe(threadMode = ThreadMode.MAIN)
+        public void onRecommendSongListEvent(RecommendSongItemEvent event) {
+            LogUtils.d(TAG, event.getRecommendSongItems());
+            adapter.setRecommendSongItems(event.getRecommendSongItems());
+            adapter.notifyDataSetChanged();
         }
 
         private void init(){
@@ -169,10 +184,6 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             rvRecommendSongList.setAdapter(adapter = new RecommendSongListAdapter());
         }
 
-        public void bind(int position) {
-            adapter.setRecommendSongItems(recommendSongItems);
-            adapter.notifyDataSetChanged();
-        }
 
         @Data
         class RecommendSongListAdapter extends RecyclerView.Adapter<RecommendSongListAdapter.ItemViewHolder>{
@@ -188,7 +199,7 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             @Override
             public void onBindViewHolder(@NonNull ItemViewHolder holder, int position) {
-                bind(position);
+                holder.bind(position);
             }
 
             @Override
@@ -206,11 +217,19 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
                 public ItemViewHolder(@NonNull View itemView) {
                     super(itemView);
+                    ButterKnife.bind(this, itemView);
                 }
 
                 public void bind(int position){
+                    if (position >= recommendSongItems.size()) {
+                        return;
+                    }
                     Glide.with(itemView).load(recommendSongItems.get(position).getPicUrl()).into(ivRecommendCover);
                     tvRecommendSongListName.setText(recommendSongItems.get(position).getName());
+
+                    itemView.setOnClickListener((view)->{
+                        ToastUtils.showLong(position + "");
+                    });
                 }
             }
         }

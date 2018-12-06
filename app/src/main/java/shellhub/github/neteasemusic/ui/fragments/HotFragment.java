@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -20,11 +22,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.HotAdapter;
+import shellhub.github.neteasemusic.model.entities.RecommendSongItemEvent;
 import shellhub.github.neteasemusic.response.banner.BannersItem;
-import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongItem;
+import shellhub.github.neteasemusic.util.TagUtils;
 
 public class HotFragment extends Fragment {
-
+    private String TAG = TagUtils.getTag(this.getClass());
     @BindView(R.id.rv_fragment_hot)
     RecyclerView rvHot;
 
@@ -56,9 +59,4 @@ public class HotFragment extends Fragment {
         hotAdapter.notifyDataSetChanged();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onRecommendSongListEvent(List<RecommendSongItem> recommendSongItems) {
-        hotAdapter.setRecommendSongItems(recommendSongItems);
-        hotAdapter.notifyDataSetChanged();
-    }
 }

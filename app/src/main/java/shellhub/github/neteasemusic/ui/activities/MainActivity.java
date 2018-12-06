@@ -48,6 +48,7 @@ import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
+import shellhub.github.neteasemusic.model.entities.RecommendSongItemEvent;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.MainPresenter;
 import shellhub.github.neteasemusic.presenter.impl.MainPresenterImpl;
@@ -208,7 +209,9 @@ public class MainActivity extends BaseApp
 
     @Override
     public void showRecommendSongList(List<RecommendSongItem> recommendSongItems) {
-        EventBus.getDefault().post(recommendSongItems);
+        RecommendSongItemEvent recommendSongItemEvent = new RecommendSongItemEvent();
+        recommendSongItemEvent.setRecommendSongItems(recommendSongItems);
+        EventBus.getDefault().post(recommendSongItemEvent);
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
