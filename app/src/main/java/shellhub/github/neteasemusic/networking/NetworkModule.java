@@ -47,6 +47,9 @@ public class NetworkModule {
                                 .header("Content-Type", "application/json")
                                 .removeHeader("Pragma")
                                 .header("Cache-Control", String.format("max-age=%d", BuildConfig.CACHETIME))
+                                .addHeader("Cookie", "__remember_me=true; " +
+                                        "MUSIC_U=8f68d095e67f61eb13cc459fb616d94b47e5068cd50411b88eda4b883181a673b770156b3ad1280a9e8ae5c70ca8806963531a931aa80ad0; " +
+                                        "__csrf=47281a4e13088a05288b11ca161c982c")
                                 .build();
 
                         okhttp3.Response response = chain.proceed(request);
