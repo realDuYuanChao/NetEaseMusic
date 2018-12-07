@@ -2,10 +2,12 @@ package shellhub.github.neteasemusic.response.recommend.resource;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 @Data
-public class RecommendSongItem {
+public class RecommendSongItem implements Serializable {
 
 	@SerializedName("picUrl")
 	private String picUrl;

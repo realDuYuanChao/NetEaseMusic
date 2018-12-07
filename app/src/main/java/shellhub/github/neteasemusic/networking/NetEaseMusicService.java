@@ -1,6 +1,9 @@
 package shellhub.github.neteasemusic.networking;
 
 
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
+
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
@@ -9,6 +12,7 @@ import shellhub.github.neteasemusic.response.banner.BannerResponse;
 import shellhub.github.neteasemusic.response.comment.CommentResponse;
 import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
+import shellhub.github.neteasemusic.response.playlist.PlaylistDetailResponse;
 import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongListResponse;
 import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
@@ -340,6 +344,31 @@ public class NetEaseMusicService {
                     @Override
                     public void onComplete() {
 
+                    }
+                });
+    }
+
+    public void getPlaylistDetail(long id, Callback callback) {
+        netEaseMusicAPI.getPlaylistDetail(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<PlaylistDetailResponse>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                    }
+
+                    @Override
+                    public void onNext(PlaylistDetailResponse playlistDetailResponse) {
+                        callback.onSuccess(playlistDetailResponse);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        LogUtils.d("onError", e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
                     }
                 });
     }

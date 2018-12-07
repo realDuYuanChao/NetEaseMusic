@@ -110,6 +110,11 @@
             android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".ui.activities.PlaylistDetailActivity"
+            android:parentActivityName=".ui.activities.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <service
             android:name=".service.impl.MusicServiceImpl"
             android:enabled="true"

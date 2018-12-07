@@ -16,7 +16,7 @@ public class ConstantUtils {
     public final static String SONG_DETAIL_API = "/song/detail";
     public final static String BANNER_API = "/banner";
     public final static String RECOMMEND_SONG_LIST_API = "/recommend/resource";
-
+    public final static String PLAYLIST_DETAIL_API = "/playlist/detail";
 
 
     /**
@@ -56,6 +56,7 @@ public class ConstantUtils {
      */
     public final static String MUSIC_URI_KEY = "shellhub.github.neteasemusic_music_uri";
     public final static String MUSIC_ID_KEY = "shellhub.github.neteasemusic_music_id_key";
+    public final static String RECOMMEND_PLAYLIST_KEY = "shellhub.github.neteasemusic_recommend_playlist_key";
 
     /**
      * Music Player Action Command

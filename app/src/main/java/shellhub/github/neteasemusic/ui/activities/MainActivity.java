@@ -48,6 +48,7 @@ import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
+import shellhub.github.neteasemusic.model.entities.PlaylistEvent;
 import shellhub.github.neteasemusic.model.entities.RecommendSongItemEvent;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.MainPresenter;
@@ -58,6 +59,7 @@ import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongIte
 import shellhub.github.neteasemusic.ui.fragments.MainFragment;
 import shellhub.github.neteasemusic.ui.fragments.MusicFragment;
 import shellhub.github.neteasemusic.util.BitmapUtils;
+import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.NetEaseMusicApp;
 import shellhub.github.neteasemusic.util.TagUtils;
@@ -136,7 +138,11 @@ public class MainActivity extends BaseApp
         mainPresenter.musicMenuNavigate(event);
     }
 
-    ;
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlaylistEvent(PlaylistEvent playlistEvent) {
+        //todo
+        navigatePlaylist(playlistEvent.getRecommendSongItem());
+    }
 
     /**
      * px转换dip
@@ -197,6 +203,13 @@ public class MainActivity extends BaseApp
     }
 
     @Override
+    public void navigatePlaylist(RecommendSongItem recommendSongItem) {
+        Intent intent = new Intent(this, PlaylistDetailActivity.class);
+        intent.putExtra(ConstantUtils.RECOMMEND_PLAYLIST_KEY, recommendSongItem);
+        startActivity(intent);
+    }
+
+    @Override
     public void showNetworkError(String errorMsg) {
         ToastUtils.showLong(R.string.network_error);
     }
@@ -213,6 +226,7 @@ public class MainActivity extends BaseApp
         recommendSongItemEvent.setRecommendSongItems(recommendSongItems);
         EventBus.getDefault().post(recommendSongItemEvent);
     }
+
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     @Override

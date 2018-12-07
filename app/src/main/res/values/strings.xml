@@ -66,4 +66,6 @@
     <string name="song_list">歌单</string>
     <string name="ranking">排行榜</string>
     <string name="recommended_song_list">推荐歌单</string>
+    <string name="multi_pick">Multi-pick</string>
+    <string name="downlaod">Downlaod</string>
 </resources>

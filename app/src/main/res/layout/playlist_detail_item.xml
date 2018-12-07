@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <TextView
+        android:id="@+id/tv_track_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="TextView"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:textColor="@color/dark"
+        app:layout_constraintStart_toEndOf="@+id/tv_playlist_counter"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_playlist_counter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/gray"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_track_name"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_track_name"
+        tools:text="1" />
+
+    <ImageView
+        android:id="@+id/iv_track_quality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_artist_and_album"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_artist_and_album"
+        app:srcCompat="@drawable/ic_hq" />
+
+    <TextView
+        android:id="@+id/tv_artist_and_album"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="TextView"
+        app:layout_constraintStart_toEndOf="@+id/iv_track_quality"
+        app:layout_constraintTop_toBottomOf="@+id/tv_track_name" />
+
+    <ImageView
+        android:id="@+id/iv_playlist_action_pop_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:tint="@color/gray"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.488"
+        app:srcCompat="@drawable/ic_pop_menu" />
+
+    <ImageView
+        android:id="@+id/iv_playlist_video_action"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:tint="@color/gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/iv_playlist_action_pop_menu"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/actionbar_video_selected" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+<!--<TextView-->
+<!--android:id="@+id/tv_playlist_name"-->
+<!--android:layout_width="wrap_content"-->
+<!--android:layout_height="wrap_content"-->
+<!--tools:text="Demo" />-->

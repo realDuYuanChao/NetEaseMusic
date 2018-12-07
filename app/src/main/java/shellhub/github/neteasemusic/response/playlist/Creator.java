@@ -1,22 +1,22 @@
-package shellhub.github.neteasemusic.response.recommend.resource;
+package shellhub.github.neteasemusic.response.playlist;
 
+import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
 
 import lombok.Data;
 
 @Data
-public class Creator implements Serializable {
+@Generated("com.robohorse.robopojogenerator")
+public class Creator{
+
+	@SerializedName("birthday")
+	private long birthday;
 
 	@SerializedName("detailDescription")
 	private String detailDescription;
 
 	@SerializedName("backgroundUrl")
 	private String backgroundUrl;
-
-	@SerializedName("birthday")
-	private long birthday;
 
 	@SerializedName("gender")
 	private int gender;
@@ -42,11 +42,9 @@ public class Creator implements Serializable {
 	@SerializedName("defaultAvatar")
 	private boolean defaultAvatar;
 
-	@SerializedName("avatarImgIdStr")
-	private String avatarImgIdStr;
-
 	@SerializedName("backgroundImgIdStr")
 	private String backgroundImgIdStr;
+
 
 	@SerializedName("province")
 	private int province;
@@ -69,21 +67,27 @@ public class Creator implements Serializable {
 	@SerializedName("vipType")
 	private int vipType;
 
-	@SerializedName("userId")
-	private int userId;
-
 	@SerializedName("followed")
 	private boolean followed;
+
+	@SerializedName("userId")
+	private int userId;
 
 	@SerializedName("mutual")
 	private boolean mutual;
 
+	@SerializedName("avatarImgId_str")
+	private String avatarImgIdStr;
+
 	@SerializedName("authority")
 	private int authority;
+
+	@SerializedName("userType")
+	private int userType;
 
 	@SerializedName("backgroundImgId")
 	private long backgroundImgId;
 
-	@SerializedName("userType")
-	private int userType;
+	@SerializedName("experts")
+	private Object experts;
 }

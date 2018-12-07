@@ -28,6 +28,8 @@ public interface MainView extends BaseView {
 
     void navigateToFavorites();
 
+    void navigatePlaylist(RecommendSongItem recommendSongItem);
+
     void showNetworkError(String errorMsg);
 
     void showBanner(List<BannersItem> bannersItems);

@@ -1,6 +1,5 @@
 package shellhub.github.neteasemusic.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import lombok.Data;
 import shellhub.github.neteasemusic.R;
+import shellhub.github.neteasemusic.model.entities.PlaylistEvent;
 import shellhub.github.neteasemusic.model.entities.RecommendSongItemEvent;
 import shellhub.github.neteasemusic.response.banner.BannersItem;
 import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongItem;
@@ -227,8 +227,9 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     Glide.with(itemView).load(recommendSongItems.get(position).getPicUrl()).into(ivRecommendCover);
                     tvRecommendSongListName.setText(recommendSongItems.get(position).getName());
 
-                    itemView.setOnClickListener((view)->{
-                        ToastUtils.showLong(position + "");
+                    itemView.setOnClickListener((view) -> {
+
+                        EventBus.getDefault().post(new PlaylistEvent(recommendSongItems.get(position)));
                     });
                 }
             }
