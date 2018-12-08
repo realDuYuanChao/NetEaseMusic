@@ -35,61 +35,41 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha2'
     implementation 'androidx.dynamicanimation:dynamicanimation:1.0.0'
-    //butterknife
     implementation 'com.jakewharton:butterknife:9.0.0-rc1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
-    //okhttp & retrofit & gson-convert
     implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
     implementation 'com.squareup.retrofit2:converter-scalars:2.4.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
-    //RXAndroid & RXJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.3'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
-    //Gson for json
     implementation 'com.google.code.gson:gson:2.8.5'
-    //util code
     implementation 'com.blankj:utilcode:1.21.1'
-    //lombok
     compileOnly 'org.projectlombok:lombok:1.16.20'
     annotationProcessor 'org.projectlombok:lombok:1.16.20'
-
-    //dagger
     implementation 'com.google.dagger:dagger:2.18'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.18'
     compileOnly 'javax.annotation:jsr250-api:1.0'
-    //glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
-    //glide palette
     implementation 'com.github.florent37:glidepalette:2.1.2'
-    //circle imageview
     implementation 'de.hdodenhof:circleimageview:2.2.0'
-    //eventbus
     implementation 'org.greenrobot:eventbus:3.1.1'
-    //PermissionsDispatcher
     implementation 'com.github.hotchemi:permissionsdispatcher:4.0.0'
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:4.0.0"
-    //flexbox
     implementation 'com.google.android:flexbox:1.1.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'androidx.palette:palette:1.0.0'
-
-    //banner
     implementation 'com.youth.banner:banner:1.4.10'
-
-    //android room orm framework
-//    def room_version = "2.1.0-alpha02"
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
     implementation "androidx.room:room-runtime:2.1.0-alpha02"
     annotationProcessor "androidx.room:room-compiler:2.1.0-alpha02" // use kapt for Kotlin
-    // optional - RxJava support for Room
     implementation "androidx.room:room-rxjava2:2.1.0-alpha02"
-    // Test helpers
+    androidTestImplementation 'androidx.test:runner:1.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     testImplementation "androidx.room:room-testing:2.1.0-alpha02"
+    testImplementation 'junit:junit:4.12'
 }
