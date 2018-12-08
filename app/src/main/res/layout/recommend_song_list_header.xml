@@ -6,12 +6,11 @@
     android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/tv_playlist_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="@string/recommended_song_list"
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:textColor="@color/dark"
         android:textStyle="bold"
@@ -25,8 +24,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:tint="@color/gray"
-        app:layout_constraintBottom_toBottomOf="@+id/textView2"
-        app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toTopOf="@+id/textView2"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_playlist_header"
+        app:layout_constraintStart_toEndOf="@+id/tv_playlist_header"
+        app:layout_constraintTop_toTopOf="@+id/tv_playlist_header"
         app:srcCompat="@drawable/ic_arrow" />
 </androidx.constraintlayout.widget.ConstraintLayout>

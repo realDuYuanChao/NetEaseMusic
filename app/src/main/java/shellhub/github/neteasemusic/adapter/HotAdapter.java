@@ -41,6 +41,7 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private final int TYPE_TOP_RECOMMEND = 1;
     private final int TYPE_RECOMMENDED_SONG_LIST_HEADER = 2;
     private final int TYPE_RECOMMEND_SONG_LIST = 3;
+    private final int TYPE_LATEST_SONG_LIST_HEADER = 4;
 
     @NonNull
     @Override
@@ -60,11 +61,15 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             case TYPE_RECOMMENDED_SONG_LIST_HEADER:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recommend_song_list_header, parent, false);
                 ButterKnife.bind(this, view);
-                return new RecommendSongListHeader(view);
+                return new RecommendSongListHeader(view, parent.getContext().getResources().getString(R.string.recommended_song_list));
             case TYPE_RECOMMEND_SONG_LIST:
                 view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recommand_song_list, parent, false);
                 ButterKnife.bind(this, view);
                 return new RecommendSongListViewHolder(view);
+            case TYPE_LATEST_SONG_LIST_HEADER:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recommend_song_list_header, parent, false);
+                ButterKnife.bind(this, view);
+                return new LatestSongListViewHeader(view, parent.getContext().getResources().getString(R.string.latest_music));
             default:
                 break;
         }
@@ -79,25 +84,25 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             //not need bind
         } else if (holder instanceof RecommendSongListHeader) {
             //not need bind
+            ((RecommendSongListHeader) holder).bind();
         } else if (holder instanceof RecommendSongListViewHolder) {
             //not need bind
+        } else if (holder instanceof LatestSongListViewHeader) {
+            ((LatestSongListViewHeader) holder).bind();
         }
     }
 
     @Override
     public int getItemCount() {
-        return 4;
+        return 5;
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position >= 3) {
-            return TYPE_RECOMMEND_SONG_LIST;
-        }
         return position;
     }
 
-    public class BannerViewHolder extends RecyclerView.ViewHolder{
+    public class BannerViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.banner)
         Banner banner;
@@ -117,7 +122,7 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    public class TopRecommendViewHolder extends RecyclerView.ViewHolder{
+    public class TopRecommendViewHolder extends RecyclerView.ViewHolder {
 
         public TopRecommendViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -146,19 +151,33 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     public class RecommendSongListHeader extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.tv_playlist_header)
+        TextView tvPlaylistHeader;
+
+        private String playlistHeaderTitle;
+
         public RecommendSongListHeader(@NonNull View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }
 
+        public RecommendSongListHeader(@NonNull View itemView, String title) {
+            super(itemView);
+            playlistHeaderTitle = title;
+            ButterKnife.bind(this, itemView);
+        }
+
         @OnClick()
         public void onRecommendSongListHeaderClick(View view) {
-            ToastUtils.showShort("onRecommendSongListHeaderClick");
-            //TODO
+            //todo
+        }
+
+        public void bind() {
+            tvPlaylistHeader.setText(playlistHeaderTitle);
         }
     }
 
-    public class RecommendSongListViewHolder extends RecyclerView.ViewHolder{
+    public class RecommendSongListViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.rv_recommend_song_list)
         RecyclerView rvRecommendSongList;
@@ -179,14 +198,14 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             adapter.notifyDataSetChanged();
         }
 
-        private void init(){
+        private void init() {
             rvRecommendSongList.setLayoutManager(new GridLayoutManager(itemView.getContext(), 3));
             rvRecommendSongList.setAdapter(adapter = new RecommendSongListAdapter());
         }
 
 
         @Data
-        class RecommendSongListAdapter extends RecyclerView.Adapter<RecommendSongListAdapter.ItemViewHolder>{
+        class RecommendSongListAdapter extends RecyclerView.Adapter<RecommendSongListAdapter.ItemViewHolder> {
 
             private List<RecommendSongItem> recommendSongItems = new ArrayList<>();
 
@@ -207,7 +226,7 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 return recommendSongItems.size();
             }
 
-            public class ItemViewHolder extends RecyclerView.ViewHolder{
+            public class ItemViewHolder extends RecyclerView.ViewHolder {
 
                 @BindView(R.id.iv_recommend_cover)
                 ImageView ivRecommendCover;
@@ -220,7 +239,7 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     ButterKnife.bind(this, itemView);
                 }
 
-                public void bind(int position){
+                public void bind(int position) {
                     if (position >= recommendSongItems.size()) {
                         return;
                     }
@@ -233,6 +252,17 @@ public class HotAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     });
                 }
             }
+        }
+    }
+
+    public class LatestSongListViewHeader extends RecommendSongListHeader {
+
+        public LatestSongListViewHeader(@NonNull View itemView) {
+            super(itemView);
+        }
+
+        public LatestSongListViewHeader(@NonNull View itemView, String title) {
+            super(itemView, title);
         }
     }
 }
