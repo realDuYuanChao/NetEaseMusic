@@ -14,12 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,6 +39,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.OnNeverAskAgain;
 import permissions.dispatcher.OnPermissionDenied;
@@ -45,6 +48,7 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 import shellhub.github.neteasemusic.BaseApp;
 import shellhub.github.neteasemusic.R;
+import shellhub.github.neteasemusic.model.entities.BannerEvent;
 import shellhub.github.neteasemusic.model.entities.MusicMenu;
 import shellhub.github.neteasemusic.model.entities.MusicMenuIndexEvent;
 import shellhub.github.neteasemusic.model.entities.NavProfile;
@@ -76,6 +80,21 @@ public class MainActivity extends BaseApp
     DrawerLayout drawer;
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.iv_controller_album_cover)
+    ImageView ivControllerAlbumCover;
+
+    @BindView(R.id.tv_controller_title)
+    TextView tvControllerTitle;
+
+    @BindView(R.id.iv_controller_play_pause)
+    ImageView ivControllerPlayPause;
+
+    @BindView(R.id.iv_controller_playlist)
+    ImageView ivCOntrollerPlaylist;
+
+    @BindView(R.id.tv_controller_lyric)
+    TextView tvControllerLyric;
 
     private View navHeader;
     private ImageView ivAvatar;
@@ -113,8 +132,6 @@ public class MainActivity extends BaseApp
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
-        initControllerCard();
-
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -125,6 +142,12 @@ public class MainActivity extends BaseApp
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateMiniCoverAndTitle();
     }
 
     @Override
@@ -217,7 +240,7 @@ public class MainActivity extends BaseApp
     @Override
     public void showBanner(List<BannersItem> bannersItems) {
         LogUtils.d(TAG, "bannerSize=" + bannersItems.size());
-        EventBus.getDefault().post(bannersItems);
+        EventBus.getDefault().post(new BannerEvent(bannersItems));
     }
 
     @Override
@@ -317,6 +340,12 @@ public class MainActivity extends BaseApp
     }
 
     @Override
+    public void updateMiniCoverAndTitle() {
+        Glide.with(this).load(MusicUtils.readAlbumCover()).into(ivControllerAlbumCover);
+        tvControllerTitle.setText(MusicUtils.readSongName());
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -333,4 +362,18 @@ public class MainActivity extends BaseApp
         }
     }
 
+    @OnClick({R.id.iv_controller_play_pause, R.id.iv_controller_playlist, R.id.iv_controller_album_cover, R.id.tv_controller_lyric})
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.iv_controller_play_pause:
+                ToastUtils.showLong("ivControllerPlayPause");
+                break;
+            case R.id.iv_controller_playlist:
+                ToastUtils.showLong("plalist");
+                break;
+            default:
+                startActivity(new Intent(this, PlayActivity.class));
+                break;
+        }
+    }
 }

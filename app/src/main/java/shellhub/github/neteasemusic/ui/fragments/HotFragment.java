@@ -22,6 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.HotAdapter;
+import shellhub.github.neteasemusic.model.entities.BannerEvent;
 import shellhub.github.neteasemusic.model.entities.RecommendSongItemEvent;
 import shellhub.github.neteasemusic.response.banner.BannersItem;
 import shellhub.github.neteasemusic.util.TagUtils;
@@ -54,8 +55,8 @@ public class HotFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onBannerEvent(List<BannersItem> bannersItems) {
-        hotAdapter.setBannersItems(bannersItems);
+    public void onBannerEvent(BannerEvent bannerEvent) {
+        hotAdapter.setBannersItems(bannerEvent.getBannersItems());
         hotAdapter.notifyDataSetChanged();
     }
 

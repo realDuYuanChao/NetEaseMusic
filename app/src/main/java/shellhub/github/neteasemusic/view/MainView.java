@@ -16,6 +16,8 @@ public interface MainView extends BaseView {
 
     void updateMusicMenu(List<MusicMenu> musicMenus);
 
+    void updateMiniCoverAndTitle();
+
     void setUpNavHeader();
 
     void navigateToLocalView();

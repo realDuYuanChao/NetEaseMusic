@@ -22,8 +22,4 @@ public class BaseApp extends AppCompatActivity {
         deps = DaggerDeps.builder().networkModule(new NetworkModule(cacheFile)).build();
     }
 
-    public void initControllerCard() {
-        getSupportFragmentManager().beginTransaction().replace(R.id.quick_controller_container, new ControllerCardFragment()).commit();
-    }
-
 }
