@@ -14,14 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
-import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -132,6 +130,7 @@ public class MainActivity extends BaseApp
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         navigationView.setNavigationItemSelectedListener(this);
+        findViewById(R.id.sliding_layout).setEnabled(false); //completely disable the sliding panel (including touch and programmatic sliding)
     }
 
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -317,10 +316,10 @@ public class MainActivity extends BaseApp
         Glide.with(this).load(navProfile.getAvatarUrl()).into(ivAvatar);
         tvNickname.setText(navProfile.getNickname());
 
-        new Thread(()->{
+        new Thread(() -> {
             Bitmap bitmap = MusicUtils.getBitmap(navProfile.getBackgroundUrl());
             Bitmap bitmap1 = BitmapUtils.fastblur(bitmap, 01, 25);
-            runOnUiThread(()->{
+            runOnUiThread(() -> {
                 navHeader.setBackground(new BitmapDrawable(getResources(), bitmap1));
             });
         }).start();
@@ -362,14 +361,12 @@ public class MainActivity extends BaseApp
         }
     }
 
-    @OnClick({R.id.iv_controller_play_pause, R.id.iv_controller_playlist, R.id.iv_controller_album_cover, R.id.tv_controller_lyric})
+    @OnClick({R.id.iv_controller_play_pause, R.id.iv_controller_playlist, R.id.iv_controller_album_cover, R.id.tv_controller_lyric, R.id.tv_controller_title})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.iv_controller_play_pause:
-                ToastUtils.showLong("ivControllerPlayPause");
                 break;
             case R.id.iv_controller_playlist:
-                ToastUtils.showLong("plalist");
                 break;
             default:
                 startActivity(new Intent(this, PlayActivity.class));
