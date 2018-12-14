@@ -2,7 +2,6 @@ package shellhub.github.neteasemusic.networking;
 
 
 import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.ToastUtils;
 
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -14,10 +13,10 @@ import shellhub.github.neteasemusic.response.detail.DetailResponse;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
 import shellhub.github.neteasemusic.response.playlist.PlaylistDetailResponse;
 import shellhub.github.neteasemusic.response.recommend.resource.RecommendSongListResponse;
-import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.SearchResponse;
 import shellhub.github.neteasemusic.response.search.artist.ArtistResponse;
 import shellhub.github.neteasemusic.response.search.hot.HotResponse;
+import shellhub.github.neteasemusic.response.search.mp3.SongResponse;
 import shellhub.github.neteasemusic.response.search.song.detail.SongDetailResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 
@@ -321,8 +320,8 @@ public class NetEaseMusicService {
                 });
     }
 
-    public void getRecommendSongList(Callback callback) {
-        netEaseMusicAPI.getRecommendSongList()
+    public void getRecommendSongList(String cookie, Callback callback) {
+        netEaseMusicAPI.getRecommendSongList(cookie)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<RecommendSongListResponse>() {

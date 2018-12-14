@@ -2,6 +2,7 @@ package shellhub.github.neteasemusic.networking;
 
 import io.reactivex.Observable;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Query;
 import shellhub.github.neteasemusic.response.banner.BannerResponse;
 import shellhub.github.neteasemusic.response.comment.CommentResponse;
@@ -55,7 +56,7 @@ public interface NetEaseMusicAPI {
     Observable<BannerResponse> getBanner();
 
     @GET(ConstantUtils.RECOMMEND_SONG_LIST_API)
-    Observable<RecommendSongListResponse> getRecommendSongList();
+    Observable<RecommendSongListResponse> getRecommendSongList(@Header("Cookie") String cookie);
 
     @GET(ConstantUtils.PLAYLIST_DETAIL_API)
     Observable<PlaylistDetailResponse> getPlaylistDetail(@Query("id") long id);
