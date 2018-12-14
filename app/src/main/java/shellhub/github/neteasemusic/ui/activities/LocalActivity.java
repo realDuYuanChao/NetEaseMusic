@@ -59,24 +59,26 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
         initToolbar();
         vpLocalFiles.setOffscreenPageLimit(4);
         vpLocalFiles.setAdapter(new LocalCategoryPagerAdapter(getSupportFragmentManager(), this));
-        LogUtils.d(TAG, "onCreate");
     }
 
     private void initToolbar() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        if (getSupportActionBar() != null) getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
+        EventBus.getDefault().register(this);
         tlLocalCategory.setupWithViewPager(vpLocalFiles);
         setUpMVP();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -111,9 +113,7 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     @Override
     public void setUpMVP() {
         mLocalPresenter = new LocalPresenterImpl(this);
-        new Handler().postDelayed(() -> {
-            mLocalPresenter.load();
-        }, 500);
+        mLocalPresenter.load();
     }
 
     @Override

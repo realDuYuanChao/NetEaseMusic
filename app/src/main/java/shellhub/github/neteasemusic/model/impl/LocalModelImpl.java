@@ -5,10 +5,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
+import android.util.Log;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SPUtils;
-
 import com.blankj.utilcode.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -16,6 +16,12 @@ import org.greenrobot.eventbus.EventBus;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import shellhub.github.neteasemusic.model.LocalModel;
 import shellhub.github.neteasemusic.model.entities.Album;
 import shellhub.github.neteasemusic.model.entities.Artist;
@@ -46,44 +52,96 @@ public class LocalModelImpl implements LocalModel {
         String[] selectionArgs = null;
         String sortOrder = null;
         Cursor cursor = Utils.getApp().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
-        while (cursor.moveToNext()) {
-            Single single = new Single();
-            EventBus.getDefault().post(single);
-            single.setData(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
-            single.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)));
-            single.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
-            single.setAlbumId(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)));
-            if (!singles.contains(single)) {
+
+        if (cursor == null) return;
+
+        Observable.create((ObservableOnSubscribe<Single>) emitter -> {
+
+            while (cursor.moveToNext()) {
+                Single single = new Single();
+                EventBus.getDefault().post(single);
+                single.setData(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)));
+                single.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)));
+                single.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
+                single.setAlbumId(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)));
+
+                emitter.onNext(single);
+            }
+            cursor.close();
+            emitter.onComplete();
+
+        }).subscribeOn(Schedulers.io()).subscribeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<Single>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                //TODO
+            }
+
+            @Override
+            public void onNext(Single single) {
                 singles.add(single);
             }
-        }
-        callback.onLoadedAllSingle(singles);
+
+            @Override
+            public void onError(Throwable e) {
+                Log.d(TAG, "onError: " + e.getMessage());
+            }
+
+            @Override
+            public void onComplete() {
+                callback.onLoadedAllSingle(singles);
+            }
+        });
     }
 
     @Override
     public void loadAllAlbum(Callback callback) {
         Uri uri = MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI;
-        String[] projects = new String[]{"_id",MediaStore.Audio.AlbumColumns.ALBUM, MediaStore.Audio.AlbumColumns.ARTIST, "artist_id", MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS, MediaStore.Audio.AlbumColumns.FIRST_YEAR};
+        String[] projects = new String[]{"_id", MediaStore.Audio.AlbumColumns.ALBUM, MediaStore.Audio.AlbumColumns.ARTIST, "artist_id", MediaStore.Audio.AlbumColumns.NUMBER_OF_SONGS, MediaStore.Audio.AlbumColumns.FIRST_YEAR};
         String selection = null;
         String[] selectionArgs = null;
         Cursor cursor = Utils.getApp().getContentResolver().query(uri, projects, selection, selectionArgs, null);
+        if (cursor == null) return;
 
         List<Album> albums = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            Album album = new Album();
-            album.setId(cursor.getInt(0));
-            album.setAlbumCoverUri(getAlbumArtUri(album.getId()));
-            album.setTitle(cursor.getString(1));
-            album.setArtistName(cursor.getString(2));
-            album.setArtistId(cursor.getInt(3));
-            album.setSongCount(cursor.getInt(4));
-            album.setYear(cursor.getInt(5));
+        Observable.create((ObservableOnSubscribe<? extends Album>) emitter -> {
+            while (cursor.moveToNext()) {
+                Album album = new Album();
+                album.setId(cursor.getInt(0));
+                album.setAlbumCoverUri(getAlbumArtUri(album.getId()));
+                album.setTitle(cursor.getString(1));
+                album.setArtistName(cursor.getString(2));
+                album.setArtistId(cursor.getInt(3));
+                album.setSongCount(cursor.getInt(4));
+                album.setYear(cursor.getInt(5));
 
-            albums.add(album);
-        }
-        LogUtils.d(TAG, albums);
+                emitter.onNext(album);
+            }
+            cursor.close();
+            emitter.onComplete();
 
-        callback.onLoadedAllAlbum(albums);
+        }).subscribeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Album>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(Album album) {
+                        albums.add(album);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        callback.onLoadedAllAlbum(albums);
+                    }
+                });
     }
 
     @Override
@@ -100,18 +158,46 @@ public class LocalModelImpl implements LocalModel {
         String[] selectionArgs = null;
         String sortOrder = MediaStore.Audio.Artists.ARTIST + " ASC";
         Cursor cursor = Utils.getApp().getContentResolver().query(uri, projection, selection, selectionArgs, sortOrder);
-        while (cursor.moveToNext()) {
-            Artist artist = new Artist();
-            String artistName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)).split("/")[0];
-            artist.setName(artistName);
-            artist.setSongCount(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_TRACKS)));
-            artists.add(artist);
+        if (cursor == null) return;
+        Observable.create((ObservableOnSubscribe<? extends Artist>) emitter -> {
+            while (cursor.moveToNext()) {
+                Artist artist = new Artist();
+                String artistName = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.ARTIST)).split("/")[0];
+                artist.setName(artistName);
+                artist.setSongCount(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Artists.NUMBER_OF_TRACKS)));
+                artists.add(artist);
 
-            artist.setProfile(""/**TODO**/);
+                artist.setProfile(""/**TODO**/);
 
-        }
-        LogUtils.d(TAG, artists);
-        callback.onLoadAllArtist(artists);
+                emitter.onNext(artist);
+
+            }
+            cursor.close();
+            emitter.onComplete();
+
+        }).subscribeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<Artist>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        //TODO
+                    }
+
+                    @Override
+                    public void onNext(Artist artist) {
+                        artists.add(artist);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d(TAG, "onError: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        callback.onLoadAllArtist(artists);
+                    }
+                });
     }
 
     @Override
