@@ -27,6 +27,7 @@ import shellhub.github.neteasemusic.model.entities.Album;
 import shellhub.github.neteasemusic.model.entities.AlbumEvent;
 import shellhub.github.neteasemusic.model.entities.Artist;
 import shellhub.github.neteasemusic.model.entities.ArtistEvent;
+import shellhub.github.neteasemusic.model.entities.PlayActivityEvent;
 import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.model.entities.SingleEvent;
 import shellhub.github.neteasemusic.presenter.LocalPresenter;
@@ -130,7 +131,8 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     }
 
     @Override
-    public void navigatePlay(String data) {
+    public void navigatePlay() {
+        startActivity(new Intent(this, PlayActivity.class));
     }
 
     @Override
@@ -143,5 +145,10 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSingleEvent(Single single) {
         mLocalPresenter.loadSong(single);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onPlayActivityEvent(PlayActivityEvent event) {
+        navigatePlay();
     }
 }

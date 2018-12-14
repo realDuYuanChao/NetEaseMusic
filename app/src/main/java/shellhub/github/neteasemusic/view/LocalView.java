@@ -13,7 +13,7 @@ public interface LocalView extends BaseView{
 
     void loadAlbum(List<Album> albums);
 
-    void navigatePlay(String data);
+    void navigatePlay();
 
     void play(String songUrl);
 }
