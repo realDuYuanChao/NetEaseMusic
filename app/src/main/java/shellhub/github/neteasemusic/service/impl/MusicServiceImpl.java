@@ -163,9 +163,7 @@ public class MusicServiceImpl extends Service implements MusicService,
         mMusicUrl = SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).getString(ConstantUtils.SP_CURRENT_SONG_URL_KEY);
         registerBecomingNoisyReceiver();
         registerPlayerReceiver();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -327,6 +325,7 @@ public class MusicServiceImpl extends Service implements MusicService,
         }
         unregisterReceiver(playerReceiver);
         unregisterReceiver(becomingNoisyReceiver);
+        EventBus.getDefault().unregister(this);
         stopSelf();
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_IS_PLAYING_STATUS_KEY, false);
         super.onDestroy();

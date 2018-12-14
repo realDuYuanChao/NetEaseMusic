@@ -4,7 +4,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.Menu;
 
 import com.blankj.utilcode.util.LogUtils;
@@ -94,7 +93,6 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                LogUtils.d(TAG, query);
                 return false;
             }
 
@@ -118,19 +116,16 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
 
     @Override
     public void loadSingle(List<Single> singles) {
-        LogUtils.d(TAG, singles);
         EventBus.getDefault().post(new SingleEvent(singles));
     }
 
     @Override
     public void loadArtist(List<Artist> artists) {
-        LogUtils.d(TAG, artists);
         EventBus.getDefault().post(new ArtistEvent(artists));
     }
 
     @Override
     public void loadAlbum(List<Album> albums) {
-        LogUtils.d(TAG, albums);
         EventBus.getDefault().post(new AlbumEvent(albums));
     }
 
@@ -147,7 +142,6 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSingleEvent(Single single) {
-        LogUtils.d(TAG, single);
         mLocalPresenter.loadSong(single);
     }
 }
