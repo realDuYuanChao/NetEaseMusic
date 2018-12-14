@@ -19,9 +19,9 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".ui.activities.SplashActivity"
@@ -42,7 +42,8 @@
         <activity
             android:name=".ui.activities.AccountActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.activities.RegisterActivity" />
+        <activity android:name=".ui.activities.RegisterActivity"
+            android:parentActivityName=".ui.activities.AccountActivity" />
         <activity
             android:name=".ui.activities.LocalActivity"
             android:label="@string/local_files"
@@ -65,7 +66,8 @@
             android:label="@string/favs"
             android:parentActivityName=".ui.activities.MainActivity" />
         <activity
-            android:name=".ui.activities.PlayActivity" android:theme="@style/AppTheme.NoActionBar">
+            android:name=".ui.activities.PlayActivity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -109,7 +111,6 @@
             android:name=".ui.activities.SearchActivity"
             android:parentActivityName=".ui.activities.MainActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".ui.activities.PlaylistDetailActivity"
             android:parentActivityName=".ui.activities.MainActivity"
@@ -119,7 +120,9 @@
             android:name=".service.impl.MusicServiceImpl"
             android:enabled="true"
             android:exported="true" />
+
         <receiver android:name=".service.impl.MusicServiceImpl$ControllerListener" />
+
     </application>
 
 </manifest>

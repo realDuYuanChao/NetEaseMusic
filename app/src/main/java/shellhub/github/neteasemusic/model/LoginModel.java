@@ -12,5 +12,6 @@ public interface LoginModel {
         void onPasswordError(String errorMsg);
 
         void onSuccess(LoginResponse response);
+
     }
 }

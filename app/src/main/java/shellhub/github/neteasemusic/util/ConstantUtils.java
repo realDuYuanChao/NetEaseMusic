@@ -25,6 +25,7 @@ public class ConstantUtils {
     public final static int SUCCESS = 200;
     public final static int ACCOUNT_NOT_EXISTS = 501;
     public final static int INCORRECT_PASSWORD = 502;
+    public final static int TRY_PASSWORD_LIMIT = 509; //密码错误超过限制 Password error exceeds limit
 
     /**
      * HTTP Response

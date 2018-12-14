@@ -85,5 +85,6 @@ public class LoginActivity extends BaseApp implements LoginView {
         pbLogin.setVisibility(View.GONE);
         Intent intent = new Intent(this, MainActivity.class);
         ActivityUtils.startActivity(intent.putExtra(ConstantUtils.LOGIN_RESPONSE_KEY, loginResponse));
+        finish();
     }
 }

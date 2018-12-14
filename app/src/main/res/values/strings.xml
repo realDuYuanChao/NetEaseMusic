@@ -69,4 +69,7 @@
     <string name="multi_pick">Multi-pick</string>
     <string name="downlaod">Downlaod</string>
     <string name="latest_music">最新音乐</string>
+    <string name="incorrect_password">密码不正确</string>
+    <string name="account_not_exists">帐号不存在</string>
+    <string name="try_password_limit">密码错误超过限制</string>
 </resources>

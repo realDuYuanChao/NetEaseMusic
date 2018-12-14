@@ -2,6 +2,9 @@ package shellhub.github.neteasemusic.model.impl;
 
 import android.text.TextUtils;
 
+import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.ToastUtils;
 import com.blankj.utilcode.util.Utils;
 
 import shellhub.github.neteasemusic.R;
@@ -10,6 +13,7 @@ import shellhub.github.neteasemusic.model.entities.User;
 import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
 import shellhub.github.neteasemusic.util.AccountUtils;
+import shellhub.github.neteasemusic.util.ConstantUtils;
 
 public class LoginModelImpl implements LoginModel {
     private NetEaseMusicService mNetEaseMusicService;
@@ -42,7 +46,17 @@ public class LoginModelImpl implements LoginModel {
 
             @Override
             public void onError(Throwable e) {
-                //TODO
+                String message = e.getMessage();
+                ToastUtils.showLong(message);
+                if (message.contains(ConstantUtils.INCORRECT_PASSWORD + "")) {
+                    callback.onPasswordError(Utils.getApp().getResources().getString(R.string.incorrect_password));
+                } else if (message.contains(ConstantUtils.TRY_PASSWORD_LIMIT + "")){
+                    callback.onPasswordError(Utils.getApp().getResources().getString(R.string.try_password_limit));
+                } else if (message.contains(ConstantUtils.ACCOUNT_NOT_EXISTS + "")) {
+                    callback.onUsernameError(Utils.getApp().getString(R.string.account_not_exists));
+                }else {
+                    callback.onUsernameError("login error");
+                }
             }
         });
     }
