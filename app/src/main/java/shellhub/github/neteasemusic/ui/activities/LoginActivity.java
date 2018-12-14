@@ -2,16 +2,15 @@ package shellhub.github.neteasemusic.ui.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import com.blankj.utilcode.util.ActivityUtils;
 import com.blankj.utilcode.util.ToastUtils;
 
 import javax.inject.Inject;
 
+import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -22,6 +21,7 @@ import shellhub.github.neteasemusic.networking.NetEaseMusicService;
 import shellhub.github.neteasemusic.presenter.LoginPresenter;
 import shellhub.github.neteasemusic.presenter.impl.LoginPresenterImpl;
 import shellhub.github.neteasemusic.response.login.LoginResponse;
+import shellhub.github.neteasemusic.util.ActivityUtils;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.view.LoginView;
 
@@ -84,7 +84,12 @@ public class LoginActivity extends BaseApp implements LoginView {
     public void loginSuccess(LoginResponse loginResponse) {
         pbLogin.setVisibility(View.GONE);
         Intent intent = new Intent(this, MainActivity.class);
-        ActivityUtils.startActivity(intent.putExtra(ConstantUtils.LOGIN_RESPONSE_KEY, loginResponse));
+        startActivity(intent.putExtra(ConstantUtils.LOGIN_RESPONSE_KEY, loginResponse));
         finish();
+    }
+
+    @Override
+    public void hideKeyboard() {
+        ActivityUtils.hideKeyboard(this);
     }
 }

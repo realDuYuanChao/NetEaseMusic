@@ -12,4 +12,6 @@ public interface LoginView extends BaseView {
     void passwordError(String errorMsg);
 
     void loginSuccess(LoginResponse loginResponse);
+
+    void hideKeyboard();
 }

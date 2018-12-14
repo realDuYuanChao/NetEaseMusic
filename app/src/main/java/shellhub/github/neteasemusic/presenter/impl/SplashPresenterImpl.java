@@ -27,4 +27,9 @@ public class SplashPresenterImpl implements SplashPresenter, SplashModel.SplashC
     public void navigateLogin() {
         mSplashView.navigateLogin();
     }
+
+    @Override
+    public void navigateAccount() {
+        mSplashView.navigateAccount();
+    }
 }

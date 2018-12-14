@@ -1,5 +1,6 @@
 package shellhub.github.neteasemusic.ui.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.Nullable;
@@ -24,8 +25,7 @@ public class SplashActivity extends AppCompatActivity implements SplashView {
         setUpMVP();
 
         new Handler().postDelayed(()->{
-//            mSplashPresenter.navigate();
-            com.blankj.utilcode.util.ActivityUtils.startActivity(AccountActivity.class);
+            mSplashPresenter.navigate();
         } , 1000);
     }
 
@@ -36,12 +36,18 @@ public class SplashActivity extends AppCompatActivity implements SplashView {
 
     @Override
     public void navigateMain() {
-        com.blankj.utilcode.util.ActivityUtils.startActivity(MainActivity.class);
+        startActivity(new Intent(this, MainActivity.class));
         finish();
     }
 
     @Override
     public void navigateLogin() {
-        com.blankj.utilcode.util.ActivityUtils.startActivity(LoginActivity.class);
+        //todo
+    }
+
+    @Override
+    public void navigateAccount() {
+        startActivity(new Intent(this, AccountActivity.class));
+        finish();
     }
 }

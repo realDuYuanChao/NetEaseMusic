@@ -7,5 +7,7 @@ public interface SplashModel {
         void navigateMain();
 
         void navigateLogin();
+
+        void navigateAccount();
     }
 }

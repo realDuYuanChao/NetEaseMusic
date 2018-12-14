@@ -28,6 +28,7 @@ public class LoginPresenterImpl implements LoginPresenter, LoginModel.LoginCallb
     public void validateCredentials(User user) {
         if (mLoginView != null) {
             mLoginView.showProgress();
+            mLoginView.hideKeyboard();
         }
         mLoginModel.login(user, this );
     }
