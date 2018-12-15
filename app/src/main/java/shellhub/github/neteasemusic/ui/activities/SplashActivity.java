@@ -20,13 +20,12 @@ public class SplashActivity extends AppCompatActivity implements SplashView {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityUtils.requestFullScreen(this, false);
-        overridePendingTransition(R.anim.slide_out_up, R.anim.slide_in_up);
         setContentView(R.layout.activity_splash);
         setUpMVP();
 
         new Handler().postDelayed(()->{
             mSplashPresenter.navigate();
-        } , 1000);
+        } , 500);
     }
 
     @Override
