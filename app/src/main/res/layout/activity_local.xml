@@ -41,6 +41,13 @@
             app:tabTextAppearance="@style/TabTextAppearance"
             app:tabTextColor="@color/tab_text" />
 
+        <ProgressBar
+            android:id="@+id/pb_local_loading"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/vp_local_files"
             android:layout_width="match_parent"

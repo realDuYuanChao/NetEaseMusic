@@ -263,6 +263,16 @@ public class MainActivity extends BaseApp
         mainPresenter.getRecommendSongList();
     }
 
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
     @NeedsPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     void permissionRequest() {
         Log.d(TAG, "setUpMVP: ");

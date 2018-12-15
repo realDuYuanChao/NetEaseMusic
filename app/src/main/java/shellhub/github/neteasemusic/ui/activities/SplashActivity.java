@@ -34,6 +34,16 @@ public class SplashActivity extends AppCompatActivity implements SplashView {
     }
 
     @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
     public void navigateMain() {
         startActivity(new Intent(this, MainActivity.class));
         finish();

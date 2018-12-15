@@ -46,4 +46,14 @@ public class AccountActivity extends AppCompatActivity implements AccountView {
     public void setUpMVP() {
         mAccountPresenter = new AccountPresenterImpl(this);
     }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
 }

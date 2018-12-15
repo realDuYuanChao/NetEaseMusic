@@ -23,6 +23,7 @@ public class LocalPresenterImpl implements LocalPresenter,  LocalModel.Callback 
 
     @Override
     public void load() {
+        mLocalView.showProgress();
         mLocalModel.loadAllSingle(this);
         mLocalModel.loadAllArtist(this);
         mLocalModel.loadAllAlbum(this);
@@ -47,6 +48,7 @@ public class LocalPresenterImpl implements LocalPresenter,  LocalModel.Callback 
 
     @Override
     public void onLoadedAllSingle(List<Single> singles) {
+        mLocalView.hideProgress();
         mLocalView.loadSingle(singles);
     }
 

@@ -1,15 +1,14 @@
 package shellhub.github.neteasemusic;
 
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.File;
 
+import androidx.appcompat.app.AppCompatActivity;
 import lombok.Data;
 import shellhub.github.neteasemusic.deps.DaggerDeps;
 import shellhub.github.neteasemusic.deps.Deps;
 import shellhub.github.neteasemusic.networking.NetworkModule;
-import shellhub.github.neteasemusic.ui.fragments.ControllerCardFragment;
 
 
 @Data

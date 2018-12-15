@@ -25,4 +25,14 @@ public class RegisterActivity extends AppCompatActivity implements RegisterView 
     public void setUpMVP() {
 
     }
+
+    @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
 }

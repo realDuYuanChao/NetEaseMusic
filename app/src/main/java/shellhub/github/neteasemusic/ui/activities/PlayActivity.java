@@ -283,6 +283,16 @@ public class PlayActivity extends BaseApp implements PlayView, ServiceConnection
     }
 
     @Override
+    public void showProgress() {
+
+    }
+
+    @Override
+    public void hideProgress() {
+
+    }
+
+    @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         LogUtils.d(TAG, "onProgressChanged");
         tvCurrentTime.setText(MusicUtils.formatDuration(progress * 1000));

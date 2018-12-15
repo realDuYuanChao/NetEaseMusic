@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.google.android.material.tabs.TabLayout;
@@ -47,6 +49,9 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
 
     @BindView(R.id.toolbar)
     Toolbar toolbar;
+
+    @BindView(R.id.pb_local_loading)
+    ProgressBar pbLocalLoading;
 
     private LocalPresenter mLocalPresenter;
 
@@ -113,6 +118,16 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     public void setUpMVP() {
         mLocalPresenter = new LocalPresenterImpl(this);
         mLocalPresenter.load();
+    }
+
+    @Override
+    public void showProgress() {
+        pbLocalLoading.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        pbLocalLoading.setVisibility(View.GONE);
     }
 
     @Override
