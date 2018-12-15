@@ -72,4 +72,6 @@
     <string name="incorrect_password">密码不正确</string>
     <string name="account_not_exists">帐号不存在</string>
     <string name="try_password_limit">密码错误超过限制</string>
+    <string name="play_all">Play all</string>
+    <string name="tracks">tracks</string>
 </resources>
