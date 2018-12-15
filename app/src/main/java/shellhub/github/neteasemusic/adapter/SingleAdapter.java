@@ -1,6 +1,5 @@
 package shellhub.github.neteasemusic.adapter;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,6 +106,7 @@ public class SingleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public void bind(int position) {
             super.bind(position);
+            tvSingleTitle.setTextColor(Utils.getApp().getResources().getColor(R.color.red));
         }
     }
 
