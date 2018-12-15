@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 import lombok.Data;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.model.entities.PlayActivityEvent;
+import shellhub.github.neteasemusic.model.entities.PlaySingleEvent;
 import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.util.TagUtils;
 
@@ -133,7 +134,7 @@ public class SingleAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 } else {
                     currentPosition = index + 1;
                     notifyDataSetChanged();
-                    EventBus.getDefault().post(singles.get(index));
+                    EventBus.getDefault().post(new PlaySingleEvent(singles.get(index)));
                 }
 
             });

@@ -30,6 +30,7 @@ import shellhub.github.neteasemusic.model.entities.AlbumEvent;
 import shellhub.github.neteasemusic.model.entities.Artist;
 import shellhub.github.neteasemusic.model.entities.ArtistEvent;
 import shellhub.github.neteasemusic.model.entities.PlayActivityEvent;
+import shellhub.github.neteasemusic.model.entities.PlaySingleEvent;
 import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.model.entities.SingleEvent;
 import shellhub.github.neteasemusic.presenter.LocalPresenter;
@@ -158,8 +159,8 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSingleEvent(Single single) {
-        mLocalPresenter.loadSong(single);
+    public void onSingleEvent(PlaySingleEvent event) {
+        mLocalPresenter.loadSong(event.getSingle());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
