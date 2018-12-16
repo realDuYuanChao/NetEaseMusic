@@ -8,14 +8,16 @@
 
     <TextView
         android:id="@+id/tv_single_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:layout_marginEnd="8dp"
         android:textColor="@color/dark"
+        app:layout_constraintEnd_toStartOf="@+id/iv_pop_menu"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="TextView" />
 
     <ImageView
         android:id="@+id/iv_single_downloaded"
@@ -42,18 +44,19 @@
 
     <TextView
         android:id="@+id/tv_single_artist"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
         android:ellipsize="marquee"
         android:singleLine="true"
-        android:text="TextView"
         android:textColor="@color/gray"
         app:layout_constraintBottom_toBottomOf="@+id/iv_single_downloaded"
+        app:layout_constraintEnd_toStartOf="@+id/iv_pop_menu"
         app:layout_constraintStart_toEndOf="@+id/iv_single_hq"
-        app:layout_constraintTop_toTopOf="@+id/iv_single_downloaded" />
+        app:layout_constraintTop_toTopOf="@+id/iv_single_downloaded"
+        tools:text="TextView" />
 
     <ImageView
         android:id="@+id/iv_pop_menu"

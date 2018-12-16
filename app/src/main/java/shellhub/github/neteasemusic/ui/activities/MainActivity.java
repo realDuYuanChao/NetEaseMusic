@@ -352,6 +352,7 @@ public class MainActivity extends BaseApp
     public void updateMiniCoverAndTitle() {
         Glide.with(this).load(MusicUtils.readAlbumCover()).into(ivControllerAlbumCover);
         tvControllerTitle.setText(MusicUtils.readSongName());
+        tvControllerLyric.setText(MusicUtils.readArtistAndAlbum());//TODO
     }
 
     @Override

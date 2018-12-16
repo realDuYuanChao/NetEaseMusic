@@ -44,6 +44,7 @@ public class LocalPresenterImpl implements LocalPresenter,  LocalModel.Callback 
     @Override
     public void onLoadedSong(String songUrl) {
         mLocalView.play(songUrl);
+        mLocalView.updateMiniController();
     }
 
     @Override

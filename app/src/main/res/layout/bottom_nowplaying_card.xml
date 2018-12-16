@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mini_controller"
-    android:clickable="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:clickable="true"
     android:focusable="true">
 
     <ImageView
@@ -22,24 +22,31 @@
 
     <TextView
         android:id="@+id/tv_controller_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:text="天地(《《中国新说唱》》)"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:maxLines="1"
+        tools:text="天地(《《中国新说唱》》)"
         android:textColor="@color/dark"
+        app:layout_constraintBottom_toTopOf="@+id/tv_controller_lyric"
+        app:layout_constraintEnd_toStartOf="@+id/iv_controller_play_pause"
         app:layout_constraintStart_toEndOf="@+id/iv_controller_album_cover"
         app:layout_constraintTop_toTopOf="@+id/iv_controller_album_cover" />
 
     <TextView
         android:id="@+id/tv_controller_lyric"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="歌词"
+        android:layout_marginEnd="8dp"
+        android:maxLines="1"
+        tools:text="歌词"
         android:textColor="@color/gray"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_controller_album_cover"
+        app:layout_constraintEnd_toStartOf="@+id/iv_controller_play_pause"
         app:layout_constraintStart_toEndOf="@+id/iv_controller_album_cover" />
 
     <ImageView

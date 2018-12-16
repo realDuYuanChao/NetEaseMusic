@@ -27,6 +27,7 @@ import shellhub.github.neteasemusic.model.entities.Album;
 import shellhub.github.neteasemusic.model.entities.Artist;
 import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.util.ConstantUtils;
+import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 public class LocalModelImpl implements LocalModel {
@@ -35,13 +36,19 @@ public class LocalModelImpl implements LocalModel {
 
     @Override
     public void loadSong(Single single, Callback callback) {
-        callback.onLoadedSong(single.getData());
+
+        //store song name
+        MusicUtils.saveSongName(single.getTitle());
 
         //store song album
         LogUtils.d(TAG, single.getAlbumId());
         LogUtils.d(TAG, getAlbumArtUri(single.getAlbumId()).toString());
         SPUtils.getInstance(ConstantUtils.SP_NET_EASE_MUSIC_STATUS, Context.MODE_PRIVATE).put(ConstantUtils.SP_CURRENT_SONG_ALBUM_URL_KEY,
                 getAlbumArtUri(single.getAlbumId()).toString());
+
+        //store artist - album ane
+        MusicUtils.saveArtistAndAlbum(single.getArtist() + " - " + single.getAlbumName());
+        callback.onLoadedSong(single.getData());
     }
 
     @Override
@@ -64,6 +71,7 @@ public class LocalModelImpl implements LocalModel {
                 single.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)));
                 single.setArtist(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)));
                 single.setAlbumId(cursor.getInt(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID)));
+                single.setAlbumName(cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM)));
 
                 emitter.onNext(single);
             }

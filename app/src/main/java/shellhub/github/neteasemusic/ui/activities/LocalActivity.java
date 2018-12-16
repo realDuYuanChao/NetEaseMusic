@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.bumptech.glide.Glide;
 import com.google.android.material.tabs.TabLayout;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,6 +39,7 @@ import shellhub.github.neteasemusic.model.entities.SingleEvent;
 import shellhub.github.neteasemusic.presenter.LocalPresenter;
 import shellhub.github.neteasemusic.presenter.impl.LocalPresenterImpl;
 import shellhub.github.neteasemusic.util.ConstantUtils;
+import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.LocalView;
 
@@ -54,6 +58,21 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     @BindView(R.id.pb_local_loading)
     ProgressBar pbLocalLoading;
 
+    @BindView(R.id.iv_controller_album_cover)
+    ImageView ivControllerAlbumCover;
+
+    @BindView(R.id.tv_controller_title)
+    TextView tvControllerTitle;
+
+    @BindView(R.id.iv_controller_play_pause)
+    ImageView ivControllerPlayPause;
+
+    @BindView(R.id.iv_controller_playlist)
+    ImageView ivControllerPlaylist;
+
+    @BindView(R.id.tv_controller_lyric)
+    TextView tvControllerLyric;
+
     private LocalPresenter mLocalPresenter;
 
 
@@ -65,6 +84,7 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
         initToolbar();
         vpLocalFiles.setOffscreenPageLimit(4);
         vpLocalFiles.setAdapter(new LocalCategoryPagerAdapter(getSupportFragmentManager(), this));
+        findViewById(R.id.sliding_layout).setEnabled(false);
     }
 
     private void initToolbar() {
@@ -79,6 +99,12 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
         tlLocalCategory.setupWithViewPager(vpLocalFiles);
         setUpMVP();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateMiniController();
     }
 
     @Override
@@ -156,6 +182,13 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
         Intent intent = new Intent(ConstantUtils.ACTION_PLAY);
         intent.putExtra(ConstantUtils.MUSIC_URI_KEY, songUrl);
         sendBroadcast(intent);
+    }
+
+    @Override
+    public void updateMiniController() {
+        Glide.with(this).load(MusicUtils.readAlbumCover()).into(ivControllerAlbumCover);
+        tvControllerTitle.setText(MusicUtils.readSongName());
+        tvControllerLyric.setText(MusicUtils.readArtistAndAlbum());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -16,4 +16,6 @@ public interface LocalView extends BaseView{
     void navigatePlay();
 
     void play(String songUrl);
+
+    void updateMiniController();
 }

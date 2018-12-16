@@ -8,4 +8,5 @@ public class Single {
     private String title;
     private String artist;
     private int albumId;
+    private String albumName;
 }
