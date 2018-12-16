@@ -49,6 +49,7 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
 
     @Override
     public void search(String keyword) {
+        mSearchView.hideKeyboard();
         mSearchView.showProgress();
         mSearchModel.searchByKeywords(keyword, this);
     }

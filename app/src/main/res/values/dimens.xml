@@ -9,4 +9,6 @@
     <dimen name="smaller">10sp</dimen>
     <dimen name="small_controller">30dp</dimen>
     <dimen name="big_controller">50dp</dimen>
+    <dimen name="mini_controller_height">64dp</dimen>
+    <dimen name="mini_controller_shadow_height">1dp</dimen>
 </resources>

@@ -41,6 +41,7 @@ import shellhub.github.neteasemusic.response.search.hot.HotResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 import shellhub.github.neteasemusic.ui.fragments.HotSearchFragment;
 import shellhub.github.neteasemusic.ui.fragments.SearchFragment;
+import shellhub.github.neteasemusic.util.ActivityUtils;
 import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.MusicUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
@@ -76,6 +77,7 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
 
         initToolbar();
         setUpMVP();
+        findViewById(R.id.sliding_layout).setEnabled(false); //completely disable the sliding panel (including touch and programmatic sliding)
     }
 
     @Override
@@ -142,6 +144,11 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
     @Override
     public void hideProgress() {
         pbSearching.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void hideKeyboard() {
+        ActivityUtils.hideKeyboard(this);
     }
 
     @Override

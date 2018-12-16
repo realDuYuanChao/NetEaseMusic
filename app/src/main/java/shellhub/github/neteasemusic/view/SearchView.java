@@ -9,9 +9,8 @@ import shellhub.github.neteasemusic.response.search.hot.HotResponse;
 import shellhub.github.neteasemusic.response.search.video.VideoResponse;
 
 public interface SearchView extends BaseView {
-    void showProgress();
 
-    void hideProgress();
+    void hideKeyboard();
 
     void showHots(HotResponse hotResponse);
 
