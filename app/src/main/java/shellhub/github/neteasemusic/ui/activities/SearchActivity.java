@@ -7,10 +7,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.Utils;
+import com.bumptech.glide.Glide;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -56,6 +59,22 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
 
     @BindView(R.id.pb_searching)
     ProgressBar pbSearching;
+
+    @BindView(R.id.iv_controller_album_cover)
+    ImageView ivControllerAlbumCover;
+
+    @BindView(R.id.tv_controller_title)
+    TextView tvControllerTitle;
+
+    @BindView(R.id.iv_controller_play_pause)
+    ImageView ivControllerPlayPause;
+
+    @BindView(R.id.iv_controller_playlist)
+    ImageView ivControllerPlaylist;
+
+    @BindView(R.id.tv_controller_lyric)
+    TextView tvControllerLyric;
+
 
     @Inject
     NetEaseMusicService mNetEaseMusicService;
@@ -196,6 +215,13 @@ public class SearchActivity extends BaseApp implements shellhub.github.neteasemu
         Intent intent = new Intent(ConstantUtils.ACTION_PLAY);
         intent.putExtra(ConstantUtils.MUSIC_URI_KEY, songUrl);
         Utils.getApp().sendBroadcast(intent);
+    }
+
+    @Override
+    public void updateMiniController() {
+        Glide.with(this).load(MusicUtils.readAlbumCover()).into(ivControllerAlbumCover);
+        tvControllerTitle.setText(MusicUtils.readSongName());
+        tvControllerLyric.setText(MusicUtils.readArtistAndAlbum());
     }
 
     @Override

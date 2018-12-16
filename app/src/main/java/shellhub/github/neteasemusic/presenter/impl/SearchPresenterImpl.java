@@ -114,6 +114,7 @@ public class SearchPresenterImpl implements SearchPresenter, SearchModel.Callbac
 
     @Override
     public void onSongReady(String url) {
+        mSearchView.updateMiniController();
         mSearchView.playSong(url);
     }
 

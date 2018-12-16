@@ -26,4 +26,6 @@ public interface SearchView extends BaseView {
 
     void playSong(String songUrl);
 
+    void updateMiniController();
+
 }
