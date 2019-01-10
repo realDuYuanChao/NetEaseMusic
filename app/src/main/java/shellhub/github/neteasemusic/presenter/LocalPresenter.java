@@ -1,5 +1,6 @@
 package shellhub.github.neteasemusic.presenter;
 
+import shellhub.github.neteasemusic.adapter.BaseViewHolder;
 import shellhub.github.neteasemusic.model.entities.Single;
 
 public interface LocalPresenter {
@@ -8,4 +9,13 @@ public interface LocalPresenter {
     void query(String keyword);
 
     void loadSong(Single single);
+
+    int getSongCount();
+
+    void onBindSongRowViewAtPosition(int position, BaseViewHolder holder);
+
+    void onSongItemClickedAtPosition(int position);
+
+    int getCurrentSongPosition();
+
 }

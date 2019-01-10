@@ -20,9 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.AlbumAdapter;
-import shellhub.github.neteasemusic.adapter.SingleAdapter;
 import shellhub.github.neteasemusic.model.entities.AlbumEvent;
-import shellhub.github.neteasemusic.model.entities.SingleEvent;
 import shellhub.github.neteasemusic.util.TagUtils;
 
 /**

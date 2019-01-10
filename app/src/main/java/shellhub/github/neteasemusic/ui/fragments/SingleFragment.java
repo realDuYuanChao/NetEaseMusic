@@ -12,6 +12,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Objects;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.SingleAdapter;
-import shellhub.github.neteasemusic.model.entities.SingleEvent;
+import shellhub.github.neteasemusic.model.entities.SongEvent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -65,7 +67,7 @@ public class SingleFragment extends Fragment {
 
     private void setUp() {
         rvSingle.setLayoutManager(new LinearLayoutManager(getContext()));
-        rvSingle.addItemDecoration(new DividerItemDecoration(getContext(), LinearLayoutManager.VERTICAL));
+        rvSingle.addItemDecoration(new DividerItemDecoration(Objects.requireNonNull(getContext()), LinearLayoutManager.VERTICAL));
         if (adapter == null) {
             adapter = new SingleAdapter();
         }
@@ -73,9 +75,7 @@ public class SingleFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onSingleEvent(SingleEvent event) {
-        LogUtils.d(TAG, event.getSingles());
-        adapter.setSingles(event.getSingles());
+    public void onSingleEvent(SongEvent event) {
         adapter.notifyDataSetChanged();
     };
 }

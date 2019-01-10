@@ -34,8 +34,7 @@ import shellhub.github.neteasemusic.model.entities.Artist;
 import shellhub.github.neteasemusic.model.entities.ArtistEvent;
 import shellhub.github.neteasemusic.model.entities.PlayActivityEvent;
 import shellhub.github.neteasemusic.model.entities.PlaySingleEvent;
-import shellhub.github.neteasemusic.model.entities.Single;
-import shellhub.github.neteasemusic.model.entities.SingleEvent;
+import shellhub.github.neteasemusic.model.entities.SongEvent;
 import shellhub.github.neteasemusic.presenter.LocalPresenter;
 import shellhub.github.neteasemusic.presenter.impl.LocalPresenterImpl;
 import shellhub.github.neteasemusic.util.ConstantUtils;
@@ -73,7 +72,7 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     @BindView(R.id.tv_controller_lyric)
     TextView tvControllerLyric;
 
-    private LocalPresenter mLocalPresenter;
+    public static LocalPresenter mLocalPresenter;
 
 
     @Override
@@ -158,17 +157,17 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     }
 
     @Override
-    public void loadSingle(List<Single> singles) {
-        EventBus.getDefault().post(new SingleEvent(singles));
+    public void updateSongList() {
+        EventBus.getDefault().post(new SongEvent());
     }
 
     @Override
-    public void loadArtist(List<Artist> artists) {
+    public void updateArtistList(List<Artist> artists) {
         EventBus.getDefault().post(new ArtistEvent(artists));
     }
 
     @Override
-    public void loadAlbum(List<Album> albums) {
+    public void updateAlbumList(List<Album> albums) {
         EventBus.getDefault().post(new AlbumEvent(albums));
     }
 
