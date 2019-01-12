@@ -20,9 +20,7 @@ public class LocalSongPlayingViewHolder extends BaseViewHolder implements LocalS
 
     public LocalSongPlayingViewHolder(@NonNull View itemView) {
         super(itemView);
-        itemView.setOnClickListener((view)->{
-            presenter.onSongItemClickedAtPosition(getAdapterPosition());
-        });
+        itemView.setOnClickListener((view)-> presenter.onSongItemClickedAtPosition(getAdapterPosition()));
     }
 
     public LocalSongPlayingViewHolder(LocalPresenter presenter, @NonNull View itemView) {

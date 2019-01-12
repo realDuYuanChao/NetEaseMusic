@@ -19,9 +19,7 @@ public class LocalSongViewHolder extends BaseViewHolder implements LocalSongRowV
 
     public LocalSongViewHolder(@NonNull View itemView) {
         super(itemView);
-        itemView.setOnClickListener((view)->{
-            presenter.onSongItemClickedAtPosition(getAdapterPosition());
-        });
+        itemView.setOnClickListener((view)-> presenter.onSongItemClickedAtPosition(getAdapterPosition()));
     }
 
     public LocalSongViewHolder(LocalPresenter presenter, @NonNull View itemView) {
@@ -36,6 +34,6 @@ public class LocalSongViewHolder extends BaseViewHolder implements LocalSongRowV
 
     @Override
     public void setSongArtist(String songArtist) {
-        tvSingleTitle.setText(songArtist);
+        tvSingleArtist.setText(songArtist);
     }
 }
