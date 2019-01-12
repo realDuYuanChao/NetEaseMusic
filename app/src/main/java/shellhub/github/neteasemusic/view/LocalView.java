@@ -1,16 +1,11 @@
 package shellhub.github.neteasemusic.view;
 
-import java.util.List;
-
-import shellhub.github.neteasemusic.model.entities.Album;
-import shellhub.github.neteasemusic.model.entities.Artist;
-
 public interface LocalView extends BaseView{
     void updateSongList();
 
-    void updateArtistList(List<Artist> artists);
+    void updateArtistList();
 
-    void updateAlbumList(List<Album> albums);
+    void updateAlbumList();
 
     void navigatePlay();
 

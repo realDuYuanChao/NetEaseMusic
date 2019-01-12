@@ -49,6 +49,6 @@ public class SingleAdapter extends RecyclerView.Adapter<BaseViewHolder> {
 
     @Override
     public int getItemCount() {
-        return localPresenter.getSongCount();
+        return localPresenter.getSongItemCount();
     }
 }

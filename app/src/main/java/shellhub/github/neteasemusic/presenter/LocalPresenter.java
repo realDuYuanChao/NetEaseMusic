@@ -10,11 +10,17 @@ public interface LocalPresenter {
 
     void loadSong(Single single);
 
-    int getSongCount();
+    int getSongItemCount();
+
+    int getArtistItemCount();
 
     void onBindSongRowViewAtPosition(int position, BaseViewHolder holder);
 
+    void onBindArtistRowViewAtPosition(int position, BaseViewHolder holder);
+
     void onSongItemClickedAtPosition(int position);
+
+    void onArtistItemClickAtPosition(int position);
 
     int getCurrentSongPosition();
 

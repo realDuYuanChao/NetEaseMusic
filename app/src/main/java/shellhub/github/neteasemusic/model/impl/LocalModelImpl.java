@@ -193,7 +193,9 @@ public class LocalModelImpl implements LocalModel {
 
                     @Override
                     public void onNext(Artist artist) {
-                        artists.add(artist);
+                        if (!artists.contains(artist)) {
+                            artists.add(artist);
+                        }
                     }
 
                     @Override

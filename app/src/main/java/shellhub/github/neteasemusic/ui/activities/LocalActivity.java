@@ -18,8 +18,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.List;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -28,9 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.LocalCategoryPagerAdapter;
-import shellhub.github.neteasemusic.model.entities.Album;
 import shellhub.github.neteasemusic.model.entities.AlbumEvent;
-import shellhub.github.neteasemusic.model.entities.Artist;
 import shellhub.github.neteasemusic.model.entities.ArtistEvent;
 import shellhub.github.neteasemusic.model.entities.PlayActivityEvent;
 import shellhub.github.neteasemusic.model.entities.PlaySingleEvent;
@@ -162,13 +158,13 @@ public class LocalActivity extends AppCompatActivity implements LocalView {
     }
 
     @Override
-    public void updateArtistList(List<Artist> artists) {
-        EventBus.getDefault().post(new ArtistEvent(artists));
+    public void updateArtistList() {
+        EventBus.getDefault().post(new ArtistEvent());
     }
 
     @Override
-    public void updateAlbumList(List<Album> albums) {
-        EventBus.getDefault().post(new AlbumEvent(albums));
+    public void updateAlbumList() {
+        EventBus.getDefault().post(new AlbumEvent());
     }
 
     @Override

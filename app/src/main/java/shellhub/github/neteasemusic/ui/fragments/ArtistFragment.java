@@ -73,8 +73,6 @@ public class ArtistFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onSingleEvent(ArtistEvent event) {
-        LogUtils.d(TAG, event.getArtist());
-        adapter.setArtists(event.getArtist());
         adapter.notifyDataSetChanged();
     };
 

@@ -9,6 +9,7 @@ import java.util.List;
 
 import shellhub.github.neteasemusic.R;
 import shellhub.github.neteasemusic.adapter.BaseViewHolder;
+import shellhub.github.neteasemusic.adapter.LocalArtistViewHolder;
 import shellhub.github.neteasemusic.adapter.LocalSongHeaderViewHolder;
 import shellhub.github.neteasemusic.adapter.LocalSongPlayingViewHolder;
 import shellhub.github.neteasemusic.adapter.LocalSongViewHolder;
@@ -28,6 +29,8 @@ public class LocalPresenterImpl implements LocalPresenter, LocalModel.Callback {
     private LocalModel mLocalModel;
 
     private List<Single> singles = new ArrayList<>();
+    private List<Artist> artists = new ArrayList<>();
+
     private int currentSongPosition;
 
     public LocalPresenterImpl(LocalView mLocalView) {
@@ -54,8 +57,13 @@ public class LocalPresenterImpl implements LocalPresenter, LocalModel.Callback {
     }
 
     @Override
-    public int getSongCount() {
+    public int getSongItemCount() {
         return singles.size() + 1;
+    }
+
+    @Override
+    public int getArtistItemCount() {
+        return artists.size();
     }
 
     @Override
@@ -76,6 +84,14 @@ public class LocalPresenterImpl implements LocalPresenter, LocalModel.Callback {
     }
 
     @Override
+    public void onBindArtistRowViewAtPosition(int position, BaseViewHolder holder) {
+        ((LocalArtistViewHolder)holder).setArtistName(artists.get(position).getName());
+        String songCountTitle = artists.get(position).getSongCount() + "" +  Utils.getApp().getResources().getString(R.string.songs);
+        ((LocalArtistViewHolder)holder).setSongCountText(songCountTitle);
+        ((LocalArtistViewHolder)holder).setProfile(artists.get(position).getProfile());
+    }
+
+    @Override
     public void onSongItemClickedAtPosition(int position) {
         if (position == currentSongPosition) {
             mLocalView.navigatePlay();
@@ -84,6 +100,11 @@ public class LocalPresenterImpl implements LocalPresenter, LocalModel.Callback {
             loadSong(singles.get(position - 1));
             mLocalView.updateSongList();
         }
+    }
+
+    @Override
+    public void onArtistItemClickAtPosition(int position) {
+
     }
 
     @Override
@@ -111,18 +132,19 @@ public class LocalPresenterImpl implements LocalPresenter, LocalModel.Callback {
 
     @Override
     public void onLoadedAllSingle(List<Single> singles) {
+        this.singles = singles;
         mLocalView.hideProgress();
         mLocalView.updateSongList();
-        this.singles = singles;
     }
 
     @Override
     public void onLoadedAllAlbum(List<Album> albums) {
-        mLocalView.updateAlbumList(albums);
+        mLocalView.updateAlbumList();
     }
 
     @Override
     public void onLoadAllArtist(List<Artist> artists) {
-        mLocalView.updateArtistList(artists);
+        this.artists = artists;
+        mLocalView.updateArtistList();
     }
 }
