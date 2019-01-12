@@ -18,4 +18,6 @@ public interface LocalPresenter {
 
     int getCurrentSongPosition();
 
+    int getItemViewTypeOfSingle(int position);
+
 }

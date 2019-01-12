@@ -18,6 +18,7 @@ import shellhub.github.neteasemusic.model.entities.Artist;
 import shellhub.github.neteasemusic.model.entities.Single;
 import shellhub.github.neteasemusic.model.impl.LocalModelImpl;
 import shellhub.github.neteasemusic.presenter.LocalPresenter;
+import shellhub.github.neteasemusic.util.ConstantUtils;
 import shellhub.github.neteasemusic.util.TagUtils;
 import shellhub.github.neteasemusic.view.LocalView;
 
@@ -88,6 +89,17 @@ public class LocalPresenterImpl implements LocalPresenter, LocalModel.Callback {
     @Override
     public int getCurrentSongPosition() {
         return currentSongPosition;
+    }
+
+    @Override
+    public int getItemViewTypeOfSingle(int position) {
+        if (position == 0) {
+            return ConstantUtils.SINGLE_TYPE_HEADER;
+        } else if (position == getCurrentSongPosition()) {
+            return ConstantUtils.SINGLE_TYPE_IS_PLAYING;
+        } else {
+            return ConstantUtils.SINGLE_TYPE_IS_NORMAL;
+        }
     }
 
 

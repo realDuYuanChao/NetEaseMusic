@@ -86,4 +86,11 @@ public class ConstantUtils {
     public static final int ONE_MINUTE = 60 * 1000;
     public static final int ONE_SECOND = 1000;
 
+    /**
+     * RecyclerView ViewType
+     */
+    public static final int SINGLE_TYPE_HEADER = 0;
+    public static final int SINGLE_TYPE_IS_PLAYING = 1;
+    public static final int SINGLE_TYPE_IS_NORMAL = 2;
+
 }
