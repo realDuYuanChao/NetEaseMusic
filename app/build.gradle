@@ -47,7 +47,7 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.3'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.4.0'
     implementation 'com.google.code.gson:gson:2.8.5'
-    implementation 'com.blankj:utilcode:1.21.1'
+    implementation 'com.blankj:utilcode:1.25.9'
     compileOnly 'org.projectlombok:lombok:1.16.20'
     annotationProcessor 'org.projectlombok:lombok:1.16.20'
     implementation 'com.google.dagger:dagger:2.18'
