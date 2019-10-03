@@ -43,7 +43,7 @@ public class Account implements Serializable {
 	private int baoyueVersion;
 
 	@SerializedName("viptypeVersion")
-	private int viptypeVersion;
+	private double viptypeVersion;
 
 	@SerializedName("donateVersion")
 	private int donateVersion;
