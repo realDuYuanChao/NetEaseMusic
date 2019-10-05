@@ -1,4 +1,6 @@
 # NetEase Music 网易云音乐
+[![CI](https://travis-ci.org/shellhub/NetEaseMusic.svg?branch=master)](https://travis-ci.org/shellhub/NetEaseMusic)
+
 这是一个防网易云音乐Android APP，主要使用`MVP`(Model View Presenter)架构进行开发,网络请求主要采用 RxAndroid + Retrofit
 
 > 加班开发中...
